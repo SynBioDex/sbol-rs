@@ -38,7 +38,7 @@
 //! [`Document`]: sbol3::Document
 //! [`Document::check`]: sbol3::Document::check
 //! [`RdfFormat`]: sbol3::RdfFormat
-//! [conversion-md]: https://github.com/marpaia/sbol-rs/blob/master/docs/conversion.md
+//! [conversion-md]: https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md
 
 use std::collections::{HashMap, HashSet};
 use std::path::Path;

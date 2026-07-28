@@ -17,7 +17,7 @@ pub fn to_sarif(report: &ValidationReport, input_path: &Path) -> String {
     let driver = json!({
         "name": "sbol-rs",
         "version": env!("CARGO_PKG_VERSION"),
-        "informationUri": "https://github.com/marpaia/sbol-rs",
+        "informationUri": "https://github.com/SynBioDex/sbol-rs",
         "semanticVersion": env!("CARGO_PKG_VERSION"),
         "rules": rules_descriptor(),
     });

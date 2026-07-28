@@ -50,7 +50,7 @@
 //! For the full conversion model see the [conversion guide][conversion-md].
 //!
 //! [`RdfGraph`]: sbol3::RdfGraph
-//! [conversion-md]: https://github.com/marpaia/sbol-rs/blob/master/docs/conversion.md
+//! [conversion-md]: https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md
 
 use std::collections::{HashMap, HashSet};
 

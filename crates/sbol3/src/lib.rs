@@ -86,15 +86,15 @@
 //!
 //! # Where to go next
 //!
-//! - **[Crate guide](https://github.com/marpaia/sbol-rs/blob/master/docs/crate-guide.md)**:
+//! - **[Crate guide](https://github.com/SynBioDex/sbol-rs/blob/master/docs/crate-guide.md)**:
 //!   architectural tour and where each subsystem lives.
-//! - **[Validation system overview](https://github.com/marpaia/sbol-rs/blob/master/docs/validation.md)**:
+//! - **[Validation system overview](https://github.com/SynBioDex/sbol-rs/blob/master/docs/validation.md)**:
 //!   what the validator covers, `check` vs `check_complete`, CI wiring,
 //!   trust boundaries.
-//! - **[RDF I/O](https://github.com/marpaia/sbol-rs/blob/master/docs/rdf-io.md)**:
+//! - **[RDF I/O](https://github.com/SynBioDex/sbol-rs/blob/master/docs/rdf-io.md)**:
 //!   format inference, round-trip guarantees, cross-implementation
 //!   conformance.
-//! - **[Conformance grid](https://github.com/marpaia/sbol-rs/blob/master/docs/conformance.md)**:
+//! - **[Conformance grid](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conformance.md)**:
 //!   generated per-rule status for every SBOL 3.1.0 rule.
 //! - **[`prelude`]**: re-exports the symbols you'll need for most code;
 //!   `use sbol3::prelude::*;` is the conventional import. It includes the

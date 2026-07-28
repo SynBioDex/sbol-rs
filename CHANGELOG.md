@@ -152,6 +152,6 @@ allowed and will be called out in release notes. Covered surface: the
 public Rust API of the workspace crates, the `sbol` CLI exit codes,
 and the JSON v1 validation output schema.
 
-[Unreleased]: https://github.com/marpaia/sbol-rs/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/marpaia/sbol-rs/releases/tag/v0.2.0
-[0.1.0]: https://github.com/marpaia/sbol-rs/releases/tag/v0.1.0
+[Unreleased]: https://github.com/SynBioDex/sbol-rs/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.0
+[0.1.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.1.0
