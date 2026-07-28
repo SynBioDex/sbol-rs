@@ -20,8 +20,8 @@ resolver = "3"
 [workspace.package]
 edition = "2024"
 rust-version = "1.93"
-repository = "https://github.com/marpaia/sbol-rs"
-homepage = "https://github.com/marpaia/sbol-rs"
+repository = "https://github.com/SynBioDex/sbol-rs"
+homepage = "https://github.com/SynBioDex/sbol-rs"
 license = "MIT OR Apache-2.0"
 
 [workspace.dependencies]

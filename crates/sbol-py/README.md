@@ -5,7 +5,7 @@ for SBOL 2, SBOL 3, and lossless conversion between them**, backed by a Rust
 core. No other Python library covers both versions — `pysbol2` and `pysbol3`
 are separate installs with no bridge between them.
 
-`sbol` is the Python binding for [sbol-rs](https://github.com/marpaia/sbol-rs).
+`sbol` is the Python binding for [sbol-rs](https://github.com/SynBioDex/sbol-rs).
 Because the heavy lifting (RDF parsing, serialization, validation, conversion)
 runs in Rust, it is **dramatically faster than pySBOL3** — 8–2300× on
 parse/validate/serialize benchmarks (see `benchmarks/vs_pysbol3.py`).

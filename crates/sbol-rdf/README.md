@@ -43,5 +43,5 @@ directly only when:
 ## License
 
 Dual-licensed under MIT or Apache-2.0, at your option. See the
-[workspace README](https://github.com/marpaia/sbol-rs#readme) for project
+[workspace README](https://github.com/SynBioDex/sbol-rs#readme) for project
 context and the broader SBOL implementation status.

@@ -21,7 +21,7 @@ Nine subcommands cover the common workflows:
 | `sbol ontology install` | Manage cached extension ontologies (NCIT, custom) |
 
 The conversion path is explained in depth in
-[docs/conversion.md](https://github.com/marpaia/sbol-rs/blob/master/docs/conversion.md);
+[docs/conversion.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md);
 this README focuses on the CLI surface itself.
 
 ## `sbol validate`
@@ -140,7 +140,7 @@ Notable flags:
 
 The full conversion model (what the upgrade preserves, what it can't,
 what triggers warnings) is documented in
-[docs/conversion.md](https://github.com/marpaia/sbol-rs/blob/master/docs/conversion.md).
+[docs/conversion.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md).
 
 ## `sbol downgrade`
 
@@ -157,7 +157,7 @@ through `sbol upgrade` round-trip with near-zero loss because the
 upgrade preserves SBOL 2 identities and types under a
 `http://sboltools.org/backport#` namespace; the downgrade reads those
 triples back. Native SBOL 3 documents lose more; see
-[docs/conversion.md](https://github.com/marpaia/sbol-rs/blob/master/docs/conversion.md)
+[docs/conversion.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md)
 for the loss model.
 
 Notable flags:
@@ -255,7 +255,7 @@ sbol validate design.ttl --ontology ncit   # opt into the cached extension
 
 The cache is the only IO surface; validation itself never touches the
 network. See
-[docs/ontology-extensions.md](https://github.com/marpaia/sbol-rs/blob/master/docs/ontology-extensions.md)
+[docs/ontology-extensions.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/ontology-extensions.md)
 for the install workflow and the stable TSV contract.
 
 ## Backing library
@@ -267,5 +267,5 @@ README for the Rust SDK side and the docs directory for in-depth guides.
 ## License
 
 Dual-licensed under MIT or Apache-2.0, at your option. See the
-[workspace README](https://github.com/marpaia/sbol-rs#readme) for project
+[workspace README](https://github.com/SynBioDex/sbol-rs#readme) for project
 context.
