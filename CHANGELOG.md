@@ -1,12 +1,27 @@
 # Changelog
 
 All notable changes to this workspace are documented here. The format
-is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
-this workspace follows [Cargo's SemVer for `0.x`](https://doc.rust-lang.org/cargo/reference/semver.html)
-crates: breaking changes are permitted between minor versions
-(`0.1` → `0.2`) until `1.0`.
+is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and the workspace follows [Cargo's Semantic Versioning compatibility
+rules](https://doc.rust-lang.org/cargo/reference/semver.html).
 
 ## [Unreleased]
+
+## [1.0.0] - 2026-07-29
+
+### Changed
+
+- **Stability**: the public Rust APIs of the published workspace crates
+  now follow stable `1.x` Semantic Versioning. The documented `sbol`
+  CLI exit codes and JSON v1 validation output schema are also stable
+  throughout `1.x`; incompatible changes to these surfaces require a
+  new major release.
+- **Release metadata**: synchronized the Rust and Python package
+  versions, installation guidance, citation metadata, and release
+  automation for the `1.0.0` release.
+- **Distribution licensing**: every published crate and cross-platform
+  CLI archive now includes the MIT and Apache 2.0 license texts and the
+  repository `NOTICE`.
 
 ## [0.3.0] - 2026-07-29
 
@@ -278,12 +293,11 @@ Initial release. All four workspace crates (`sbol`, `sbol-rdf`,
 
 ### Stability
 
-`0.x` per Cargo's SemVer: breaking changes between `0.1` → `0.2` are
-allowed and will be called out in release notes. Covered surface: the
-public Rust API of the workspace crates, the `sbol` CLI exit codes,
-and the JSON v1 validation output schema.
+This was the initial `0.x` development line. Breaking changes between
+minor versions were permitted and called out in the release notes.
 
-[Unreleased]: https://github.com/SynBioDex/sbol-rs/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/SynBioDex/sbol-rs/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v1.0.0
 [0.3.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.3.0
 [0.2.2]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.2
 [0.2.1]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.1

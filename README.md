@@ -5,7 +5,7 @@
 [![Crates.io](https://img.shields.io/crates/v/sbol.svg)](https://crates.io/crates/sbol)
 ![Rust 1.93+](https://img.shields.io/badge/rust-1.93%2B-dea584?logo=rust)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-yellow.svg)](LICENSE-MIT)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21687241.svg)](https://doi.org/10.5281/zenodo.21687240)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21687240.svg)](https://doi.org/10.5281/zenodo.21687240)
 
 `sbol-rs` is a Rust implementation of the Synthetic Biology Open
 Language (SBOL), covering both SBOL 2.3.0 and SBOL 3.1.0. SBOL
@@ -25,7 +25,7 @@ Add the library to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-sbol = "0.2"
+sbol = "1"
 ```
 
 Or with `cargo add`:
@@ -41,6 +41,11 @@ binary named `sbol`:
 cargo install sbol-cli
 sbol validate design.ttl
 ```
+
+`sbol-rs` 1.x follows Cargo's Semantic Versioning compatibility rules
+for the public Rust APIs. The documented CLI exit codes and JSON v1
+validation output schema are also stable throughout 1.x; incompatible
+changes to those surfaces require a new major release.
 
 ## Example
 

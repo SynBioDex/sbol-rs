@@ -1,6 +1,6 @@
 [package]
 name = "sbol"
-version = "0.3.0"
+version = "1.0.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "The sbol-rs SDK for SBOL 2, SBOL 3, and bidirectional conversion."

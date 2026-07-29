@@ -1,6 +1,6 @@
 [package]
 name = "sbol-genbank"
-version = "0.3.0"
+version = "1.0.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "GenBank → SBOL 3 importer for the sbol-rs ecosystem. Parses GenBank flat-file records via gb-io and emits native sbol::Document objects."

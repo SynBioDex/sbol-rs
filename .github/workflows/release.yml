@@ -10,8 +10,57 @@ permissions:
   contents: write
 
 jobs:
+  verify:
+    name: verify release metadata and packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Rust 1.93
+        run: |
+          rustup toolchain install 1.93 --profile minimal
+          rustup default 1.93
+
+      - name: Verify synchronized release metadata
+        shell: bash
+        run: |
+          versions="$(
+            cargo metadata --format-version 1 --no-deps --locked \
+              | jq -r '.packages[] | select(.publish != []) | .version' \
+              | sort -u
+          )"
+          version_count="$(printf '%s\n' "${versions}" | sed '/^$/d' | wc -l)"
+          test "${version_count}" -eq 1
+          version="${versions}"
+          major="${version%%.*}"
+
+          grep -Fq "version = \"${version}\"" crates/sbol-py/Cargo.toml
+          grep -Fq "version = \"${version}\"" crates/sbol-py/pyproject.toml
+          grep -Fq "version: \"${version}\"" CITATION.cff
+          grep -Fq "## [${version}] - " CHANGELOG.md
+          grep -Fq "sbol = \"${major}\"" README.md
+
+          while IFS= read -r manifest; do
+            package_dir="$(dirname "${manifest}")"
+            cmp -s LICENSE-APACHE "${package_dir}/LICENSE-APACHE"
+            cmp -s LICENSE-MIT "${package_dir}/LICENSE-MIT"
+            cmp -s NOTICE "${package_dir}/NOTICE"
+          done < <(
+            cargo metadata --format-version 1 --no-deps --locked \
+              | jq -r '.packages[] | select(.publish != []) | .manifest_path'
+          )
+
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            test "${GITHUB_REF_NAME}" = "v${version}"
+          fi
+
+      - name: Verify publishable packages
+        run: cargo publish --dry-run --workspace --locked
+
   build:
     name: build ${{ matrix.target }}
+    needs: verify
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -50,7 +99,7 @@ jobs:
           pkg="sbol-${GITHUB_REF_NAME}-${{ matrix.target }}"
           mkdir -p "dist/${pkg}"
           cp "target/${{ matrix.target }}/release/sbol" "dist/${pkg}/"
-          cp README.md LICENSE-MIT LICENSE-APACHE "dist/${pkg}/"
+          cp README.md LICENSE-MIT LICENSE-APACHE NOTICE "dist/${pkg}/"
           tar -C dist -czf "${pkg}.tar.gz" "${pkg}"
 
       - name: Package (zip)
@@ -60,7 +109,7 @@ jobs:
           $pkg = "sbol-$env:GITHUB_REF_NAME-${{ matrix.target }}"
           New-Item -ItemType Directory -Force -Path "dist/$pkg" | Out-Null
           Copy-Item "target/${{ matrix.target }}/release/sbol.exe" "dist/$pkg/"
-          Copy-Item README.md, LICENSE-MIT, LICENSE-APACHE "dist/$pkg/"
+          Copy-Item README.md, LICENSE-MIT, LICENSE-APACHE, NOTICE "dist/$pkg/"
           Compress-Archive -Path "dist/$pkg" -DestinationPath "$pkg.zip"
 
       - name: Upload build artifact

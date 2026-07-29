@@ -996,7 +996,7 @@ dependencies = [
 
 [[package]]
 name = "sbol"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol-convert",
  "sbol-core",
@@ -1018,7 +1018,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-cli"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "assert_cmd",
  "clap",
@@ -1034,7 +1034,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-convert"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol-core",
  "sbol-rdf",
@@ -1044,7 +1044,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-core"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol-rdf",
  "thiserror",
@@ -1052,7 +1052,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-fasta"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol-rdf",
  "sbol3",
@@ -1063,7 +1063,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-genbank"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "gb-io",
  "sbol-convert",
@@ -1076,7 +1076,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-ontology"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "clap",
  "sha2",
@@ -1086,7 +1086,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-rdf"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "oxjsonld",
  "oxrdf",
@@ -1096,7 +1096,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-rulegen"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "serde",
  "toml",
@@ -1104,7 +1104,7 @@ dependencies = [
 
 [[package]]
 name = "sbol-utilities"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol3",
  "thiserror",
@@ -1112,7 +1112,7 @@ dependencies = [
 
 [[package]]
 name = "sbol2"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "sbol-core",
  "sbol-ontology",
@@ -1123,7 +1123,7 @@ dependencies = [
 
 [[package]]
 name = "sbol3"
-version = "0.3.0"
+version = "1.0.0"
 dependencies = [
  "criterion",
  "proptest",

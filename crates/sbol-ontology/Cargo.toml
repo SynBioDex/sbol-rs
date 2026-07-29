@@ -1,6 +1,6 @@
 [package]
 name = "sbol-ontology"
-version = "0.3.0"
+version = "1.0.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "Offline ontology facts (EDAM, SBO, SO, GO, CHEBI, CL) for SBOL validation, plus a runtime cache for opt-in extension ontologies (NCIT, custom)."

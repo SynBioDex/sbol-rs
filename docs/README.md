@@ -98,6 +98,9 @@ For maintainers and CI:
 
 - [Test architecture](testing.md): regression cases, fixtures, fuzz
   targets, property tests, cross-implementation conformance harness.
+- [Release process](releasing.md): synchronized workspace versioning,
+  release validation, crates.io publication, GitHub artifacts, and
+  Zenodo follow-up.
 - [SBOL schema conformance regression](ontology-conformance.md):
   pinned `sbol-owl3` fixture, the IRI-level cross-check against
   `vocab.rs`, and how to refresh the pin.

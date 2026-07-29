@@ -1,6 +1,6 @@
 [package]
 name = "sbol-rdf"
-version = "0.3.0"
+version = "1.0.0"
 edition.workspace = true
 rust-version.workspace = true
 repository.workspace = true

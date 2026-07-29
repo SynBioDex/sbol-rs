@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "sbol"
-version = "0.3.0"
+version = "1.0.0"
 description = "Unified SBOL 2 + SBOL 3 toolkit for Python, backed by Rust"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -1,6 +1,6 @@
 [package]
 name = "sbol-py"
-version = "0.3.0"
+version = "1.0.0"
 edition = "2021"
 rust-version = "1.93"
 description = "Idiomatic Python bindings for sbol-rs, built on the ergonomic Design arena."
