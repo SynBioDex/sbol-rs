@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use sbol-rs, please cite the software as below."
+title: "sbol-rs: A Rust SDK and CLI for the Synthetic Biology Open Language (SBOL)"
+type: software
+authors:
+  - family-names: Arpaia
+    given-names: Michael
+    affiliation: "University of Colorado Boulder, CO 80309, United States"
+  - family-names: Myers
+    given-names: "Chris J."
+    affiliation: "University of Colorado Boulder, CO 80309, United States"
+version: "0.3.0"
+date-released: "2026-07-29"
+doi: "10.5281/zenodo.21687241"
+repository-code: "https://github.com/SynBioDex/sbol-rs"
+license:
+  - Apache-2.0
+  - MIT
+keywords:
+  - SBOL
+  - Rust
+  - validation
+  - interoperability
+  - migration
+  - RDF
