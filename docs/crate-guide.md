@@ -17,7 +17,7 @@ core.
 
 | Crate          | Purpose                                                                                  |
 | -------------- | ---------------------------------------------------------------------------------------- |
-| `sbol`         | Umbrella facade. Re-exports SBOL 3 as `sbol::v3` and conversion as `sbol::convert` by default, SBOL 2 as `sbol::v2` behind the `v2` feature; adds version detection and a version-neutral document handle. |
+| `sbol`         | Complete umbrella facade. Re-exports SBOL 2 as `sbol::v2`, SBOL 3 as `sbol::v3`, and conversion as `sbol::convert`; adds version detection and a version-neutral document handle. |
 | `sbol3`        | SBOL 3.1.0 typed data model, builders, RDF I/O, validation, reference resolution.        |
 | `sbol2`        | SBOL 2.3.0 typed data model, builders, RDF I/O, validation.                              |
 | `sbol-core`    | Version-neutral machinery both versions build on: field-metadata descriptors, identity newtypes, the RDF-backed document store, and the shared validation reporting / configuration / rule-status types. |

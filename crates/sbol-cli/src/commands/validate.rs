@@ -3,15 +3,13 @@ use std::fs;
 use std::io::{self, Write};
 use std::process::ExitCode;
 
+use sbol::v3::CachingHttpResolver;
 use sbol::v3::{
     Document, FileResolver, RdfFormat, Severity, ValidationConfig, ValidationContext,
     ValidationOptions, ValidationReport,
 };
 use sbol::{SbolVersion, detect_version};
 use sbol_ontology::OntologyCache;
-
-#[cfg(feature = "http-resolver")]
-use sbol::v3::CachingHttpResolver;
 
 use crate::cli::{ExternalModeArg, OutputFormat, SbolVersionArg, ValidateArgs};
 use crate::commands::ontology::known_ontology_by_name;
@@ -80,14 +78,6 @@ fn validate_v3(args: &ValidateArgs, input: &str, format: RdfFormat, styles: Styl
         }
     };
 
-    if args.external_mode == ExternalModeArg::Allowed && !cfg!(feature = "http-resolver") {
-        eprintln!(
-            "{}: --external-mode allowed requires the `http-resolver` feature \
-             (rebuild sbol-cli with --features http-resolver)",
-            styles.err_label()
-        );
-        return ExitCode::from(2);
-    }
     if args.external_mode == ExternalModeArg::Allowed && args.cache_dir.is_none() {
         eprintln!(
             "{}: --external-mode allowed requires --cache-dir (so HTTP fetches stay deterministic)",
@@ -110,7 +100,6 @@ fn validate_v3(args: &ValidateArgs, input: &str, format: RdfFormat, styles: Styl
 
     let document_resolver = build_document_resolver(args);
     let content_resolver = build_content_resolver(args);
-    #[cfg(feature = "http-resolver")]
     let caching_http = args
         .cache_dir
         .as_ref()
@@ -125,7 +114,6 @@ fn validate_v3(args: &ValidateArgs, input: &str, format: RdfFormat, styles: Styl
     if let Some(resolver) = &content_resolver {
         context = context.with_content_resolver(resolver);
     }
-    #[cfg(feature = "http-resolver")]
     if let Some(resolver) = &caching_http {
         let doc_ref: &dyn sbol::v3::DocumentResolver = resolver;
         let content_ref: &dyn sbol::v3::ContentResolver = resolver;
@@ -361,7 +349,6 @@ fn render_output(args: &ValidateArgs, report: &ValidationReport, styles: Styles)
             format_text(args, report, color)
         }
         OutputFormat::Json => sbol::v3::to_json(report),
-        #[cfg(feature = "sarif")]
         OutputFormat::Sarif => crate::sarif::to_sarif(report, &args.path),
     };
 

@@ -174,7 +174,7 @@ sbol validate design.ttl
 # JSON output for CI consumption
 sbol validate design.ttl --format json --treat-partial-as-errors
 
-# SARIF for GitHub code scanning (requires --features sarif at build time)
+# SARIF for GitHub code scanning
 sbol validate design.ttl --format sarif --output report.sarif
 
 # Per-rule overrides
@@ -221,8 +221,7 @@ The validator emits three formats, all from the same
   `crates/sbol3/tests/validation_output.rs` uses serde_json as a
   test-only dep to verify every emitted field parses.
 - **SARIF v2.1.0**: for GitHub code scanning and editor extensions.
-  Lives in `sbol-cli` behind the `sarif` feature flag (pulls in
-  `serde_json`). SBOL coverage metadata is carried in
+  Built into `sbol-cli`. SBOL coverage metadata is carried in
   `runs[].invocations[0].properties.coverage` so SARIF consumers that
   recognize it surface it; consumers that don't ignore it per the SARIF
   spec.

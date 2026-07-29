@@ -165,9 +165,7 @@ pub use sbol_core::object::Object;
 pub use sbol_ontology::{Ontology, OntologyRegistry};
 pub use sbol_rdf::{Graph as RdfGraph, Iri, Literal, RdfFormat, Resource, Term, Triple};
 pub use specification::{SPEC_VERSION, SPECIFICATION_URL};
-#[cfg(feature = "http-resolver")]
 pub use validation::CachingHttpResolver;
-#[cfg(feature = "http-resolver")]
 pub use validation::HttpResolver;
 pub use validation::{
     AppliedOptions, Blocker, ContentResolver, CoverageKind, DocumentResolver, DocumentSet,

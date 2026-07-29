@@ -44,4 +44,4 @@ sbol-ontology = { path = "crates/sbol-ontology", version = "0.2.2" }
 sbol-rdf = { path = "crates/sbol-rdf", version = "0.2.2" }
 sha3 = "0.10"
 thiserror = "2"
-ureq = "2.12"
+ureq = "3.3"

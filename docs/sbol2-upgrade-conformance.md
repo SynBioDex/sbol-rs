@@ -120,8 +120,8 @@ fetches a real iGEM part as SBOL 2 from SynBioHub, runs
 summary.
 
 ```sh
-cargo run -p sbol-convert --example synbiohub_upgrade --features http-resolver
-cargo run -p sbol-convert --example synbiohub_upgrade --features http-resolver -- BBa_F2620
+cargo run -p sbol-convert --example synbiohub_upgrade
+cargo run -p sbol-convert --example synbiohub_upgrade -- BBa_F2620
 ```
 
 ## Related

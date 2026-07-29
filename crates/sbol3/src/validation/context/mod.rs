@@ -6,7 +6,6 @@ use crate::validation::options::ValidationOptions;
 mod resolvers;
 
 pub use resolvers::FileResolver;
-#[cfg(feature = "http-resolver")]
 pub use resolvers::{CachingHttpResolver, HttpResolver};
 pub use sbol_core::document::DocumentSetError;
 pub use sbol_core::validation::options::ExternalValidationMode;

@@ -1,13 +1,11 @@
-//! Concrete resolver implementations for opt-in external validation: a
-//! filesystem resolver plus (behind the `http-resolver` feature) HTTP and
-//! disk-caching HTTP resolvers. The resolution traits and error types they
-//! implement live in the parent [`super`] module.
+//! Concrete resolver implementations for opt-in external validation:
+//! filesystem, HTTP, and disk-caching HTTP resolvers. The resolution traits
+//! and error types they implement live in the parent [`super`] module.
 
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 
-#[cfg(feature = "http-resolver")]
 use std::io::Read;
 
 use sbol_core::document::RawDocument;
@@ -131,7 +129,6 @@ impl DocumentResolver for FileResolver {
     }
 }
 
-#[cfg(feature = "http-resolver")]
 /// HTTP(S) resolver for opt-in external validation.
 #[derive(Clone, Debug)]
 #[non_exhaustive]
@@ -139,23 +136,20 @@ pub struct HttpResolver {
     agent: ureq::Agent,
 }
 
-#[cfg(feature = "http-resolver")]
 impl Default for HttpResolver {
     fn default() -> Self {
         Self {
-            agent: ureq::Agent::new(),
+            agent: ureq::Agent::new_with_defaults(),
         }
     }
 }
 
-#[cfg(feature = "http-resolver")]
 impl HttpResolver {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-#[cfg(feature = "http-resolver")]
 impl ContentResolver for HttpResolver {
     fn resolve_content(&self, source: &Iri) -> Result<ResolvedContent, ResolutionError> {
         let value = source.as_str();
@@ -166,23 +160,29 @@ impl ContentResolver for HttpResolver {
             ));
         }
 
-        let response = self.agent.get(value).call().map_err(http_error)?;
+        let mut response = self
+            .agent
+            .get(value)
+            .call()
+            .map_err(|error| http_error(error, value))?;
         let media_type = response
-            .header("content-type")
+            .headers()
+            .get("content-type")
+            .and_then(|header| header.to_str().ok())
             .and_then(|header| header.split(';').next())
             .map(str::trim)
             .filter(|value| !value.is_empty())
             .map(ToOwned::to_owned);
         let mut bytes = Vec::new();
         response
-            .into_reader()
+            .body_mut()
+            .as_reader()
             .read_to_end(&mut bytes)
             .map_err(ResolutionError::from)?;
         Ok(ResolvedContent::new(bytes, media_type))
     }
 }
 
-#[cfg(feature = "http-resolver")]
 impl DocumentResolver for HttpResolver {
     fn resolve_document(&self, resource: &Resource) -> Result<RawDocument, ResolutionError> {
         let Some(iri) = resource.as_iri() else {
@@ -219,14 +219,12 @@ impl DocumentResolver for HttpResolver {
 /// produce flaky results when upstream content changes). Writes are
 /// atomic via tmp-file + rename so a crashed run never leaves a corrupt
 /// cache entry.
-#[cfg(feature = "http-resolver")]
 #[derive(Debug)]
 pub struct CachingHttpResolver {
     inner: HttpResolver,
     cache_dir: PathBuf,
 }
 
-#[cfg(feature = "http-resolver")]
 impl CachingHttpResolver {
     pub fn new(cache_dir: impl Into<PathBuf>) -> Self {
         Self {
@@ -273,7 +271,6 @@ impl CachingHttpResolver {
     }
 }
 
-#[cfg(feature = "http-resolver")]
 impl ContentResolver for CachingHttpResolver {
     fn resolve_content(&self, source: &Iri) -> Result<ResolvedContent, ResolutionError> {
         if let Some(cached) = self.read_cached(source) {
@@ -285,7 +282,6 @@ impl ContentResolver for CachingHttpResolver {
     }
 }
 
-#[cfg(feature = "http-resolver")]
 impl DocumentResolver for CachingHttpResolver {
     fn resolve_document(&self, resource: &Resource) -> Result<RawDocument, ResolutionError> {
         let Some(iri) = resource.as_iri() else {
@@ -312,7 +308,6 @@ impl DocumentResolver for CachingHttpResolver {
     }
 }
 
-#[cfg(feature = "http-resolver")]
 fn hex_digest_static(bytes: &[u8]) -> String {
     let mut out = String::with_capacity(bytes.len() * 2);
     use std::fmt::Write as _;
@@ -322,24 +317,22 @@ fn hex_digest_static(bytes: &[u8]) -> String {
     out
 }
 
-#[cfg(feature = "http-resolver")]
 fn write_atomic(path: &Path, bytes: &[u8]) -> io::Result<()> {
     let tmp = path.with_extension("tmp");
     fs::write(&tmp, bytes)?;
     fs::rename(&tmp, path)
 }
 
-#[cfg(feature = "http-resolver")]
-fn http_error(error: ureq::Error) -> ResolutionError {
+fn http_error(error: ureq::Error, url: &str) -> ResolutionError {
     match error {
-        ureq::Error::Status(404, _) => {
+        ureq::Error::StatusCode(404) => {
             ResolutionError::new(ResolutionErrorKind::NotFound, "HTTP resource was not found")
         }
-        ureq::Error::Status(status, response) => ResolutionError::new(
+        ureq::Error::StatusCode(status) => ResolutionError::new(
             ResolutionErrorKind::Http,
-            format!("HTTP {status} while resolving {}", response.get_url()),
+            format!("HTTP {status} while resolving {url}"),
         ),
-        ureq::Error::Transport(error) => ResolutionError::new(
+        error => ResolutionError::new(
             ResolutionErrorKind::Http,
             format!("HTTP transport error: {error}"),
         ),

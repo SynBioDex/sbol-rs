@@ -92,7 +92,6 @@ pub(crate) struct OntologyVerifyArgs {
 pub(crate) enum OutputFormat {
     Text,
     Json,
-    #[cfg(feature = "sarif")]
     Sarif,
 }
 
@@ -265,8 +264,7 @@ pub(crate) struct ValidateArgs {
     #[arg(long = "resolve-content", value_name = "DIR")]
     pub(crate) resolve_content: Vec<PathBuf>,
 
-    /// Cache directory required by `--external-mode allowed` when the
-    /// `http-resolver` feature is built in.
+    /// Cache directory required by `--external-mode allowed`.
     #[arg(long)]
     pub(crate) cache_dir: Option<PathBuf>,
 

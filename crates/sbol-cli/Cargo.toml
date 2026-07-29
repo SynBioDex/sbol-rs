@@ -22,17 +22,12 @@ path = "src/main.rs"
 
 [dependencies]
 clap.workspace = true
-sbol = { workspace = true, features = ["v2"] }
+sbol.workspace = true
 sbol-fasta.workspace = true
 sbol-genbank.workspace = true
 sbol-ontology.workspace = true
 serde_json = "1"
 terminal_size = "0.4"
-
-[features]
-default = []
-sarif = []
-http-resolver = ["sbol/http-resolver"]
 
 [dev-dependencies]
 assert_cmd = "2"

@@ -2,10 +2,8 @@
 //!
 //! This crate re-exports the SBOL 2 implementation as [`v2`], the SBOL 3
 //! implementation as [`v3`], and the SBOL 2 ⇄ SBOL 3 conversion API as
-//! [`convert`], each behind a cargo feature (`v3` and `convert` are on by
-//! default; enable `v2` for the SBOL 2 surface). It also adds version
-//! detection plus a version-neutral [`AnyDocument`] handle over the
-//! underlying RDF layer.
+//! [`convert`]. It also adds version detection plus a version-neutral
+//! [`AnyDocument`] handle over the underlying RDF layer.
 #![forbid(unsafe_code)]
 
 pub use sbol_core;
@@ -13,13 +11,10 @@ pub use sbol_rdf;
 pub use sbol_rdf::{Graph as RdfGraph, Iri, Literal, RdfFormat, Resource, Term, Triple};
 
 /// SBOL 2 ⇄ SBOL 3 conversion.
-#[cfg(feature = "convert")]
 pub use sbol_convert as convert;
 /// SBOL 2 implementation.
-#[cfg(feature = "v2")]
 pub use sbol2 as v2;
 /// SBOL 3 implementation.
-#[cfg(feature = "v3")]
 pub use sbol3 as v3;
 
 const SBOL_V2_NS: &str = "http://sbols.org/v2#";
@@ -71,14 +66,12 @@ pub fn detect_version(input: &str, format: RdfFormat) -> Option<SbolVersion> {
 /// [`Document`](v3::Document); SBOL 2 documents are handled directly through
 /// `v2::Document`. The enum is `#[non_exhaustive]` so further arms can be
 /// added without a breaking change.
-#[cfg(feature = "v3")]
 #[non_exhaustive]
 pub enum AnyDocument {
     /// An SBOL 3 document.
     V3(v3::Document),
 }
 
-#[cfg(feature = "v3")]
 impl AnyDocument {
     /// Returns the SBOL major version of the wrapped document.
     pub fn version(&self) -> SbolVersion {
@@ -109,7 +102,6 @@ impl AnyDocument {
     }
 }
 
-#[cfg(feature = "v3")]
 pub mod prelude {
     //! Re-exports for most sbol-rs code: the SBOL 3 prelude plus the umbrella
     //! version-detection surface.

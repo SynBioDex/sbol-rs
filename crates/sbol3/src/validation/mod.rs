@@ -11,7 +11,6 @@ mod tables;
 mod validator;
 
 pub use blocker::Blocker;
-#[cfg(feature = "http-resolver")]
 pub use context::{CachingHttpResolver, HttpResolver};
 pub use context::{
     ContentResolver, DocumentResolver, DocumentSet, DocumentSetError, ExternalValidationMode,

@@ -4,8 +4,8 @@
 //! Run with:
 //!
 //! ```sh
-//! cargo run -p sbol-convert --example synbiohub_upgrade --features http-resolver
-//! cargo run -p sbol-convert --example synbiohub_upgrade --features http-resolver -- BBa_F2620
+//! cargo run -p sbol-convert --example synbiohub_upgrade
+//! cargo run -p sbol-convert --example synbiohub_upgrade -- BBa_F2620
 //! ```
 //!
 //! ## Provenance pipeline
@@ -27,6 +27,7 @@
 //! `sbol_convert` — no external services or Docker required.
 
 use std::env;
+use std::io::Read;
 use std::time::Duration;
 
 use sbol_convert::{UpgradeReport, UpgradeWarning};
@@ -89,13 +90,17 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 
 fn fetch(url: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let agent = ureq::AgentBuilder::new()
-        .timeout_connect(Duration::from_secs(10))
-        .timeout_read(Duration::from_secs(30))
+    let config = ureq::Agent::config_builder()
+        .timeout_connect(Some(Duration::from_secs(10)))
+        .timeout_recv_response(Some(Duration::from_secs(30)))
+        .timeout_recv_body(Some(Duration::from_secs(30)))
         .user_agent(USER_AGENT)
         .build();
-    let response = agent.get(url).call()?;
-    Ok(response.into_string()?)
+    let agent = ureq::Agent::new_with_config(config);
+    let mut response = agent.get(url).call()?;
+    let mut body = String::new();
+    response.body_mut().as_reader().read_to_string(&mut body)?;
+    Ok(body)
 }
 
 fn print_upgrade_report(report: &UpgradeReport) {

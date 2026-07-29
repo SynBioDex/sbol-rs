@@ -134,7 +134,7 @@ the version crates are usable directly.
 
 | Crate | Role |
 |---|---|
-| [`sbol`](crates/sbol/) | Umbrella facade. Re-exports SBOL 3 as `sbol::v3` and conversion as `sbol::convert` by default; SBOL 2 as `sbol::v2` behind the `v2` feature. Adds version detection and a version-neutral document handle. |
+| [`sbol`](crates/sbol/) | Complete umbrella facade. Re-exports SBOL 2 as `sbol::v2`, SBOL 3 as `sbol::v3`, and conversion as `sbol::convert`; adds version detection and a version-neutral document handle. |
 | [`sbol3`](crates/sbol3/) | SBOL 3.1.0 typed data model, RDF I/O, and validator. |
 | [`sbol2`](crates/sbol2/) | SBOL 2.3.0 typed data model, RDF I/O, and validator. |
 | [`sbol-core`](crates/sbol-core/) | Version-neutral machinery both versions build on: field-metadata descriptors, identity newtypes, the RDF-backed document store, and the shared validation reporting and configuration types. |

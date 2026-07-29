@@ -21,11 +21,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 sbol3.workspace = true
 sbol-core.workspace = true
 sbol-rdf.workspace = true
-ureq = { workspace = true, optional = true }
 
-[features]
-http-resolver = ["dep:ureq", "sbol3/http-resolver"]
-
-[[example]]
-name = "synbiohub_upgrade"
-required-features = ["http-resolver"]
+[dev-dependencies]
+ureq.workspace = true

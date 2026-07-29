@@ -3,7 +3,7 @@ name = "sbol"
 version = "0.2.2"
 edition.workspace = true
 rust-version.workspace = true
-description = "The sbol-rs SDK for SBOL: SBOL 2, SBOL 3, and 2 <-> 3 conversion, selected by cargo feature."
+description = "The sbol-rs SDK for SBOL 2, SBOL 3, and bidirectional conversion."
 repository.workspace = true
 homepage.workspace = true
 documentation = "https://docs.rs/sbol"
@@ -19,13 +19,6 @@ rustdoc-args = ["--cfg", "docsrs"]
 [dependencies]
 sbol-core.workspace = true
 sbol-rdf.workspace = true
-sbol2 = { workspace = true, optional = true }
-sbol3 = { workspace = true, optional = true }
-sbol-convert = { workspace = true, optional = true }
-
-[features]
-default = ["v3", "convert"]
-v2 = ["dep:sbol2"]
-v3 = ["dep:sbol3"]
-convert = ["dep:sbol-convert", "v3"]
-http-resolver = ["sbol3/http-resolver", "sbol-convert/http-resolver"]
+sbol2.workspace = true
+sbol3.workspace = true
+sbol-convert.workspace = true

@@ -11,7 +11,6 @@ mod commands;
 mod output;
 mod style;
 
-#[cfg(feature = "sarif")]
 mod sarif;
 
 use cli::{Cli, Command};

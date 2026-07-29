@@ -120,11 +120,10 @@ When present, one of:
 | 3 | `--treat-partial-as-errors` was set and the report has any partially-applied rule. |
 | 4 | (Reserved) Baseline regression detected by `--baseline`. |
 
-## SARIF v2.1.0 emitter (optional)
+## SARIF v2.1.0 emitter
 
-Build `sbol-cli` with the `sarif` feature to emit
-`runs[].results[]`-shaped output for GitHub code-scanning and other SARIF
-consumers. SBOL coverage metadata round-trips through
+Use `--format sarif` to emit `runs[].results[]`-shaped output for GitHub
+code-scanning and other SARIF consumers. SBOL coverage metadata round-trips through
 `runs[].invocations[0].properties.coverage`. SARIF consumers that
 recognize the property key surface it; consumers that don't ignore it per
 the SARIF spec.
