@@ -2,8 +2,8 @@ use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use sbol3::{
-    ContentResolver, Document, DocumentResolver, DocumentSet, ExternalValidationMode, Iri,
-    RawDocument, ResolutionError, ResolutionErrorKind, ResolvedContent, Resource, Severity,
+    ContentResolver, Document, DocumentResolver, DocumentSet, ExternalValidationMode, HttpResolver,
+    Iri, RawDocument, ResolutionError, ResolutionErrorKind, ResolvedContent, Resource, Severity,
     ValidationContext,
 };
 use sha3::{Digest, Sha3_256};
@@ -35,6 +35,16 @@ impl ContentResolver for StaticContentResolver {
     fn resolve_content(&self, _source: &Iri) -> Result<ResolvedContent, ResolutionError> {
         self.result.clone()
     }
+}
+
+#[test]
+fn http_resolver_is_available_in_the_standard_build() {
+    let resolver = HttpResolver::new();
+    let error = resolver
+        .resolve_content(&Iri::from_static("file:///tmp/not-http"))
+        .unwrap_err();
+
+    assert_eq!(error.kind(), ResolutionErrorKind::UnsupportedScheme);
 }
 
 #[test]

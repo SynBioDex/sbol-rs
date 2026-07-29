@@ -1,6 +1,6 @@
 [package]
 name = "sbol-utilities"
-version = "0.2.2"
+version = "0.3.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "Biology-first construction helpers and algorithms for sbol-rs, in the spirit of sbol_utilities."

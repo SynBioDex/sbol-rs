@@ -1,6 +1,6 @@
 [package]
 name = "sbol-rulegen"
-version = "0.2.2"
+version = "0.3.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "Build-time code generator that turns a versioned SBOL validation rules.toml into a Rust rule catalog, shared by the sbol2 and sbol3 build scripts."

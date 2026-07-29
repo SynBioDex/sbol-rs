@@ -8,6 +8,137 @@ crates: breaking changes are permitted between minor versions
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-07-29
+
+### Changed
+
+- **`sbol`**: SBOL 2, SBOL 3, and bidirectional conversion are now
+  always available as `sbol::v2`, `sbol::v3`, and `sbol::convert`.
+  Consumers no longer need to select those APIs with Cargo features.
+- **`sbol3` / `sbol-cli`**: HTTP and caching HTTP resolvers are now
+  built in. `sbol validate --external-mode allowed` works without a
+  custom-feature build, while still requiring `--cache-dir` to keep
+  external resolution deterministic.
+- **`sbol-cli`**: SARIF output is now included in every build; use
+  `sbol validate --format sarif` without enabling a `sarif` feature.
+- **`sbol-ontology`**: refreshed the integrity-pinned EDAM snapshot to
+  `dev(1.25-20260626T1230Z)` and ChEBI to release 253, including the
+  corresponding bundled term and branch facts.
+- **Workspace**: updated `ureq` from 2.12 to 3.3 and adopted the new
+  client and response APIs in the HTTP resolvers and SynBioHub example.
+- **Repository metadata**: updated canonical source, documentation,
+  SARIF, and release links after the move to `SynBioDex/sbol-rs`.
+
+### Removed
+
+- **Cargo features**: removed the `sbol` crate's `v2`, `v3`,
+  `convert`, and `http-resolver` features; `sbol3` and `sbol-convert`'s
+  `http-resolver` features; and `sbol-cli`'s `http-resolver` and
+  `sarif` features. The formerly gated facade modules, resolvers, and
+  CLI output are now available unconditionally, but downstream
+  `features = [...]` declarations that name the removed features must
+  be deleted.
+
+## [0.2.2] - 2026-07-18
+
+### Added
+
+- **`sbol2`** (new crate): typed SBOL 2.3.0 data model, builders,
+  RDF/XML and Turtle I/O, document traversal, and validation. The
+  validator implements all 222 machine-checkable rules in the
+  268-rule catalog, with a firing negative and non-firing positive
+  fixture for every implemented rule and configurable compliant,
+  complete, best-practice, and types-in-URI gates.
+- **`sbol-core`** and **`sbol-rulegen`** (new crates): shared,
+  version-neutral document, identity, schema, diff, validation, and
+  rule-catalog infrastructure used by the SBOL 2 and SBOL 3
+  implementations.
+- **`sbol`**: umbrella facade exposing the versioned implementations as
+  `sbol::v2` and `sbol::v3`, conversion as `sbol::convert`, and
+  `SbolVersion`, `detect_version{,_in_graph}`, and `AnyDocument` for
+  version-neutral workflows.
+- **`sbol-convert`** (new crate): the SBOL 2 ⇄ SBOL 3 conversion
+  engine, with committed differential tests against
+  SynBioDex/SBOL-Converter in both directions.
+- **`sbol-cli`**: automatic SBOL 2/SBOL 3 detection for `validate`,
+  `--sbol-version` selection for validation and rule catalogs, and
+  flags for compliant, complete, best-practice, and types-in-URI
+  validation families.
+- **Document diffing**: `Document::diff` for SBOL 2 and SBOL 3,
+  structured `Diff` / `ObjectDiff` / `PropertyChange` results, and an
+  `sbol diff` command with human-readable and JSON output.
+- **`sbol3::design`**: mutable arena-style `Design` API for composing
+  components, sequences, sub-components, and constraints with typed
+  handles, aggregate error reporting, and lowering to an immutable
+  `Document`.
+- **`sbol-utilities`** (new crate): biology-first construction verbs,
+  assembled-sequence computation, combinatorial-derivation expansion,
+  and helpers for functional components and common DNA/RNA/protein
+  parts.
+- **`sbol-fasta` / `sbol-genbank`**: SBOL 3 → FASTA and SBOL 3 →
+  GenBank exporters, complementing the existing importers.
+- **`sbol-py`** (new crate): PyO3-based Python package named `sbol`
+  covering SBOL 2 and SBOL 3 I/O, validation, conversion, design
+  construction, sequence utilities, and FASTA/GenBank import and
+  export.
+- **Specification and conformance assets**: vendored the SBOL 2.3.0
+  specification and added SBOLTestSuite, libSBOLj, pySBOL3,
+  BioPython, and SBOL-Converter agreement gates across validation,
+  RDF I/O, conversion, and sequence-format handling.
+
+### Changed
+
+- **Crate layout**: moved the original SBOL 3 implementation from
+  `sbol` into `sbol3`; `sbol` became the umbrella facade. Import SBOL 3
+  items from `sbol::v3` or depend on `sbol3` directly instead of using
+  the former `sbol::*` root surface.
+- **Conversion API**: moved upgrade and downgrade operations off
+  SBOL 3 `Document` inherent methods and into free functions under
+  `sbol-convert` (also re-exported from `sbol::convert`).
+- **Conversion semantics**: aligned identity/version handling, class
+  mapping, MapsTo and Interface lowering, and backport metadata with
+  SynBioDex/SBOL-Converter. Conversion provenance now uses the
+  `https://sbols.org/backport/2_3#` vocabulary.
+- **Cross-implementation benchmarks**: expanded the matrix to SBOL 2
+  and SBOL 3 parse, serialize, cross-format conversion, and validation
+  phases, and refreshed the committed results.
+
+### Fixed
+
+- **`sbol-rdf`**: resolve relative IRIs against a base IRI while
+  parsing, allowing SBOLTestSuite documents with relative attachment
+  and source references to load.
+- **`sbol-genbank`**: corrected feature-key mappings exposed by parity
+  checks against `sbol-utilities`' `gb2so.csv`, including the INSDC
+  `-10_signal` and `-35_signal` spellings, and added multi-span,
+  malformed-input, and BioPython agreement coverage.
+
+## [0.2.1] - 2026-06-27
+
+### Added
+
+- **Release distribution**: cross-platform CI builds and tagged-release
+  archives for Linux x86_64, macOS arm64 and x86_64, and Windows
+  x86_64, containing the `sbol` CLI plus licenses and README.
+- **SBOL 3 validation evidence**: committed negative/positive coverage
+  matrix and freshness gate demonstrating that every one of the 109
+  machine-checkable SBOL 3.1.0 rules has both a firing violation and a
+  non-firing valid fixture.
+- **`sbol-ontology`**: `OntologyRegistry` for layering extension
+  snapshots over the bundled ontology without allowing extensions to
+  overwrite bundled facts.
+
+### Changed
+
+- **`sbol-ontology`**: replaced placeholder ontology-source metadata
+  with exact version, retrieval-date, and SHA-256 provenance pins,
+  including dated GO and Cell Ontology sources.
+- **Internals**: decomposed the CLI, conversion engine, builder,
+  validation resolver, ontology generator, benchmarks, and large test
+  suites into focused modules without changing their public behavior.
+- **Benchmarks**: refreshed the cross-implementation results and added
+  p99 latency reporting alongside medians.
+
 ## [0.2.0] - 2026-05-21
 
 ### Added
@@ -152,6 +283,9 @@ allowed and will be called out in release notes. Covered surface: the
 public Rust API of the workspace crates, the `sbol` CLI exit codes,
 and the JSON v1 validation output schema.
 
-[Unreleased]: https://github.com/SynBioDex/sbol-rs/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/SynBioDex/sbol-rs/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.3.0
+[0.2.2]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.2
+[0.2.1]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.1
 [0.2.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.2.0
 [0.1.0]: https://github.com/SynBioDex/sbol-rs/releases/tag/v0.1.0

@@ -1,6 +1,6 @@
 [package]
 name = "sbol2"
-version = "0.2.2"
+version = "0.3.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "Rust implementation of the SBOL 2.3.0 specification: typed data model, RDF I/O, and validation."

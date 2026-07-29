@@ -1,6 +1,6 @@
 [package]
 name = "sbol-fasta"
-version = "0.2.2"
+version = "0.3.0"
 edition.workspace = true
 rust-version.workspace = true
 description = "FASTA → SBOL 3 importer for the sbol-rs ecosystem. Pure-Rust, zero new transitive dependencies."

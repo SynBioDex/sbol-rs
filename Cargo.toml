@@ -31,17 +31,17 @@ oxjsonld = "0.2.5"
 oxrdf = "0.3.3"
 oxrdfio = "0.2.5"
 proptest = "1"
-sbol = { path = "crates/sbol", version = "0.2.2" }
-sbol2 = { path = "crates/sbol2", version = "0.2.2" }
-sbol3 = { path = "crates/sbol3", version = "0.2.2" }
-sbol-convert = { path = "crates/sbol-convert", version = "0.2.2" }
-sbol-core = { path = "crates/sbol-core", version = "0.2.2" }
-sbol-rulegen = { path = "crates/sbol-rulegen", version = "0.2.2" }
-sbol-fasta = { path = "crates/sbol-fasta", version = "0.2.2" }
-sbol-genbank = { path = "crates/sbol-genbank", version = "0.2.2" }
-sbol-utilities = { path = "crates/sbol-utilities", version = "0.2.2" }
-sbol-ontology = { path = "crates/sbol-ontology", version = "0.2.2" }
-sbol-rdf = { path = "crates/sbol-rdf", version = "0.2.2" }
+sbol = { path = "crates/sbol", version = "0.3.0" }
+sbol2 = { path = "crates/sbol2", version = "0.3.0" }
+sbol3 = { path = "crates/sbol3", version = "0.3.0" }
+sbol-convert = { path = "crates/sbol-convert", version = "0.3.0" }
+sbol-core = { path = "crates/sbol-core", version = "0.3.0" }
+sbol-rulegen = { path = "crates/sbol-rulegen", version = "0.3.0" }
+sbol-fasta = { path = "crates/sbol-fasta", version = "0.3.0" }
+sbol-genbank = { path = "crates/sbol-genbank", version = "0.3.0" }
+sbol-utilities = { path = "crates/sbol-utilities", version = "0.3.0" }
+sbol-ontology = { path = "crates/sbol-ontology", version = "0.3.0" }
+sbol-rdf = { path = "crates/sbol-rdf", version = "0.3.0" }
 sha3 = "0.10"
 thiserror = "2"
 ureq = "3.3"

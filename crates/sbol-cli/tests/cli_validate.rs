@@ -110,6 +110,22 @@ fn json_output_parses_as_json() {
 }
 
 #[test]
+fn sarif_output_is_available_in_the_standard_build() {
+    let dir = TempDir::new().unwrap();
+    let path = write_fixture(&dir, "ok.ttl", TTL_VALID);
+    let assertion = Command::cargo_bin("sbol")
+        .unwrap()
+        .args(["validate", path.to_str().unwrap(), "--format", "sarif"])
+        .assert()
+        .success();
+    let stdout = String::from_utf8(assertion.get_output().stdout.clone()).unwrap();
+    let value: serde_json::Value = serde_json::from_str(stdout.trim())
+        .unwrap_or_else(|err| panic!("CLI SARIF output failed to parse: {err}\n{stdout}"));
+    assert_eq!(value["version"].as_str(), Some("2.1.0"));
+    assert!(value["runs"].as_array().is_some_and(|runs| runs.len() == 1));
+}
+
+#[test]
 fn show_coverage_summary_appears_in_text_output() {
     let dir = TempDir::new().unwrap();
     let path = write_fixture(&dir, "ok.ttl", TTL_VALID);
