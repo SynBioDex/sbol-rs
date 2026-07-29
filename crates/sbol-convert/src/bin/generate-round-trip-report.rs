@@ -7,7 +7,7 @@
 //! `docs/sbol3-round-trip-report.md`.
 //!
 //! The point is not regression gating; that lives in
-//! [`crates/sbol-convert/tests/upgrade_conformance.rs`] and
+//! `crates/sbol-convert/tests/upgrade_conformance.rs` and
 //! `crates/sbol-convert/tests/downgrade_round_trip.rs`. The point is empirical
 //! discovery: turning the question "which deferred enhancements
 //! actually matter on real data?" into "here are the triples that

@@ -166,8 +166,7 @@ pub enum MapsToSide {
     Local,
     Remote,
     /// The MapsTo had no enclosing
-    /// [`sbol2:Module`](crate::sbol2_vocab::SBOL2_MODULE) /
-    /// [`sbol2:FunctionalComponent`](crate::sbol2_vocab::SBOL2_FUNCTIONAL_COMPONENT)
+    /// `sbol2:Module` / `sbol2:FunctionalComponent`
     /// carrier: nothing in the source pointed at it via the
     /// `sbol2:mapsTo` containment predicate, so the upgrade has no
     /// place to attach the resulting ComponentReference + Constraint

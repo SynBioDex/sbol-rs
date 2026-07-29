@@ -1,7 +1,7 @@
 //! Field-metadata catalog for the SBOL 2 data model.
 //!
 //! [`FieldDescriptor`] describes one property: its predicate IRI, cardinality,
-//! value kind, optional reference target, and validation rule. [`class_spec`]
+//! value kind, optional reference target, and validation rule. `class_spec`
 //! maps every class IRI to its parents and directly-declared fields; the RDF
 //! serializer and (later) validator share this single source of truth so the
 //! schema cannot drift between subsystems.
