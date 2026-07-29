@@ -1,5 +1,12 @@
 ![sbol-rs: a Rust implementation of SBOL](docs/images/sbol-rs.png)
 
+[![CI](https://github.com/SynBioDex/sbol-rs/actions/workflows/ci.yml/badge.svg)](https://github.com/SynBioDex/sbol-rs/actions/workflows/ci.yml)
+[![Documentation](https://docs.rs/sbol/badge.svg)](https://docs.rs/sbol)
+[![Crates.io](https://img.shields.io/crates/v/sbol.svg)](https://crates.io/crates/sbol)
+![Rust 1.93+](https://img.shields.io/badge/rust-1.93%2B-dea584?logo=rust)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-yellow.svg)](LICENSE-MIT)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.21687241.svg)](https://doi.org/10.5281/zenodo.21687240)
+
 `sbol-rs` is a Rust implementation of the Synthetic Biology Open
 Language (SBOL), covering both SBOL 2.3.0 and SBOL 3.1.0. SBOL
 is the community standard for the exchange of synthetic biology designs
