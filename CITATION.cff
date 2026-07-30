@@ -13,9 +13,7 @@ version: "1.0.0"
 date-released: "2026-07-29"
 doi: "10.5281/zenodo.21687240"
 repository-code: "https://github.com/SynBioDex/sbol-rs"
-license:
-  - Apache-2.0
-  - MIT
+license: Apache-2.0
 keywords:
   - SBOL
   - Rust
