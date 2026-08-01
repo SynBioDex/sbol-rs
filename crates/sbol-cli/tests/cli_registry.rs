@@ -18,8 +18,16 @@ fn serve_once(content_type: &str, body: String) -> (String, Receiver<String>) {
 }
 
 fn serve_responses(responses: Vec<(u16, String, String)>) -> (String, Receiver<String>) {
+    serve_dynamic_responses(move |_| responses)
+}
+
+fn serve_dynamic_responses(
+    responses: impl FnOnce(&str) -> Vec<(u16, String, String)>,
+) -> (String, Receiver<String>) {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let address = listener.local_addr().unwrap();
+    let base = format!("http://{address}");
+    let responses = responses(&base);
     let (sender, receiver) = mpsc::channel();
     thread::spawn(move || {
         for (status, content_type, body) in responses {
@@ -51,7 +59,7 @@ fn serve_responses(responses: Vec<(u16, String, String)>) -> (String, Receiver<S
             .unwrap();
         }
     });
-    (format!("http://{address}"), receiver)
+    (base, receiver)
 }
 
 fn request_is_complete(request: &[u8]) -> bool {
@@ -134,6 +142,106 @@ fn registry_status_reads_instance_metadata() {
 }
 
 #[test]
+fn registry_commands_rotate_expired_oauth_credentials_before_use() {
+    let (base, requests) = serve_dynamic_responses(|base| {
+        vec![
+            (
+                200,
+                "application/json".to_owned(),
+                format!(
+                    r#"{{
+                        "issuer":"{base}",
+                        "authorization_endpoint":"{base}/oauth/authorize",
+                        "token_endpoint":"{base}/oauth/token",
+                        "registration_endpoint":"{base}/oauth/register",
+                        "code_challenge_methods_supported":["S256"],
+                        "token_endpoint_auth_methods_supported":["none"],
+                        "scopes_supported":["sbol:read","sbol:write"]
+                    }}"#
+                ),
+            ),
+            (
+                200,
+                "application/json".to_owned(),
+                format!(
+                    r#"{{
+                        "access_token":"new-access",
+                        "refresh_token":"new-refresh",
+                        "expires_in":3600,
+                        "token_type":"Bearer",
+                        "scope":"sbol:read sbol:write",
+                        "resource":"{base}/api/v2"
+                    }}"#
+                ),
+            ),
+            (
+                200,
+                "application/json".to_owned(),
+                format!(
+                    r#"{{
+                        "name":"Local SBOL DB",
+                        "instance_url":"{base}",
+                        "uri_prefix":"{base}/",
+                        "front_page_text":"",
+                        "setup_required":false,
+                        "policies":{{"allow_public_signup":true,"require_login":false}},
+                        "capabilities":{{}},
+                        "machine_access":{{"api_url":"{base}/api/v2","authorization_issuer":"{base}"}}
+                    }}"#
+                ),
+            ),
+        ]
+    });
+    let dir = TempDir::new().unwrap();
+    let credentials = dir.path().join("credentials.json");
+    std::fs::write(
+        &credentials,
+        format!(
+            r#"{{
+                "version":1,
+                "active_registry":"{base}/",
+                "registries":{{
+                    "{base}/":{{
+                        "access_token":"expired-access",
+                        "refresh_token":"old-refresh",
+                        "expires_at":0,
+                        "issuer":"{base}",
+                        "client_id":"client-123",
+                        "resource":"{base}/api/v2"
+                    }}
+                }}
+            }}"#
+        ),
+    )
+    .unwrap();
+
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .env_remove("SBOL_REGISTRY_URL")
+        .env("SBOL_CREDENTIALS_FILE", &credentials)
+        .args(["registry", "status", &base])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("Local SBOL DB"));
+
+    let discovery = requests.recv().unwrap();
+    assert!(discovery.starts_with("GET /.well-known/oauth-authorization-server"));
+    let refresh = requests.recv().unwrap();
+    assert!(refresh.starts_with("POST /oauth/token"));
+    let refresh_form = refresh.split_once("\r\n\r\n").unwrap().1;
+    assert!(refresh_form.contains("grant_type=refresh_token"));
+    assert!(refresh_form.contains("refresh_token=old-refresh"));
+    let status = requests.recv().unwrap().to_ascii_lowercase();
+    assert!(status.starts_with("get /api/v2/instance"));
+    assert!(status.contains("authorization: bearer new-access"));
+
+    let stored = std::fs::read_to_string(credentials).unwrap();
+    assert!(stored.contains("new-access"));
+    assert!(stored.contains("new-refresh"));
+    assert!(!stored.contains("old-refresh"));
+}
+
+#[test]
 fn registry_status_requires_an_explicit_or_environment_registry() {
     let dir = TempDir::new().unwrap();
     Command::cargo_bin("sbol")
@@ -191,6 +299,42 @@ fn registry_login_stores_only_the_returned_token_in_a_private_profile() {
             0o600
         );
     }
+}
+
+#[test]
+fn registry_logout_revokes_and_removes_a_compatibility_credential() {
+    let (base, requests) =
+        serve_dynamic_responses(|_| vec![(204, "application/json".to_owned(), String::new())]);
+    let dir = TempDir::new().unwrap();
+    let credentials = dir.path().join("credentials.json");
+    std::fs::write(
+        &credentials,
+        format!(
+            r#"{{
+                "version":1,
+                "active_registry":"{base}/",
+                "registries":{{"{base}/":{{"access_token":"compatibility-secret"}}}}
+            }}"#
+        ),
+    )
+    .unwrap();
+
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .env_remove("SBOL_REGISTRY_URL")
+        .env("SBOL_CREDENTIALS_FILE", &credentials)
+        .args(["registry", "logout", &base])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("signed out"));
+
+    let request = requests.recv().unwrap().to_ascii_lowercase();
+    assert!(request.starts_with("delete /api/v2/session"));
+    assert!(request.contains("authorization: bearer compatibility-secret"));
+    let stored: serde_json::Value =
+        serde_json::from_str(&std::fs::read_to_string(credentials).unwrap()).unwrap();
+    assert!(stored["active_registry"].is_null());
+    assert!(stored["registries"].as_object().unwrap().is_empty());
 }
 
 #[test]

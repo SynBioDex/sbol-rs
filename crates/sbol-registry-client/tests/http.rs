@@ -4,14 +4,24 @@ use std::sync::mpsc::{self, Receiver};
 use std::thread;
 
 use sbol_registry_client::{
-    CollisionPolicy, RegistryClient, SbolVersion, SubmissionConsequence, SubmissionFormat,
-    SubmissionRequest,
+    AuthorizationServerMetadata, CollisionPolicy, RegistryClient, SbolVersion,
+    SubmissionConsequence, SubmissionFormat, SubmissionRequest,
 };
 
 fn serve_once(status: u16, content_type: &str, body: &str) -> (String, Receiver<String>) {
+    let body = body.to_owned();
+    serve_once_dynamic(status, content_type, move |_| body)
+}
+
+fn serve_once_dynamic(
+    status: u16,
+    content_type: &str,
+    body: impl FnOnce(&str) -> String,
+) -> (String, Receiver<String>) {
     let listener = TcpListener::bind("127.0.0.1:0").unwrap();
     let address = listener.local_addr().unwrap();
-    let body = body.to_owned();
+    let base = format!("http://{address}");
+    let body = body(&base);
     let content_type = content_type.to_owned();
     let (sender, receiver) = mpsc::channel();
     thread::spawn(move || {
@@ -37,7 +47,7 @@ fn serve_once(status: u16, content_type: &str, body: &str) -> (String, Receiver<
         )
         .unwrap();
     });
-    (format!("http://{address}"), receiver)
+    (base, receiver)
 }
 
 fn request_is_complete(request: &[u8]) -> bool {
@@ -140,6 +150,163 @@ fn compatibility_login_returns_a_bearer_without_leaking_credentials_into_the_url
     assert!(request.starts_with("POST /login HTTP/1.1"));
     assert!(!request.lines().next().unwrap().contains("alice"));
     assert!(request.ends_with("email=alice%40example.org&password=s3cret+%26+safe"));
+}
+
+#[test]
+fn discovers_pkce_authorization_server_and_rejects_issuer_substitution() {
+    let (base, request) = serve_once_dynamic(200, "application/json", |base| {
+        format!(
+            r#"{{
+                "issuer":"{base}",
+                "authorization_endpoint":"{base}/oauth/authorize",
+                "token_endpoint":"{base}/oauth/token",
+                "registration_endpoint":"{base}/oauth/register",
+                "code_challenge_methods_supported":["S256"],
+                "token_endpoint_auth_methods_supported":["none"],
+                "scopes_supported":["sbol:read","sbol:write"]
+            }}"#
+        )
+    });
+    let metadata = RegistryClient::new(&base)
+        .unwrap()
+        .authorization_server(&base)
+        .unwrap();
+    assert_eq!(metadata.issuer, base);
+    assert!(
+        request
+            .recv()
+            .unwrap()
+            .starts_with("GET /.well-known/oauth-authorization-server HTTP/1.1")
+    );
+
+    let (base, _request) = serve_once_dynamic(200, "application/json", |base| {
+        format!(
+            r#"{{
+                "issuer":"https://evil.example",
+                "authorization_endpoint":"{base}/oauth/authorize",
+                "token_endpoint":"{base}/oauth/token",
+                "registration_endpoint":"{base}/oauth/register",
+                "code_challenge_methods_supported":["S256"],
+                "token_endpoint_auth_methods_supported":["none"]
+            }}"#
+        )
+    });
+    let error = RegistryClient::new(&base)
+        .unwrap()
+        .authorization_server(&base)
+        .unwrap_err();
+    assert!(error.to_string().contains("issuer mismatch"));
+}
+
+#[test]
+fn registers_public_client_and_exchanges_resource_bound_token() {
+    let registration_body = r#"{
+        "client_id":"client-123",
+        "client_name":"sbol CLI",
+        "redirect_uris":["http://127.0.0.1:43123/callback"]
+    }"#;
+    let (base, registration_request) = serve_once(201, "application/json", registration_body);
+    let metadata = AuthorizationServerMetadata {
+        issuer: base.clone(),
+        authorization_endpoint: format!("{base}/oauth/authorize"),
+        token_endpoint: format!("{base}/oauth/token"),
+        registration_endpoint: format!("{base}/oauth/register"),
+        revocation_endpoint: Some(format!("{base}/oauth/revoke")),
+        code_challenge_methods_supported: vec!["S256".to_owned()],
+        token_endpoint_auth_methods_supported: vec!["none".to_owned()],
+        scopes_supported: vec!["sbol:read".to_owned(), "sbol:write".to_owned()],
+    };
+    let registration = RegistryClient::new(&base)
+        .unwrap()
+        .register_public_oauth_client(&metadata, "sbol CLI", "http://127.0.0.1:43123/callback")
+        .unwrap();
+    assert_eq!(registration.client_id, "client-123");
+    let request = registration_request.recv().unwrap();
+    assert!(request.starts_with("POST /oauth/register HTTP/1.1"));
+    let request_json: serde_json::Value =
+        serde_json::from_str(request.split_once("\r\n\r\n").unwrap().1).unwrap();
+    assert_eq!(request_json["token_endpoint_auth_method"], "none");
+    assert!(request_json.get("client_secret").is_none());
+
+    let token_body = r#"{
+        "access_token":"access-secret",
+        "refresh_token":"refresh-secret",
+        "expires_in":3600,
+        "token_type":"Bearer",
+        "scope":"sbol:read sbol:write",
+        "resource":"http://127.0.0.1:8888/api/v2"
+    }"#;
+    let (base, token_request) = serve_once(200, "application/json", token_body);
+    let metadata = AuthorizationServerMetadata {
+        token_endpoint: format!("{base}/oauth/token"),
+        issuer: base.clone(),
+        authorization_endpoint: format!("{base}/oauth/authorize"),
+        registration_endpoint: format!("{base}/oauth/register"),
+        revocation_endpoint: None,
+        code_challenge_methods_supported: vec!["S256".to_owned()],
+        token_endpoint_auth_methods_supported: vec!["none".to_owned()],
+        scopes_supported: vec![],
+    };
+    let token = RegistryClient::new(&base)
+        .unwrap()
+        .exchange_oauth_code(
+            &metadata,
+            "client-123",
+            "http://127.0.0.1:43123/callback",
+            "http://127.0.0.1:8888/api/v2",
+            "authorization-code",
+            "pkce-verifier",
+        )
+        .unwrap();
+    assert_eq!(token.resource, "http://127.0.0.1:8888/api/v2");
+    let debug = format!("{token:?}");
+    assert!(!debug.contains("access-secret"));
+    assert!(!debug.contains("refresh-secret"));
+    let request = token_request.recv().unwrap();
+    let form = request.split_once("\r\n\r\n").unwrap().1;
+    assert!(form.contains("grant_type=authorization_code"));
+    assert!(form.contains("resource=http%3A%2F%2F127.0.0.1%3A8888%2Fapi%2Fv2"));
+    assert!(form.contains("code_verifier=pkce-verifier"));
+}
+
+#[test]
+fn revokes_oauth_and_compatibility_credentials_without_putting_tokens_in_urls() {
+    let (base, oauth_request) = serve_once(200, "application/json", "");
+    let metadata = AuthorizationServerMetadata {
+        issuer: base.clone(),
+        authorization_endpoint: format!("{base}/oauth/authorize"),
+        token_endpoint: format!("{base}/oauth/token"),
+        registration_endpoint: format!("{base}/oauth/register"),
+        revocation_endpoint: Some(format!("{base}/oauth/revoke")),
+        code_challenge_methods_supported: vec!["S256".to_owned()],
+        token_endpoint_auth_methods_supported: vec!["none".to_owned()],
+        scopes_supported: vec![],
+    };
+    RegistryClient::new(&base)
+        .unwrap()
+        .revoke_oauth_token(&metadata, "refresh-secret")
+        .unwrap();
+    let request = oauth_request.recv().unwrap();
+    assert!(request.starts_with("POST /oauth/revoke HTTP/1.1"));
+    assert!(!request.lines().next().unwrap().contains("refresh-secret"));
+    let form = url::form_urlencoded::parse(request.split_once("\r\n\r\n").unwrap().1.as_bytes())
+        .into_owned()
+        .collect::<std::collections::BTreeMap<_, _>>();
+    assert_eq!(form["token"], "refresh-secret");
+
+    let (base, compatibility_request) = serve_once(204, "application/json", "");
+    RegistryClient::new(&base)
+        .unwrap()
+        .with_bearer_token("compatibility-secret")
+        .logout_compatibility_session()
+        .unwrap();
+    let request = compatibility_request.recv().unwrap();
+    assert!(request.starts_with("DELETE /api/v2/session HTTP/1.1"));
+    assert!(
+        request
+            .to_ascii_lowercase()
+            .contains("authorization: bearer compatibility-secret")
+    );
 }
 
 #[test]

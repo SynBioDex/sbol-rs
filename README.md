@@ -41,8 +41,12 @@ binary named `sbol`:
 cargo install sbol-cli
 sbol validate design.ttl
 sbol registry login
+sbol registry logout
 sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
 ```
+
+`sbol registry login` uses browser-based Sign in with SBOL when the selected
+registry advertises SBOL Identity, including PKCE and automatic token refresh.
 
 `sbol-rs` 1.x follows Cargo's Semantic Versioning compatibility rules
 for the public Rust APIs. The documented CLI exit codes and JSON v1

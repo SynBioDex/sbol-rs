@@ -36,13 +36,22 @@ with a university, institutional, or local instance:
 sbol registry login
 sbol registry login https://sbol.my-university.edu
 sbol registry login http://127.0.0.1:8888
+sbol registry logout
 ```
 
-The CLI prompts for a username or email and reads the password without
-echoing it. It stores only the returned opaque access token in the local SBOL
-profile. For controlled automation, set `SBOL_ACCESS_TOKEN`; `--password-stdin`
-is also available for login but should only be used with a secret-aware input
-mechanism.
+On an SBOL Identity registry, the command opens the registry's own sign-in and
+consent page in your browser. The CLI uses authorization code with S256 PKCE,
+listens only on a temporary loopback callback, and stores the short-lived
+access token plus rotating refresh context in a mode-`0600` local profile. It
+refreshes expired access before a registry command. `sbol registry logout`
+revokes both sides of an SBOL Identity grant and removes the local profile;
+compatibility credentials use the registry's session-revocation endpoint.
+
+Older registries without an advertised authorization issuer fall back to the
+username/password compatibility login. Supplying `--identifier` or
+`--password-stdin` requests that compatibility path explicitly. For controlled
+automation, prefer a scoped bearer in `SBOL_ACCESS_TOKEN`; never place a
+password on the command line.
 
 Pull a design by canonical IRI. The registry is inferred from the IRI, and the
 output serialization is inferred from the output extension:
@@ -83,6 +92,11 @@ per command with `--registry`, for a process with `SBOL_REGISTRY_URL`, or supply
 a bearer token with `SBOL_ACCESS_TOKEN`. `sbol registry status` prints the
 registry identity and advertised REST, MCP, and identity endpoints; add
 `--json` for a stable machine-readable response.
+
+OAuth grants are bound to the advertised V2 API resource. Login requests
+`sbol:read` and `sbol:write`; the server still applies ownership, sharing, and
+membership checks to every operation. An API token cannot be replayed against
+the registry's MCP or UserInfo resources.
 
 ## `sbol validate`
 

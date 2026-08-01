@@ -7,8 +7,10 @@ This crate keeps remote SBOL DB protocol details out of `sbol-cli` while the
 CLI itself remains part of the `sbol-rs` repository. It currently covers:
 
 - instance and machine-capability discovery;
+- OAuth authorization-server discovery, dynamic public-client registration,
+  PKCE code exchange, refresh-token rotation, and revocation;
 - canonical-design download;
-- compatibility login returning an opaque bearer token; and
+- compatibility password login for older registries; and
 - submission preview and commit with explicit collision policies.
 
 ```rust,no_run
@@ -24,7 +26,8 @@ std::fs::write("design.rdf", design.body)?;
 # Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
-Bearer tokens are opt-in and are redacted from `Debug` output:
+Bearer tokens are opt-in and are redacted from `Debug` output. OAuth token
+responses likewise redact access, refresh, and ID tokens:
 
 ```rust,no_run
 use sbol_registry_client::RegistryClient;
@@ -37,6 +40,7 @@ println!("{}", instance.name);
 # Ok::<(), Box<dyn std::error::Error>>(())
 ```
 
-The crate models the SBOL DB V2 contract rather than presenting a generic RDF
-HTTP abstraction. Authentication storage, prompts, local file conversion, and
-command-line output remain responsibilities of `sbol-cli`.
+The crate models the SBOL DB V2 and SBOL Identity wire contracts rather than
+presenting a generic RDF HTTP abstraction. Browser launch, loopback callbacks,
+credential storage, prompts, local file conversion, and command-line output
+remain responsibilities of `sbol-cli`.

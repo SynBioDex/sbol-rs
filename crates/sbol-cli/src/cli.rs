@@ -52,6 +52,8 @@ pub(crate) enum Command {
 pub(crate) enum RegistryCommand {
     /// Sign in and store a registry token in the local SBOL profile.
     Login(RegistryLoginArgs),
+    /// Revoke the active registry grant and remove it from the local profile.
+    Logout(RegistryLogoutArgs),
     /// Download a design's recursive SBOL closure.
     Pull(RegistryPullArgs),
     /// Validate and upload a design as a private registry collection.
@@ -61,18 +63,26 @@ pub(crate) enum RegistryCommand {
 }
 
 #[derive(Args)]
+pub(crate) struct RegistryLogoutArgs {
+    /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`, then the active
+    /// registry in the local SBOL profile.
+    pub(crate) registry: Option<String>,
+}
+
+#[derive(Args)]
 pub(crate) struct RegistryLoginArgs {
     /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`, then
     /// `https://sbol.io`.
     pub(crate) registry: Option<String>,
 
-    /// Account username or email. Prompted for when omitted.
+    /// Account username or email for a compatibility password login. New SBOL
+    /// Identity instances use browser login when this is omitted.
     #[arg(long)]
     pub(crate) identifier: Option<String>,
 
-    /// Read the password from standard input instead of a hidden terminal
-    /// prompt. Intended for controlled automation; never pass a password as a
-    /// command-line argument.
+    /// Force compatibility password login and read the password from standard
+    /// input. Intended for controlled automation and older registries; never
+    /// pass a password as a command-line argument.
     #[arg(long)]
     pub(crate) password_stdin: bool,
 }

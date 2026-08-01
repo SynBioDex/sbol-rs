@@ -1,9 +1,9 @@
 //! Local registry profile and bearer-token persistence for `sbol registry`.
 //!
-//! The file format is deliberately versioned and already leaves room for an
-//! OAuth refresh token and issuer. The initial compatibility login stores only
-//! the opaque access token returned by an SBOL DB instance. Secret-bearing
-//! structs intentionally do not implement `Debug`.
+//! The file format is deliberately versioned. Browser login stores a
+//! short-lived access token, rotating refresh token, public client id, issuer,
+//! audience, and expiry; compatibility login stores only its opaque access
+//! token. Secret-bearing structs intentionally do not implement `Debug`.
 
 use std::collections::BTreeMap;
 use std::env;
@@ -58,12 +58,20 @@ impl CredentialStore {
         Ok(self.load()?.active_registry)
     }
 
+    #[cfg(test)]
     pub(super) fn token_for(&self, registry: &str) -> Result<Option<String>, String> {
         Ok(self
             .load()?
             .registries
             .get(registry)
             .map(|credential| credential.access_token.clone()))
+    }
+
+    pub(super) fn credential_for(
+        &self,
+        registry: &str,
+    ) -> Result<Option<StoredCredential>, String> {
+        Ok(self.load()?.registries.get(registry).cloned())
     }
 
     pub(super) fn save_access_token(&self, registry: &str, token: String) -> Result<(), String> {
@@ -76,6 +84,53 @@ impl CredentialStore {
                 refresh_token: None,
                 expires_at: None,
                 issuer: None,
+                client_id: None,
+                resource: None,
+            },
+        );
+        self.save(&credentials)
+    }
+
+    pub(super) fn remove(&self, registry: &str) -> Result<Option<StoredCredential>, String> {
+        let mut credentials = self.load()?;
+        let removed = credentials.registries.remove(registry);
+        let cleared_active = credentials.active_registry.as_deref() == Some(registry);
+        if cleared_active {
+            credentials.active_registry = None;
+        }
+        if removed.is_some() || cleared_active {
+            self.save(&credentials)?;
+        }
+        Ok(removed)
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn save_oauth_tokens(
+        &self,
+        registry: &str,
+        access_token: String,
+        refresh_token: String,
+        expires_in: u64,
+        issuer: String,
+        client_id: String,
+        resource: String,
+    ) -> Result<(), String> {
+        let mut credentials = self.load()?;
+        credentials.active_registry = Some(registry.to_owned());
+        let expires_at = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs()
+            .saturating_add(expires_in);
+        credentials.registries.insert(
+            registry.to_owned(),
+            StoredCredential {
+                access_token,
+                refresh_token: Some(refresh_token),
+                expires_at: Some(expires_at),
+                issuer: Some(issuer),
+                client_id: Some(client_id),
+                resource: Some(resource),
             },
         );
         self.save(&credentials)
@@ -202,15 +257,33 @@ impl Default for CredentialsFile {
     }
 }
 
-#[derive(Deserialize, Serialize)]
-struct StoredCredential {
-    access_token: String,
+#[derive(Clone, Deserialize, Serialize)]
+pub(super) struct StoredCredential {
+    pub(super) access_token: String,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    refresh_token: Option<String>,
+    pub(super) refresh_token: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    expires_at: Option<String>,
+    pub(super) expires_at: Option<u64>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
-    issuer: Option<String>,
+    pub(super) issuer: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(super) client_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub(super) resource: Option<String>,
+}
+
+impl StoredCredential {
+    pub(super) fn needs_refresh(&self) -> bool {
+        let Some(expires_at) = self.expires_at else {
+            return false;
+        };
+        let now = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_default()
+            .as_secs();
+        // Refresh before a request when less than thirty seconds remain.
+        expires_at <= now.saturating_add(30)
+    }
 }
 
 fn schema_version() -> u32 {
@@ -294,5 +367,47 @@ mod tests {
                 0o600
             );
         }
+    }
+
+    #[test]
+    fn stores_refresh_context_without_exposing_it_through_debug() {
+        let directory = tempfile::tempdir().unwrap();
+        let path = directory.path().join("sbol").join("credentials.json");
+        let store = CredentialStore::at(path.clone());
+        store
+            .save_oauth_tokens(
+                "http://127.0.0.1:8888/",
+                "access-secret".to_owned(),
+                "refresh-secret".to_owned(),
+                3600,
+                "http://127.0.0.1:8888".to_owned(),
+                "client-123".to_owned(),
+                "http://127.0.0.1:8888/api/v2".to_owned(),
+            )
+            .unwrap();
+
+        let credential = store
+            .credential_for("http://127.0.0.1:8888/")
+            .unwrap()
+            .unwrap();
+        assert_eq!(credential.access_token, "access-secret");
+        assert_eq!(credential.refresh_token.as_deref(), Some("refresh-secret"));
+        assert_eq!(credential.client_id.as_deref(), Some("client-123"));
+        assert!(!credential.needs_refresh());
+        assert!(!format!("{store:?}").contains("access-secret"));
+
+        let stored = std::fs::read_to_string(path).unwrap();
+        assert!(stored.contains("refresh-secret"));
+        assert!(!stored.contains("password"));
+
+        let removed = store.remove("http://127.0.0.1:8888/").unwrap().unwrap();
+        assert_eq!(removed.refresh_token.as_deref(), Some("refresh-secret"));
+        assert!(
+            store
+                .credential_for("http://127.0.0.1:8888/")
+                .unwrap()
+                .is_none()
+        );
+        assert_eq!(store.active_registry().unwrap(), None);
     }
 }
