@@ -11,7 +11,9 @@ CLI itself remains part of the `sbol-rs` repository. It currently covers:
   PKCE code exchange, refresh-token rotation, and revocation;
 - canonical-design download;
 - compatibility password login for older registries; and
-- submission preview and commit with explicit collision policies.
+- submission preview and commit with explicit collision policies; and
+- ACL-scoped collection descriptors, biological-content downloads, and strict
+  create-or-ETag-CAS replacement.
 
 ```rust,no_run
 use sbol_registry_client::{RegistryClient, SbolVersion};
@@ -44,3 +46,10 @@ The crate models the SBOL DB V2 and SBOL Identity wire contracts rather than
 presenting a generic RDF HTTP abstraction. Browser launch, loopback callbacks,
 credential storage, prompts, local file conversion, and command-line output
 remain responsibilities of `sbol-cli`.
+
+Registry and OAuth transport URLs require HTTPS except for actual loopback
+development hosts. A design IRI is an identifier carried to that already
+validated registry, not a transport destination: an explicit HTTPS registry
+can therefore continue to address imported legacy `http://synbiohub.org/...`
+identities. Inferring a registry from such an IRI remains disallowed because it
+would imply cleartext transport.

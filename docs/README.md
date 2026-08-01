@@ -45,6 +45,13 @@ Entry points to the project's documentation, organized by topic.
 - [RDF I/O](rdf-io.md): Turtle, RDF/XML, JSON-LD, N-Triples support;
   format inference; round-trip guarantees.
 
+## Registry projects
+
+- **[Collection synchronization with the `sbol` CLI](registry-workspaces.md)**:
+  `sbol init`, the credential-free manifest and lock schemas, tracked pull and
+  ETag-guarded push, the synchronization state matrix, conflict policy, and
+  loopback development workflow.
+
 ## Conversion
 
 `sbol-rs` ingests three flavors of upstream synbio data and converts

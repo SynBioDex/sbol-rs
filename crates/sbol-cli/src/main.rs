@@ -20,6 +20,9 @@ fn main() -> ExitCode {
     let cli = Cli::parse();
     let styles = Styles::resolve(cli.color);
     match cli.command {
+        Command::Init(args) => commands::workspace::init(args, styles),
+        Command::Status(args) => commands::workspace::status(args, styles),
+        Command::Sync(args) => commands::workspace::sync(args, styles),
         Command::Validate(args) => commands::validate(args, styles),
         Command::Diff(args) => commands::diff(args, styles),
         Command::Convert(args) => commands::convert(args, styles),

@@ -53,7 +53,7 @@ fn serve_dynamic_responses(
             };
             write!(
                 stream,
-                "HTTP/1.1 {status} {reason}\r\nContent-Type: {content_type}\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+                "HTTP/1.1 {status} {reason}\r\nContent-Type: {content_type}\r\nETag: \"sbol-content-v1-test\"\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
                 body.len()
             )
             .unwrap();
@@ -112,6 +112,136 @@ fn registry_pull_infers_origin_and_writes_requested_rdf_format() {
     let request = request.recv().unwrap();
     assert!(request.contains("?format=sbol&version=sbol3"));
     assert!(request.contains("%2Fpublic%2Fexample%2Fdesign%2F1"));
+}
+
+#[test]
+fn init_and_project_pull_create_a_tracked_collection_and_lock() {
+    let (base, requests) = serve_dynamic_responses(|base| {
+        let iri = format!("{base}/user/alice/toggle/toggle_collection/1");
+        vec![
+            (
+                200,
+                "application/json".to_owned(),
+                format!(
+                    r#"{{
+                        "iri":"{iri}",
+                        "content_url":"/api/v2/collections/content",
+                        "content_etag":"\"sbol-content-v1-test\"",
+                        "triple_count":4,
+                        "display_id":"toggle"
+                    }}"#
+                ),
+            ),
+            (200, "text/turtle".to_owned(), TTL_VALID.to_owned()),
+        ]
+    });
+    let iri = format!("{base}/user/alice/toggle/toggle_collection/1");
+    let dir = TempDir::new().unwrap();
+
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .current_dir(dir.path())
+        .args(["init"])
+        .assert()
+        .success();
+    assert!(dir.path().join("sbol.toml").is_file());
+    assert!(dir.path().join("designs").is_dir());
+    assert!(!dir.path().join("sbol.lock").exists());
+
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .current_dir(dir.path())
+        .env_remove("SBOL_REGISTRY_URL")
+        .args(["registry", "pull", &iri])
+        .assert()
+        .success()
+        .stderr(predicate::str::contains("as `toggle`"));
+
+    assert!(dir.path().join("designs/toggle.ttl").is_file());
+    Document::read_path(dir.path().join("designs/toggle.ttl")).unwrap();
+    let manifest = std::fs::read_to_string(dir.path().join("sbol.toml")).unwrap();
+    let lock = std::fs::read_to_string(dir.path().join("sbol.lock")).unwrap();
+    assert!(manifest.contains("[collections.toggle]"));
+    assert!(manifest.contains(&iri));
+    assert!(lock.contains("sbol-content-v1-test"));
+    assert!(!manifest.to_ascii_lowercase().contains("token"));
+    assert!(!lock.to_ascii_lowercase().contains("token"));
+
+    let descriptor = requests.recv().unwrap();
+    assert!(descriptor.starts_with("GET /api/v2/collections/"));
+    let content = requests.recv().unwrap();
+    assert!(content.contains("/content HTTP/1.1"));
+    assert!(content.to_ascii_lowercase().contains("accept: text/turtle"));
+}
+
+#[test]
+fn tracked_push_uses_the_locked_content_etag_as_a_compare_and_swap() {
+    let (base, requests) = serve_dynamic_responses(|base| {
+        let iri = format!("{base}/user/alice/toggle/toggle_collection/1");
+        let descriptor = format!(
+            r#"{{
+                "iri":"{iri}",
+                "content_url":"/api/v2/collections/content",
+                "content_etag":"\"sbol-content-v1-test\"",
+                "triple_count":4,
+                "display_id":"toggle"
+            }}"#
+        );
+        vec![
+            (200, "application/json".to_owned(), descriptor.clone()),
+            (200, "text/turtle".to_owned(), TTL_VALID.to_owned()),
+            (200, "application/json".to_owned(), descriptor),
+            (
+                200,
+                "application/json".to_owned(),
+                format!(
+                    r#"{{
+                        "collection_uri":"{iri}",
+                        "content_etag":"\"sbol-content-v1-next\"",
+                        "triple_count":5
+                    }}"#
+                ),
+            ),
+        ]
+    });
+    let iri = format!("{base}/user/alice/toggle/toggle_collection/1");
+    let dir = TempDir::new().unwrap();
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .current_dir(dir.path())
+        .args(["init"])
+        .assert()
+        .success();
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .current_dir(dir.path())
+        .args(["registry", "pull", &iri])
+        .assert()
+        .success();
+
+    let path = dir.path().join("designs/toggle.ttl");
+    let changed = TTL_VALID.replace(
+        "    sbol:type SBO:0000251 .",
+        "    sbol:name \"Changed locally\";\n    sbol:type SBO:0000251 .",
+    );
+    std::fs::write(&path, changed).unwrap();
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .current_dir(dir.path())
+        .args(["registry", "push", "designs/toggle.ttl"])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("updated"));
+
+    let _pull_descriptor = requests.recv().unwrap();
+    let _pull_content = requests.recv().unwrap();
+    let push_descriptor = requests.recv().unwrap();
+    assert!(push_descriptor.starts_with("GET /api/v2/collections/"));
+    let put = requests.recv().unwrap().to_ascii_lowercase();
+    assert!(put.starts_with("put /api/v2/collections/"));
+    assert!(put.contains("if-match: \"sbol-content-v1-test\""));
+    let lock = std::fs::read_to_string(dir.path().join("sbol.lock")).unwrap();
+    assert!(lock.contains("sbol-content-v1-next"));
 }
 
 #[test]
@@ -299,6 +429,49 @@ fn registry_login_stores_only_the_returned_token_in_a_private_profile() {
             0o600
         );
     }
+}
+
+#[test]
+fn registry_login_does_not_fall_back_to_password_when_identity_discovery_fails() {
+    let (base, requests) = serve_dynamic_responses(|_| {
+        vec![(
+            503,
+            "application/json".to_owned(),
+            r#"{"error":{"message":"identity unavailable"}}"#.to_owned(),
+        )]
+    });
+    let dir = TempDir::new().unwrap();
+
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .env_remove("SBOL_REGISTRY_URL")
+        .env("SBOL_CREDENTIALS_FILE", dir.path().join("credentials.json"))
+        .args(["registry", "login", &base])
+        .assert()
+        .code(2)
+        .stderr(
+            predicate::str::contains("could not discover SBOL Identity")
+                .and(predicate::str::contains("--password-stdin")),
+        );
+
+    assert!(requests.recv().unwrap().starts_with("GET /api/v2/instance"));
+}
+
+#[test]
+fn no_browser_is_only_available_for_identity_login() {
+    Command::cargo_bin("sbol")
+        .unwrap()
+        .args([
+            "registry",
+            "login",
+            "https://sbol.io",
+            "--identifier",
+            "alice@example.org",
+            "--no-browser",
+        ])
+        .assert()
+        .code(2)
+        .stderr(predicate::str::contains("cannot be used with"));
 }
 
 #[test]

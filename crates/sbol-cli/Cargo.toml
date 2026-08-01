@@ -27,6 +27,7 @@ sbol-fasta.workspace = true
 sbol-genbank.workspace = true
 sbol-ontology.workspace = true
 sbol-registry-client.workspace = true
+sbol-workspace.workspace = true
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 terminal_size = "0.4"

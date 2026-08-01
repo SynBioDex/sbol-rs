@@ -4,7 +4,7 @@ use std::env;
 use std::fs;
 use std::io::{self, Read, Write};
 use std::net::{TcpListener, TcpStream};
-use std::path::Path;
+use std::path::{Component, Path, PathBuf};
 use std::process::{Command as ProcessCommand, ExitCode};
 use std::thread;
 use std::time::{Duration, Instant};
@@ -14,9 +14,13 @@ use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use rand::random;
 use sbol::v3::{Document, RdfFormat};
 use sbol_registry_client::{
-    AuthorizationServerMetadata, CollisionPolicy, RegistryClient, SbolVersion,
-    SubmissionConsequence, SubmissionCreated, SubmissionFormat, SubmissionPreview,
-    SubmissionRequest,
+    AuthorizationServerMetadata, CollectionRdfFormat, CollisionPolicy, RegistryClient,
+    RegistryError, SbolVersion, SubmissionConsequence, SubmissionCreated, SubmissionFormat,
+    SubmissionPreview, SubmissionRequest,
+};
+use sbol_workspace::{
+    CollectionSpec, LocalState, LockedCollection, Workspace, safe_collection_name, sha256_bytes,
+    write_file_atomic,
 };
 use sha2::{Digest, Sha256};
 use url::Url;
@@ -25,6 +29,7 @@ use crate::cli::{
     RegistryCollisionPolicy, RegistryCommand, RegistryLoginArgs, RegistryLogoutArgs,
     RegistryPullArgs, RegistryPushArgs, RegistryStatusArgs,
 };
+use crate::commands::workspace::{collection_format, validate_collection_rdf};
 use crate::output::infer_conversion_rdf_format;
 use crate::style::Styles;
 use credentials::CredentialStore;
@@ -121,16 +126,44 @@ fn login(args: RegistryLoginArgs, styles: Styles) -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    if args.identifier.is_none()
-        && !args.password_stdin
-        && let Ok(instance) = client.instance()
-        && let Some(machine_access) = instance.machine_access
-        && let (Some(issuer), resource) =
-            (machine_access.authorization_issuer, machine_access.api_url)
-    {
-        return oauth_login(&client, &issuer, &resource, styles);
+    if args.identifier.is_some() || args.password_stdin {
+        return password_login(client, args, styles);
     }
-    password_login(client, args, styles)
+
+    let instance = match client.instance() {
+        Ok(instance) => instance,
+        Err(error) => {
+            eprintln!(
+                "{}: could not discover SBOL Identity from {}: {error}; compatibility login must be requested explicitly with --identifier or --password-stdin",
+                styles.err_label(),
+                client.base_url()
+            );
+            return ExitCode::from(2);
+        }
+    };
+    let Some(machine_access) = instance.machine_access else {
+        eprintln!(
+            "{}: {} does not advertise machine-access authentication; compatibility login must be requested explicitly with --identifier or --password-stdin",
+            styles.err_label(),
+            client.base_url()
+        );
+        return ExitCode::from(2);
+    };
+    let Some(issuer) = machine_access.authorization_issuer else {
+        eprintln!(
+            "{}: {} does not advertise an SBOL Identity issuer; compatibility login must be requested explicitly with --identifier or --password-stdin",
+            styles.err_label(),
+            client.base_url()
+        );
+        return ExitCode::from(2);
+    };
+    oauth_login(
+        &client,
+        &issuer,
+        &machine_access.api_url,
+        args.no_browser,
+        styles,
+    )
 }
 
 fn password_login(client: RegistryClient, args: RegistryLoginArgs, styles: Styles) -> ExitCode {
@@ -206,7 +239,13 @@ fn password_login(client: RegistryClient, args: RegistryLoginArgs, styles: Style
     ExitCode::SUCCESS
 }
 
-fn oauth_login(client: &RegistryClient, issuer: &str, resource: &str, styles: Styles) -> ExitCode {
+fn oauth_login(
+    client: &RegistryClient,
+    issuer: &str,
+    resource: &str,
+    no_browser: bool,
+    styles: Styles,
+) -> ExitCode {
     let metadata = match client.authorization_server(issuer) {
         Ok(metadata) => metadata,
         Err(error) => {
@@ -269,7 +308,7 @@ fn oauth_login(client: &RegistryClient, issuer: &str, resource: &str, styles: St
 
     eprintln!("Sign in with SBOL in your browser:");
     eprintln!("{authorization_url}");
-    if let Err(error) = open_browser(authorization_url.as_str()) {
+    if !no_browser && let Err(error) = open_browser(authorization_url.as_str()) {
         eprintln!(
             "{}: could not open a browser automatically ({error}); open the URL above",
             styles.warn_label()
@@ -484,18 +523,61 @@ fn open_browser(url: &str) -> io::Result<()> {
 }
 
 fn pull(args: RegistryPullArgs, styles: Styles) -> ExitCode {
-    let target_format = match infer_conversion_rdf_format(&args.output) {
+    let cwd = match env::current_dir() {
+        Ok(cwd) => cwd,
+        Err(error) => {
+            eprintln!(
+                "{}: could not determine the current directory: {error}",
+                styles.err_label()
+            );
+            return ExitCode::from(2);
+        }
+    };
+    let workspace = match Workspace::discover(&cwd) {
+        Ok(workspace) => workspace,
+        Err(error) => {
+            eprintln!(
+                "{}: could not inspect the SBOL project: {error}",
+                styles.err_label()
+            );
+            return ExitCode::from(2);
+        }
+    };
+
+    match (workspace, args.output.as_ref(), args.alias.as_ref()) {
+        (Some(workspace), None, _) | (Some(workspace), Some(_), Some(_)) => {
+            pull_tracked(args, workspace, &cwd, styles)
+        }
+        (None, None, _) => {
+            eprintln!(
+                "{}: --output is required outside an SBOL project; run `sbol init` to track collection synchronization",
+                styles.err_label()
+            );
+            ExitCode::from(2)
+        }
+        (None, Some(_), Some(_)) => {
+            eprintln!(
+                "{}: --alias can only be used inside an SBOL project",
+                styles.err_label()
+            );
+            ExitCode::from(2)
+        }
+        (_, Some(output), None) => pull_one_shot(&args, output, styles),
+    }
+}
+
+fn pull_one_shot(args: &RegistryPullArgs, output_path: &Path, styles: Styles) -> ExitCode {
+    let target_format = match infer_conversion_rdf_format(output_path) {
         Some(format) => format,
         None => {
-            let extension = args
-                .output
+            let extension = output_path
                 .extension()
                 .and_then(|value| value.to_str())
                 .unwrap_or("<none>");
             eprintln!(
                 "{}: unsupported output extension `{extension}` for {} — supported: .ttl, .rdf, .xml, .jsonld, .nt",
                 styles.err_label(),
-                args.output.display()
+                output_path.display()
             );
             return ExitCode::from(2);
         }
@@ -549,16 +631,16 @@ fn pull(args: RegistryPullArgs, styles: Styles) -> ExitCode {
             eprintln!(
                 "{}: failed to serialize {} as {target_format}: {error}",
                 styles.err_label(),
-                args.output.display()
+                output_path.display()
             );
             return ExitCode::from(2);
         }
     };
-    if let Err(error) = fs::write(&args.output, output) {
+    if let Err(error) = write_file_atomic(output_path, output.as_bytes()) {
         eprintln!(
             "{}: failed to write {}: {error}",
             styles.err_label(),
-            args.output.display()
+            output_path.display()
         );
         return ExitCode::from(2);
     }
@@ -567,12 +649,261 @@ fn pull(args: RegistryPullArgs, styles: Styles) -> ExitCode {
         "pulled {} from {} to {}",
         args.iri,
         client.base_url(),
-        args.output.display()
+        output_path.display()
     );
     ExitCode::SUCCESS
 }
 
+fn pull_tracked(
+    args: RegistryPullArgs,
+    mut workspace: Workspace,
+    cwd: &Path,
+    styles: Styles,
+) -> ExitCode {
+    let registry = args
+        .registry
+        .as_deref()
+        .or(workspace.manifest().default_registry.as_deref());
+    let client = match registry_client(registry, Some(&args.iri)) {
+        Ok(client) => client,
+        Err(message) => {
+            eprintln!("{}: {message}", styles.err_label());
+            return ExitCode::from(2);
+        }
+    };
+    let descriptor = match client.collection_descriptor(&args.iri) {
+        Ok(descriptor) => descriptor,
+        Err(error) => {
+            eprintln!(
+                "{}: failed to inspect collection {}: {error}",
+                styles.err_label(),
+                args.iri
+            );
+            return ExitCode::from(2);
+        }
+    };
+
+    let existing = workspace
+        .collection_by_uri(&descriptor.iri)
+        .map(|(alias, spec, lock)| (alias.to_owned(), spec.clone(), lock.cloned()));
+    let (alias, spec, prior_lock) = if let Some((alias, spec, lock)) = existing {
+        if let Some(requested) = args.alias.as_deref()
+            && requested != alias
+        {
+            eprintln!(
+                "{}: collection {} is already tracked as `{alias}`",
+                styles.err_label(),
+                descriptor.iri
+            );
+            return ExitCode::from(2);
+        }
+        if let Some(output) = args.output.as_deref() {
+            let requested = match workspace_relative_path(&workspace, cwd, output) {
+                Ok(path) => path,
+                Err(message) => {
+                    eprintln!("{}: {message}", styles.err_label());
+                    return ExitCode::from(2);
+                }
+            };
+            if requested != spec.path {
+                eprintln!(
+                    "{}: collection `{alias}` is already tracked at {}; edit sbol.toml intentionally to move it",
+                    styles.err_label(),
+                    spec.path.display()
+                );
+                return ExitCode::from(2);
+            }
+        }
+        (alias, spec, lock)
+    } else {
+        let preferred = args.alias.clone().unwrap_or_else(|| {
+            safe_collection_name(&descriptor.iri, descriptor.display_id.as_deref())
+        });
+        let alias = if args.alias.is_some() {
+            if workspace.manifest().collections.contains_key(&preferred) {
+                eprintln!(
+                    "{}: collection alias `{preferred}` is already in use",
+                    styles.err_label()
+                );
+                return ExitCode::from(2);
+            }
+            preferred
+        } else {
+            workspace.next_alias(&preferred)
+        };
+        let path = match args.output.as_deref() {
+            Some(output) => match workspace_relative_path(&workspace, cwd, output) {
+                Ok(path) => path,
+                Err(message) => {
+                    eprintln!("{}: {message}", styles.err_label());
+                    return ExitCode::from(2);
+                }
+            },
+            None => workspace
+                .manifest()
+                .designs_dir
+                .join(format!("{alias}.ttl")),
+        };
+        (
+            alias,
+            CollectionSpec {
+                uri: descriptor.iri.clone(),
+                registry: client.base_url().to_string(),
+                path,
+            },
+            None,
+        )
+    };
+    if let Err(message) = validate_tracking_path(&workspace, &spec.path) {
+        eprintln!("{}: {message}", styles.err_label());
+        return ExitCode::from(2);
+    }
+
+    if prior_lock.is_some() {
+        match workspace.local_state(&alias) {
+            Ok(LocalState::Modified) => {
+                eprintln!(
+                    "{}: {} has local changes; refusing to overwrite them. Run `sbol status` and resolve the synchronization state explicitly",
+                    styles.err_label(),
+                    workspace.absolute_collection_path(&spec).display()
+                );
+                return ExitCode::from(1);
+            }
+            Ok(_) => {}
+            Err(error) => {
+                eprintln!("{}: {error}", styles.err_label());
+                return ExitCode::from(2);
+            }
+        }
+    } else if workspace.absolute_collection_path(&spec).exists() {
+        eprintln!(
+            "{}: {} already exists and is not tracked; refusing to overwrite it",
+            styles.err_label(),
+            workspace.absolute_collection_path(&spec).display()
+        );
+        return ExitCode::from(1);
+    }
+
+    let format = match collection_format(&spec.path) {
+        Ok(format) => format,
+        Err(message) => {
+            eprintln!("{}: {message}", styles.err_label());
+            return ExitCode::from(2);
+        }
+    };
+    let pulled = match client.pull_collection(&descriptor.iri, format) {
+        Ok(pulled) => pulled,
+        Err(error) => {
+            eprintln!(
+                "{}: failed to pull collection {}: {error}",
+                styles.err_label(),
+                descriptor.iri
+            );
+            return ExitCode::from(2);
+        }
+    };
+    if let Err(message) = validate_collection_rdf(&pulled.body, format) {
+        eprintln!(
+            "{}: registry returned invalid SBOL collection content: {message}",
+            styles.err_label()
+        );
+        return ExitCode::from(2);
+    }
+    let destination = workspace.absolute_collection_path(&spec);
+    if let Err(error) = write_file_atomic(&destination, &pulled.body) {
+        eprintln!(
+            "{}: failed to write {}: {error}",
+            styles.err_label(),
+            destination.display()
+        );
+        return ExitCode::from(2);
+    }
+    if let Err(error) = workspace.record_sync(
+        alias.clone(),
+        spec,
+        pulled.content_etag,
+        sha256_bytes(&pulled.body),
+    ) {
+        eprintln!(
+            "{}: failed to update the SBOL project: {error}",
+            styles.err_label()
+        );
+        return ExitCode::from(2);
+    }
+    eprintln!(
+        "pulled {} as `{alias}` to {}",
+        descriptor.iri,
+        destination.display()
+    );
+    ExitCode::SUCCESS
+}
+
+fn workspace_relative_path(
+    workspace: &Workspace,
+    cwd: &Path,
+    requested: &Path,
+) -> Result<PathBuf, String> {
+    let absolute = if requested.is_absolute() {
+        requested.to_path_buf()
+    } else {
+        cwd.join(requested)
+    };
+    absolute
+        .strip_prefix(workspace.root())
+        .map(Path::to_path_buf)
+        .map_err(|_| {
+            format!(
+                "tracked collection path {} must be inside the SBOL project at {}",
+                absolute.display(),
+                workspace.root().display()
+            )
+        })
+}
+
+fn validate_tracking_path(workspace: &Workspace, path: &Path) -> Result<(), String> {
+    if path.as_os_str().is_empty()
+        || path.is_absolute()
+        || path
+            .components()
+            .any(|component| !matches!(component, Component::Normal(_)))
+        || !path.starts_with(&workspace.manifest().designs_dir)
+    {
+        return Err(format!(
+            "tracked collection path {} must be a normalized relative path inside {}",
+            path.display(),
+            workspace.manifest().designs_dir.display()
+        ));
+    }
+    Ok(())
+}
+
 fn push(args: RegistryPushArgs, styles: Styles) -> ExitCode {
+    let cwd = match env::current_dir() {
+        Ok(cwd) => cwd,
+        Err(error) => {
+            eprintln!(
+                "{}: could not determine the current directory: {error}",
+                styles.err_label()
+            );
+            return ExitCode::from(2);
+        }
+    };
+    let workspace = match Workspace::discover(&cwd) {
+        Ok(workspace) => workspace,
+        Err(error) => {
+            eprintln!(
+                "{}: could not inspect the SBOL project: {error}",
+                styles.err_label()
+            );
+            return ExitCode::from(2);
+        }
+    };
+    if let Some(workspace) = workspace.as_ref()
+        && let Some((alias, spec, lock)) = tracked_input(workspace, &cwd, &args.input)
+    {
+        return push_tracked(args, workspace.clone(), alias, spec, lock, styles);
+    }
+
     let format = match submission_format(&args.input) {
         Ok(format) => format,
         Err(message) => {
@@ -621,8 +952,21 @@ fn push(args: RegistryPushArgs, styles: Styles) -> ExitCode {
         return ExitCode::from(2);
     }
 
-    let client = match registry_client(args.registry.as_deref(), None) {
+    let registry = args.registry.as_deref().or(workspace
+        .as_ref()
+        .and_then(|workspace| workspace.manifest().default_registry.as_deref()));
+    let client = match registry_client(registry, None) {
         Ok(client) => client,
+        Err(message) => {
+            eprintln!("{}: {message}", styles.err_label());
+            return ExitCode::from(2);
+        }
+    };
+    let tracking_plan = workspace
+        .as_ref()
+        .map(|workspace| plan_created_tracking(workspace, &cwd, &args.input, &id));
+    let tracking_plan = match tracking_plan.transpose() {
+        Ok(plan) => plan,
         Err(message) => {
             eprintln!("{}: {message}", styles.err_label());
             return ExitCode::from(2);
@@ -659,7 +1003,7 @@ fn push(args: RegistryPushArgs, styles: Styles) -> ExitCode {
         );
         return ExitCode::from(1);
     }
-    if args.preview {
+    if args.dry_run {
         render_push_result(&args.input, &preview, None, args.json);
         return ExitCode::SUCCESS;
     }
@@ -675,8 +1019,272 @@ fn push(args: RegistryPushArgs, styles: Styles) -> ExitCode {
             return ExitCode::from(2);
         }
     };
+    if let (Some(mut workspace), Some((alias, path, rdf_format))) = (workspace, tracking_plan)
+        && let Err(message) =
+            track_created_collection(&mut workspace, &client, &created, alias, path, rdf_format)
+    {
+        eprintln!(
+            "{}: collection {} was created, but the local project could not be synchronized: {message}\nrecover with `sbol registry pull {}`",
+            styles.err_label(),
+            created.collection_uri,
+            created.collection_uri
+        );
+        return ExitCode::from(2);
+    }
     render_push_result(&args.input, &preview, Some(&created), args.json);
     ExitCode::SUCCESS
+}
+
+fn tracked_input(
+    workspace: &Workspace,
+    cwd: &Path,
+    input: &Path,
+) -> Option<(String, CollectionSpec, Option<LockedCollection>)> {
+    let input = if input.is_absolute() {
+        input.to_path_buf()
+    } else {
+        cwd.join(input)
+    };
+    let input = fs::canonicalize(&input).unwrap_or(input);
+    workspace
+        .manifest()
+        .collections
+        .iter()
+        .find_map(|(alias, spec)| {
+            let tracked = workspace.absolute_collection_path(spec);
+            let tracked = fs::canonicalize(&tracked).unwrap_or(tracked);
+            (tracked == input).then(|| {
+                (
+                    alias.clone(),
+                    spec.clone(),
+                    workspace.lockfile().collections.get(alias).cloned(),
+                )
+            })
+        })
+}
+
+fn push_tracked(
+    args: RegistryPushArgs,
+    mut workspace: Workspace,
+    alias: String,
+    spec: CollectionSpec,
+    lock: Option<LockedCollection>,
+    styles: Styles,
+) -> ExitCode {
+    let Some(lock) = lock else {
+        eprintln!(
+            "{}: collection `{alias}` has no sbol.lock entry; establish a baseline with an explicit pull",
+            styles.err_label()
+        );
+        return ExitCode::from(1);
+    };
+    let client = match registry_client(Some(&spec.registry), Some(&spec.uri)) {
+        Ok(client) => client,
+        Err(message) => {
+            eprintln!("{}: {message}", styles.err_label());
+            return ExitCode::from(2);
+        }
+    };
+    if let Some(explicit) = args.registry.as_deref() {
+        match RegistryClient::new(explicit) {
+            Ok(explicit_client) if explicit_client.base_url() == client.base_url() => {}
+            Ok(_) => {
+                eprintln!(
+                    "{}: `{alias}` is bound to {}; a tracked push cannot target another registry",
+                    styles.err_label(),
+                    client.base_url()
+                );
+                return ExitCode::from(2);
+            }
+            Err(error) => {
+                eprintln!("{}: {error}", styles.err_label());
+                return ExitCode::from(2);
+            }
+        }
+    }
+    let format = match collection_format(&spec.path) {
+        Ok(format) => format,
+        Err(message) => {
+            eprintln!("{}: {message}", styles.err_label());
+            return ExitCode::from(2);
+        }
+    };
+    let body = match fs::read(&args.input) {
+        Ok(body) => body,
+        Err(error) => {
+            eprintln!(
+                "{}: failed to read {}: {error}",
+                styles.err_label(),
+                args.input.display()
+            );
+            return ExitCode::from(2);
+        }
+    };
+    if let Err(message) = validate_collection_rdf(&body, format) {
+        eprintln!(
+            "{}: collection validation failed: {message}",
+            styles.err_label()
+        );
+        return ExitCode::from(2);
+    }
+    let remote = match client.collection_descriptor(&spec.uri) {
+        Ok(remote) => remote,
+        Err(error) => {
+            eprintln!(
+                "{}: failed to inspect tracked collection {}: {error}",
+                styles.err_label(),
+                spec.uri
+            );
+            return ExitCode::from(2);
+        }
+    };
+    if remote.content_etag != lock.remote_content_etag {
+        eprintln!(
+            "{}: remote biological content changed since the last sync; no data was overwritten. Run `sbol status` before resolving the conflict",
+            styles.err_label()
+        );
+        return ExitCode::from(1);
+    }
+    if args.dry_run {
+        if args.json {
+            println!(
+                "{}",
+                serde_json::json!({
+                    "action": "update",
+                    "collection": alias,
+                    "collection_uri": spec.uri,
+                    "content_etag": lock.remote_content_etag,
+                    "dry_run": true
+                })
+            );
+        } else {
+            println!(
+                "would update {} from {} using content ETag {}",
+                spec.uri,
+                args.input.display(),
+                lock.remote_content_etag
+            );
+        }
+        return ExitCode::SUCCESS;
+    }
+
+    let written = match client.put_collection(
+        &spec.uri,
+        format,
+        &body,
+        sbol_registry_client::CollectionPrecondition::Matches(&lock.remote_content_etag),
+    ) {
+        Ok(written) => written,
+        Err(RegistryError::PreconditionFailed { .. }) => {
+            eprintln!(
+                "{}: remote biological content changed while the push was committing; no data was overwritten",
+                styles.err_label()
+            );
+            return ExitCode::from(1);
+        }
+        Err(error) => {
+            eprintln!(
+                "{}: failed to update {}: {error}",
+                styles.err_label(),
+                spec.uri
+            );
+            return ExitCode::from(2);
+        }
+    };
+    if let Err(error) = workspace.record_sync(
+        alias.clone(),
+        spec.clone(),
+        written.content_etag.clone(),
+        sha256_bytes(&body),
+    ) {
+        eprintln!(
+            "{}: remote collection was updated, but sbol.lock could not be updated: {error}",
+            styles.err_label()
+        );
+        return ExitCode::from(2);
+    }
+    if args.json {
+        println!(
+            "{}",
+            serde_json::json!({
+                "action": "update",
+                "collection": alias,
+                "collection_uri": written.collection_uri,
+                "content_etag": written.content_etag,
+                "triple_count": written.triple_count
+            })
+        );
+    } else {
+        println!(
+            "updated {} from {} ({})",
+            spec.uri,
+            args.input.display(),
+            written.content_etag
+        );
+    }
+    ExitCode::SUCCESS
+}
+
+fn plan_created_tracking(
+    workspace: &Workspace,
+    cwd: &Path,
+    input: &Path,
+    display_id: &str,
+) -> Result<(String, PathBuf, CollectionRdfFormat), String> {
+    let preferred = safe_collection_name("", Some(display_id));
+    let mut alias = workspace.next_alias(&preferred);
+    let input_absolute = if input.is_absolute() {
+        input.to_path_buf()
+    } else {
+        cwd.join(input)
+    };
+    if let Ok(relative) = input_absolute.strip_prefix(workspace.root())
+        && relative.starts_with(&workspace.manifest().designs_dir)
+        && let Ok(format) = collection_format(relative)
+    {
+        validate_tracking_path(workspace, relative)?;
+        return Ok((alias, relative.to_path_buf(), format));
+    }
+
+    let mut path = workspace
+        .manifest()
+        .designs_dir
+        .join(format!("{alias}.ttl"));
+    let mut suffix = 2;
+    while workspace.root().join(&path).exists() {
+        alias = format!("{preferred}-{suffix}");
+        path = workspace
+            .manifest()
+            .designs_dir
+            .join(format!("{alias}.ttl"));
+        suffix += 1;
+    }
+    validate_tracking_path(workspace, &path)?;
+    Ok((alias, path, CollectionRdfFormat::Turtle))
+}
+
+fn track_created_collection(
+    workspace: &mut Workspace,
+    client: &RegistryClient,
+    created: &SubmissionCreated,
+    alias: String,
+    path: PathBuf,
+    format: CollectionRdfFormat,
+) -> Result<(), String> {
+    let pulled = client
+        .pull_collection(&created.collection_uri, format)
+        .map_err(|error| format!("could not download canonical collection content: {error}"))?;
+    validate_collection_rdf(&pulled.body, format)?;
+    let spec = CollectionSpec {
+        uri: created.collection_uri.clone(),
+        registry: client.base_url().to_string(),
+        path,
+    };
+    let destination = workspace.absolute_collection_path(&spec);
+    write_file_atomic(&destination, &pulled.body).map_err(|error| error.to_string())?;
+    workspace
+        .record_sync(alias, spec, pulled.content_etag, sha256_bytes(&pulled.body))
+        .map_err(|error| error.to_string())
 }
 
 fn status(args: RegistryStatusArgs, styles: Styles) -> ExitCode {
@@ -738,7 +1346,7 @@ fn status(args: RegistryStatusArgs, styles: Styles) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-fn registry_client(
+pub(crate) fn registry_client(
     explicit: Option<&str>,
     design_iri: Option<&str>,
 ) -> Result<RegistryClient, String> {

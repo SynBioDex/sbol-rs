@@ -1190,6 +1190,7 @@ dependencies = [
  "sbol-genbank",
  "sbol-ontology",
  "sbol-registry-client",
+ "sbol-workspace",
  "serde",
  "serde_json",
  "sha2",
@@ -1286,6 +1287,18 @@ version = "1.0.0"
 dependencies = [
  "sbol3",
  "thiserror",
+]
+
+[[package]]
+name = "sbol-workspace"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "sha2",
+ "tempfile",
+ "thiserror",
+ "toml",
+ "url",
 ]
 
 [[package]]
@@ -1539,6 +1552,7 @@ dependencies = [
  "serde_spanned",
  "toml_datetime",
  "toml_parser",
+ "toml_writer",
  "winnow",
 ]
 
@@ -1559,6 +1573,12 @@ checksum = "a2abe9b86193656635d2411dc43050282ca48aa31c2451210f4202550afb7526"
 dependencies = [
  "winnow",
 ]
+
+[[package]]
+name = "toml_writer"
+version = "1.1.2+spec-1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7d56353a2a665ad0f41a421187180aab746c8c325620617ad883a99a1cbe66d2"
 
 [[package]]
 name = "typenum"

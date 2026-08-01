@@ -27,6 +27,7 @@ core.
 | `sbol-ontology`| Offline ontology facts (EDAM, SBO, SO, GO, ChEBI, CL) plus a runtime cache for opt-in extensions (NCIT, custom). See [`ontology-extensions.md`](ontology-extensions.md).|
 | `sbol-fasta` / `sbol-genbank` | FASTA and GenBank importers to native SBOL 3.                             |
 | `sbol-registry-client` | Typed HTTP transport for SBOL DB discovery, download, login, and submission preview/commit. |
+| `sbol-workspace` | Credential-free project manifest/lock model and collection synchronization baselines. |
 | `sbol-cli`     | Command-line tool for both versions and authenticated registries. Ships the `sbol` binary. |
 
 Internally each version crate is split into private modules; on `sbol3`

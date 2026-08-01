@@ -43,6 +43,8 @@ sbol validate design.ttl
 sbol registry login
 sbol registry logout
 sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
+sbol init
+sbol registry pull https://sbol.io/public/toggle/toggle_collection/1
 ```
 
 `sbol registry login` uses browser-based Sign in with SBOL when the selected
@@ -159,6 +161,7 @@ the version crates are usable directly.
 | [`sbol-convert`](crates/sbol-convert/) | SBOL 2 ⇄ SBOL 3 conversion at the RDF triple level (`upgrade_from_sbol2`, `downgrade`). |
 | [`sbol-cli`](crates/sbol-cli/) | The `sbol` command-line tool: validate, compare, convert, import, and authenticated registry workflows. |
 | [`sbol-registry-client`](crates/sbol-registry-client/) | Typed SBOL DB discovery, download, login, and collision-aware submission transport used by the CLI. |
+| [`sbol-workspace`](crates/sbol-workspace/) | Credential-free `sbol.toml` / `sbol.lock` model, local hashing, atomic writes, and collection synchronization baselines. |
 | [`sbol-rulegen`](crates/sbol-rulegen/) | Generates each version's validation rule catalog from its `rules.toml`. |
 | [`sbol-fasta`](crates/sbol-fasta/) / [`sbol-genbank`](crates/sbol-genbank/) | FASTA and GenBank importers to native SBOL 3. |
 | [`sbol-ontology`](crates/sbol-ontology/) / [`sbol-rdf`](crates/sbol-rdf/) | Bundled ontology snapshots and the RDF serialization layer. |

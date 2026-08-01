@@ -23,6 +23,12 @@ pub(crate) struct Cli {
 
 #[derive(Subcommand)]
 pub(crate) enum Command {
+    /// Initialize an SBOL project with sbol.toml and a designs directory.
+    Init(InitArgs),
+    /// Show local and remote synchronization state for this SBOL project.
+    Status(WorkspaceStatusArgs),
+    /// Reconcile tracked collections without implicit deletion or merging.
+    Sync(WorkspaceSyncArgs),
     /// Validate an SBOL 2 or SBOL 3 document against the spec.
     Validate(ValidateArgs),
     /// Compare two SBOL documents of the same version, object by identity.
@@ -43,9 +49,42 @@ pub(crate) enum Command {
     /// Manage cached extension ontologies (NCIT and others).
     #[command(subcommand)]
     Ontology(OntologyCommand),
-    /// Authenticate, download, and publish designs in an SBOL registry.
+    /// Authenticate and synchronize collections with an SBOL registry.
     #[command(subcommand)]
     Registry(RegistryCommand),
+}
+
+#[derive(Args)]
+pub(crate) struct InitArgs {
+    /// Project directory. Defaults to the current directory.
+    #[arg(default_value = ".", value_name = "PATH")]
+    pub(crate) path: PathBuf,
+
+    /// Optional default registry URL stored in sbol.toml.
+    #[arg(long, value_name = "URL")]
+    pub(crate) registry: Option<String>,
+}
+
+#[derive(Args)]
+pub(crate) struct WorkspaceStatusArgs {
+    /// Limit status to these collection aliases. Defaults to all collections.
+    #[arg(value_name = "COLLECTION")]
+    pub(crate) collections: Vec<String>,
+
+    /// Print machine-readable JSON.
+    #[arg(long)]
+    pub(crate) json: bool,
+}
+
+#[derive(Args)]
+pub(crate) struct WorkspaceSyncArgs {
+    /// Limit synchronization to these collection aliases. Defaults to all.
+    #[arg(value_name = "COLLECTION")]
+    pub(crate) collections: Vec<String>,
+
+    /// Report selected pull/push operations without changing files or the registry.
+    #[arg(long)]
+    pub(crate) dry_run: bool,
 }
 
 #[derive(Subcommand)]
@@ -54,9 +93,9 @@ pub(crate) enum RegistryCommand {
     Login(RegistryLoginArgs),
     /// Revoke the active registry grant and remove it from the local profile.
     Logout(RegistryLogoutArgs),
-    /// Download a design's recursive SBOL closure.
+    /// Check out an SBOL collection and its recursive biological content.
     Pull(RegistryPullArgs),
-    /// Validate and upload a design as a private registry collection.
+    /// Create or update a registry collection from a local design file.
     Push(RegistryPushArgs),
     /// Show the identity and machine capabilities of a registry.
     Status(RegistryStatusArgs),
@@ -85,17 +124,26 @@ pub(crate) struct RegistryLoginArgs {
     /// pass a password as a command-line argument.
     #[arg(long)]
     pub(crate) password_stdin: bool,
+
+    /// Print the SBOL Identity authorization URL without launching a browser.
+    /// The CLI still waits for the loopback authorization callback.
+    #[arg(long, conflicts_with_all = ["identifier", "password_stdin"])]
+    pub(crate) no_browser: bool,
 }
 
 #[derive(Args)]
 pub(crate) struct RegistryPullArgs {
-    /// The complete design IRI to download.
+    /// The complete collection IRI to download.
     pub(crate) iri: String,
 
     /// Destination path. The RDF serialization is inferred from its extension:
     /// `.ttl`, `.rdf` / `.xml`, `.jsonld`, or `.nt`.
     #[arg(long, short = 'o', value_name = "PATH")]
-    pub(crate) output: PathBuf,
+    pub(crate) output: Option<PathBuf>,
+
+    /// Local collection alias when tracking the pull in an SBOL project.
+    #[arg(long, value_name = "NAME")]
+    pub(crate) alias: Option<String>,
 
     /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`, then to the origin of
     /// the design IRI. Required for registries mounted below a path prefix.
@@ -151,10 +199,9 @@ pub(crate) struct RegistryPushArgs {
     #[arg(long, value_enum, default_value_t = RegistryCollisionPolicy::Fail)]
     pub(crate) collision: RegistryCollisionPolicy,
 
-    /// Run server-side validation, identity minting, and collision analysis
-    /// without writing anything.
-    #[arg(long)]
-    pub(crate) preview: bool,
+    /// Run validation and report the exact action without changing registry data.
+    #[arg(long, alias = "preview")]
+    pub(crate) dry_run: bool,
 
     /// Print the preview and commit result as JSON.
     #[arg(long)]

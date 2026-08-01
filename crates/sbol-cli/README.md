@@ -11,6 +11,9 @@ workflows:
 
 | Subcommand | Use it to… |
 |---|---|
+| `sbol init` | Create `sbol.toml` and `designs/` for a synchronized SBOL project |
+| `sbol status` | Compare tracked local files with their locked remote content ETags |
+| `sbol sync` | Pull remote-only changes and CAS-push local-only changes |
 | `sbol validate` | Validate an SBOL 2 or SBOL 3 document against the spec |
 | `sbol diff` | Compare two documents of the same version, object by identity |
 | `sbol convert` | Cross-serialize SBOL 3 between Turtle, RDF/XML, JSON-LD, N-Triples |
@@ -20,7 +23,7 @@ workflows:
 | `sbol import-fasta` | Convert a FASTA file to SBOL 3 |
 | `sbol rules list` | Inspect the built-in validation rule catalog |
 | `sbol ontology install` | Manage cached extension ontologies (NCIT, custom) |
-| `sbol registry` | Sign in, inspect a registry, download designs, and preview or publish submissions |
+| `sbol registry` | Sign in, inspect a registry, and pull or push designs and collections |
 
 The conversion path is explained in depth in
 [docs/conversion.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md);
@@ -53,16 +56,36 @@ username/password compatibility login. Supplying `--identifier` or
 automation, prefer a scoped bearer in `SBOL_ACCESS_TOKEN`; never place a
 password on the command line.
 
-Pull a design by canonical IRI. The registry is inferred from the IRI, and the
-output serialization is inferred from the output extension:
+Outside an SBOL project, pull a one-off design by canonical IRI. The registry is
+inferred from the IRI, and the output serialization is inferred from the output
+extension:
 
 ```sh
 sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
 sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.jsonld
 ```
 
-For local testing, keep the canonical design IRI but direct the request to the
-development server explicitly:
+Inside a project, pull a collection without `--output` to create a tracked file
+under `designs/` and the first `sbol.lock` baseline:
+
+```sh
+mkdir toggle-project && cd toggle-project
+sbol init
+sbol registry pull https://sbol.io/public/toggle/toggle_collection/1
+sbol status
+```
+
+Tracked updates use the lock's biological-content ETag as an HTTP
+compare-and-swap, so a concurrent remote change is never overwritten:
+
+```sh
+sbol registry push designs/toggle.ttl --dry-run
+sbol registry push designs/toggle.ttl
+sbol sync
+```
+
+For local testing, use the exact loopback origin printed by the development
+server:
 
 ```sh
 sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 \
@@ -70,17 +93,18 @@ sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 \
   -o design.ttl
 ```
 
-Every push first asks the registry to parse and validate the content, mint the
-proposed identities, and analyze collisions. `--preview` stops after that
-read-only analysis:
+Every initial, untracked push first asks the registry to parse and validate the
+content, mint the proposed identities, and analyze collisions. `--dry-run`
+stops after that read-only analysis (`--preview` remains an alias):
 
 ```sh
-sbol registry push design.ttl --preview
+sbol registry push design.ttl --dry-run
 sbol registry push design.ttl
 ```
 
-The default collision policy is `fail`. Replacing or merging an existing
-collection must be chosen explicitly:
+The default initial-creation collision policy is `fail`. A collection already
+checked out in the current project is updated through its locked ETag instead
+of a collision policy. Legacy one-shot replacement or merging remains explicit:
 
 ```sh
 sbol registry push design.ttl --collision replace
@@ -97,6 +121,10 @@ OAuth grants are bound to the advertised V2 API resource. Login requests
 `sbol:read` and `sbol:write`; the server still applies ownership, sharing, and
 membership checks to every operation. An API token cannot be replayed against
 the registry's MCP or UserInfo resources.
+
+The complete project schema, tracking rules, state matrix, and conflict policy
+are documented in
+[Collection synchronization with the `sbol` CLI](../../docs/registry-workspaces.md).
 
 ## `sbol validate`
 

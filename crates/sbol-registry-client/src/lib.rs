@@ -12,7 +12,7 @@ use std::time::Duration;
 
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-use url::Url;
+use url::{Host, Url};
 
 const DEFAULT_MAX_RESPONSE_BYTES: u64 = 64 * 1024 * 1024;
 const USER_AGENT: &str = concat!("sbol-registry-client/", env!("CARGO_PKG_VERSION"));
@@ -71,7 +71,7 @@ impl RegistryClient {
             iri: iri.to_owned(),
             source,
         })?;
-        if !matches!(url.scheme(), "http" | "https") || url.host_str().is_none() {
+        if !is_secure_registry_url(&url) {
             return Err(RegistryError::UnsupportedDesignIri(iri.to_owned()));
         }
         if !url.username().is_empty() || url.password().is_some() {
@@ -370,6 +370,97 @@ impl RegistryClient {
         self.post_json(url, request)
     }
 
+    /// Read the synchronization descriptor for one visible collection.
+    pub fn collection_descriptor(&self, iri: &str) -> Result<CollectionDescriptor, RegistryError> {
+        validate_design_iri(iri)?;
+        let mut url = self.endpoint("api/v2/collections/")?;
+        url.path_segments_mut()
+            .map_err(|_| RegistryError::CannotBeBase(self.base_url.to_string()))?
+            .pop_if_empty()
+            .push(iri);
+        let response = self.get(url, "application/json")?;
+        serde_json::from_slice(&response.body).map_err(RegistryError::InvalidJson)
+    }
+
+    /// Download only the biological SBOL document used for collection
+    /// synchronization. Server-managed ACL, audit, review, and timestamps are
+    /// excluded from both the body and the returned content ETag.
+    pub fn pull_collection(
+        &self,
+        iri: &str,
+        format: CollectionRdfFormat,
+    ) -> Result<PulledCollection, RegistryError> {
+        let url = self.collection_content_url(iri)?;
+        let response = self.get(url.clone(), format.media_type())?;
+        let etag = response.etag.ok_or(RegistryError::MissingContentEtag)?;
+        Ok(PulledCollection {
+            body: response.body,
+            content_type: response.content_type,
+            content_etag: etag,
+            source_url: url,
+        })
+    }
+
+    /// Strict create-or-CAS collection replacement. There is intentionally no
+    /// unconditional variant.
+    pub fn put_collection(
+        &self,
+        iri: &str,
+        format: CollectionRdfFormat,
+        body: &[u8],
+        precondition: CollectionPrecondition<'_>,
+    ) -> Result<CollectionWrite, RegistryError> {
+        let url = self.collection_content_url(iri)?;
+        let mut request = self
+            .agent
+            .put(url.as_str())
+            .header("Accept", "application/json")
+            .content_type(format.media_type());
+        request = match precondition {
+            CollectionPrecondition::Create => request.header("If-None-Match", "*"),
+            CollectionPrecondition::Matches(etag) => request.header("If-Match", etag),
+        };
+        if let Some(token) = &self.bearer_token {
+            request = request.header("Authorization", format!("Bearer {token}"));
+        }
+        let mut response = request.send(body).map_err(RegistryError::Transport)?;
+        let status = response.status().as_u16();
+        let current_content_etag = response
+            .headers()
+            .get("etag")
+            .and_then(|value| value.to_str().ok())
+            .map(str::to_owned);
+        let bytes = response
+            .body_mut()
+            .with_config()
+            .limit(self.max_response_bytes)
+            .read_to_vec()
+            .map_err(RegistryError::Transport)?;
+        if status == 412 {
+            return Err(RegistryError::PreconditionFailed {
+                current_content_etag,
+            });
+        }
+        if !(200..300).contains(&status) {
+            return Err(RegistryError::HttpStatus {
+                status,
+                message: error_message(&bytes),
+            });
+        }
+        serde_json::from_slice(&bytes).map_err(RegistryError::InvalidJson)
+    }
+
+    fn collection_content_url(&self, iri: &str) -> Result<Url, RegistryError> {
+        validate_design_iri(iri)?;
+        let mut url = self.endpoint("api/v2/collections/")?;
+        url.path_segments_mut()
+            .map_err(|_| RegistryError::CannotBeBase(self.base_url.to_string()))?
+            .pop_if_empty()
+            .push(iri)
+            .push("content");
+        Ok(url)
+    }
+
     fn endpoint(&self, relative: &str) -> Result<Url, RegistryError> {
         self.base_url
             .join(relative)
@@ -652,6 +743,57 @@ pub struct SubmissionCreated {
     pub triple_count: usize,
 }
 
+/// Lightweight collection synchronization descriptor.
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct CollectionDescriptor {
+    pub iri: String,
+    pub content_url: String,
+    pub content_etag: String,
+    pub triple_count: usize,
+    #[serde(default)]
+    pub display_id: Option<String>,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CollectionRdfFormat {
+    Turtle,
+    RdfXml,
+    JsonLd,
+    NTriples,
+}
+
+impl CollectionRdfFormat {
+    pub fn media_type(self) -> &'static str {
+        match self {
+            Self::Turtle => "text/turtle",
+            Self::RdfXml => "application/rdf+xml",
+            Self::JsonLd => "application/ld+json",
+            Self::NTriples => "application/n-triples",
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug)]
+pub enum CollectionPrecondition<'a> {
+    Create,
+    Matches(&'a str),
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct CollectionWrite {
+    pub collection_uri: String,
+    pub content_etag: String,
+    pub triple_count: usize,
+}
+
+#[derive(Clone, Debug)]
+pub struct PulledCollection {
+    pub body: Vec<u8>,
+    pub content_type: Option<String>,
+    pub content_etag: String,
+    pub source_url: Url,
+}
+
 /// A downloaded SBOL representation plus revision metadata.
 #[derive(Clone, Debug)]
 pub struct PulledDesign {
@@ -676,7 +818,7 @@ pub enum RegistryError {
         #[source]
         source: url::ParseError,
     },
-    #[error("registry URL must use http or https and include a host: `{0}`")]
+    #[error("registry URL must use HTTPS, or HTTP on a loopback host: `{0}`")]
     UnsupportedRegistryUrl(String),
     #[error("registry URL must not include credentials, a query, or a fragment: `{0}`")]
     InvalidRegistryBase(String),
@@ -692,7 +834,7 @@ pub enum RegistryError {
         #[source]
         source: url::ParseError,
     },
-    #[error("design IRI must use http or https and include a host: `{0}`")]
+    #[error("a registry origin cannot be inferred securely from design IRI `{0}`")]
     UnsupportedDesignIri(String),
     #[error("design IRI must not include credentials: `{0}`")]
     CredentialedDesignIri(String),
@@ -712,6 +854,14 @@ pub enum RegistryError {
     InvalidUtf8(#[source] std::string::FromUtf8Error),
     #[error("registry returned an empty access token")]
     EmptyAccessToken,
+    #[error("registry collection response did not include a biological content ETag")]
+    MissingContentEtag,
+    #[error(
+        "collection precondition failed; current remote content ETag: {current_content_etag:?}"
+    )]
+    PreconditionFailed {
+        current_content_etag: Option<String>,
+    },
 }
 
 fn oauth_url(value: &str, kind: &'static str) -> Result<Url, RegistryError> {
@@ -719,11 +869,10 @@ fn oauth_url(value: &str, kind: &'static str) -> Result<Url, RegistryError> {
         kind,
         url: value.to_owned(),
     })?;
-    let loopback = matches!(url.host_str(), Some("localhost" | "127.0.0.1" | "::1"));
     if url.host_str().is_none()
         || !url.username().is_empty()
         || url.password().is_some()
-        || !(matches!(url.scheme(), "https") || url.scheme() == "http" && loopback)
+        || !is_secure_registry_url(&url)
     {
         return Err(RegistryError::InvalidOAuthUrl {
             kind,
@@ -738,7 +887,7 @@ fn normalize_registry_url(value: &str) -> Result<Url, RegistryError> {
         url: value.to_owned(),
         source,
     })?;
-    if !matches!(url.scheme(), "http" | "https") || url.host_str().is_none() {
+    if !is_secure_registry_url(&url) {
         return Err(RegistryError::UnsupportedRegistryUrl(value.to_owned()));
     }
     if !url.username().is_empty()
@@ -758,13 +907,29 @@ fn validate_design_iri(value: &str) -> Result<(), RegistryError> {
         iri: value.to_owned(),
         source,
     })?;
-    if !matches!(url.scheme(), "http" | "https") || url.host_str().is_none() {
-        return Err(RegistryError::UnsupportedDesignIri(value.to_owned()));
-    }
     if !url.username().is_empty() || url.password().is_some() {
         return Err(RegistryError::CredentialedDesignIri(value.to_owned()));
     }
     Ok(())
+}
+
+/// Registry credentials and uploaded biological data must not cross a cleartext
+/// network boundary. Plain HTTP transport is accepted only for an actual
+/// loopback host so local development can use an ephemeral server without
+/// weakening production defaults. Design IRIs are identifiers sent to this
+/// already-validated registry endpoint, not transport destinations; legacy
+/// `http://` identities therefore remain usable with an explicit registry.
+fn is_secure_registry_url(url: &Url) -> bool {
+    match url.scheme() {
+        "https" => url.host().is_some(),
+        "http" => match url.host() {
+            Some(Host::Domain(host)) => host.eq_ignore_ascii_case("localhost"),
+            Some(Host::Ipv4(address)) => address.is_loopback(),
+            Some(Host::Ipv6(address)) => address.is_loopback(),
+            None => false,
+        },
+        _ => false,
+    }
 }
 
 fn error_message(body: &[u8]) -> String {
@@ -818,6 +983,44 @@ mod tests {
         assert!(matches!(
             RegistryClient::from_design_iri("https://alice:secret@example.org/design/1"),
             Err(RegistryError::CredentialedDesignIri(_))
+        ));
+    }
+
+    #[test]
+    fn accepts_http_only_for_actual_loopback_hosts() {
+        for url in [
+            "http://localhost:8888",
+            "http://127.0.0.1:8888",
+            "http://127.25.4.3:8888",
+            "http://[::1]:8888",
+        ] {
+            RegistryClient::new(url).unwrap_or_else(|error| panic!("{url}: {error}"));
+        }
+
+        for url in [
+            "http://example.org",
+            "http://localhost.example.org",
+            "http://192.168.1.10:8888",
+        ] {
+            assert!(matches!(
+                RegistryClient::new(url),
+                Err(RegistryError::UnsupportedRegistryUrl(_))
+            ));
+            assert!(matches!(
+                RegistryClient::from_design_iri(&format!("{url}/design/1")),
+                Err(RegistryError::UnsupportedDesignIri(_))
+            ));
+        }
+    }
+
+    #[test]
+    fn explicit_secure_registry_accepts_legacy_http_design_identifiers() {
+        let client = RegistryClient::new("https://registry.example").unwrap();
+        validate_design_iri("http://synbiohub.org/public/igem/BBa_J23100/1").unwrap();
+        assert_eq!(client.base_url().as_str(), "https://registry.example/");
+        assert!(matches!(
+            RegistryClient::from_design_iri("http://synbiohub.org/public/igem/BBa_J23100/1"),
+            Err(RegistryError::UnsupportedDesignIri(_))
         ));
     }
 

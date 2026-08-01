@@ -1,0 +1,19 @@
+[package]
+name = "sbol-workspace"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+description = "Project manifest and lockfile model for reproducible SBOL collection synchronization."
+repository.workspace = true
+homepage.workspace = true
+license.workspace = true
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+toml = { version = "1.1", default-features = false, features = ["parse", "display", "serde"] }
+sha2.workspace = true
+thiserror.workspace = true
+url = "2"
+
+[dev-dependencies]
+tempfile = "3"

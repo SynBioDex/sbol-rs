@@ -7,6 +7,7 @@ pub(crate) mod registry;
 pub(crate) mod rules;
 pub(crate) mod upgrade;
 pub(crate) mod validate;
+pub(crate) mod workspace;
 
 pub(crate) use convert::convert;
 pub(crate) use diff::diff;

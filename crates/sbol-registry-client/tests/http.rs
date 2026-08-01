@@ -4,8 +4,9 @@ use std::sync::mpsc::{self, Receiver};
 use std::thread;
 
 use sbol_registry_client::{
-    AuthorizationServerMetadata, CollisionPolicy, RegistryClient, SbolVersion,
-    SubmissionConsequence, SubmissionFormat, SubmissionRequest,
+    AuthorizationServerMetadata, CollectionPrecondition, CollectionRdfFormat, CollisionPolicy,
+    RegistryClient, RegistryError, SbolVersion, SubmissionConsequence, SubmissionFormat,
+    SubmissionRequest,
 };
 
 fn serve_once(status: u16, content_type: &str, body: &str) -> (String, Receiver<String>) {
@@ -121,6 +122,91 @@ fn pull_encodes_the_complete_iri_and_preserves_revision_metadata() {
             .to_ascii_lowercase()
             .contains("authorization: bearer secret-token")
     );
+}
+
+#[test]
+fn collection_sync_reads_descriptors_and_biological_content_etags() {
+    let descriptor_body = r#"{
+        "iri":"https://example.org/user/alice/toggle/toggle_collection/1",
+        "content_url":"/api/v2/collections/example/content",
+        "content_etag":"\"sbol-content-v1-abc\"",
+        "triple_count":42,
+        "display_id":"toggle"
+    }"#;
+    let (base, descriptor_request) = serve_once(200, "application/json", descriptor_body);
+    let iri = "https://example.org/user/alice/toggle/toggle_collection/1";
+    let descriptor = RegistryClient::new(&base)
+        .unwrap()
+        .collection_descriptor(iri)
+        .unwrap();
+    assert_eq!(descriptor.display_id.as_deref(), Some("toggle"));
+    assert_eq!(descriptor.content_etag, "\"sbol-content-v1-abc\"");
+    let request = descriptor_request.recv().unwrap();
+    assert!(request.starts_with(
+        "GET /api/v2/collections/https:%2F%2Fexample.org%2Fuser%2Falice%2Ftoggle%2Ftoggle_collection%2F1 HTTP/1.1"
+    ));
+
+    let (base, content_request) = serve_once(200, "text/turtle", "@prefix sbol: <x> .");
+    let pulled = RegistryClient::new(&base)
+        .unwrap()
+        .with_bearer_token("private-read")
+        .pull_collection(iri, CollectionRdfFormat::Turtle)
+        .unwrap();
+    assert_eq!(pulled.content_etag, "\"revision-1\"");
+    assert_eq!(pulled.body, b"@prefix sbol: <x> .");
+    let request = content_request.recv().unwrap().to_ascii_lowercase();
+    assert!(request.starts_with(
+        "get /api/v2/collections/https:%2f%2fexample.org%2fuser%2falice%2ftoggle%2ftoggle_collection%2f1/content http/1.1"
+    ));
+    assert!(request.contains("accept: text/turtle"));
+    assert!(request.contains("authorization: bearer private-read"));
+}
+
+#[test]
+fn collection_sync_writes_require_create_or_exact_content_preconditions() {
+    let body = r#"{
+        "collection_uri":"https://example.org/user/alice/toggle/toggle_collection/1",
+        "content_etag":"\"sbol-content-v1-next\"",
+        "triple_count":43
+    }"#;
+    let (base, request) = serve_once(200, "application/json", body);
+    let iri = "https://example.org/user/alice/toggle/toggle_collection/1";
+    let result = RegistryClient::new(&base)
+        .unwrap()
+        .with_bearer_token("private-write")
+        .put_collection(
+            iri,
+            CollectionRdfFormat::Turtle,
+            b"@prefix sbol: <x> .",
+            CollectionPrecondition::Matches("\"sbol-content-v1-abc\""),
+        )
+        .unwrap();
+    assert_eq!(result.content_etag, "\"sbol-content-v1-next\"");
+    let request = request.recv().unwrap().to_ascii_lowercase();
+    assert!(request.starts_with("put /api/v2/collections/"));
+    assert!(request.contains("if-match: \"sbol-content-v1-abc\""));
+    assert!(request.contains("authorization: bearer private-write"));
+
+    let (base, _request) = serve_once(
+        412,
+        "application/json",
+        r#"{"error":{"message":"content changed"}}"#,
+    );
+    let error = RegistryClient::new(&base)
+        .unwrap()
+        .put_collection(
+            iri,
+            CollectionRdfFormat::Turtle,
+            b"@prefix sbol: <x> .",
+            CollectionPrecondition::Create,
+        )
+        .unwrap_err();
+    assert!(matches!(
+        error,
+        RegistryError::PreconditionFailed {
+            current_content_etag: Some(_)
+        }
+    ));
 }
 
 #[test]
