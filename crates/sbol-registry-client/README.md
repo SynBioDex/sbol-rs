@@ -15,6 +15,19 @@ CLI itself remains part of the `sbol-rs` repository. It currently covers:
 - ACL-scoped collection descriptors, biological-content downloads, and strict
   create-or-ETag-CAS replacement.
 
+## Crate organization
+
+- `client/` keeps the public client type and groups operations by discovery,
+  identity, designs, submissions, and collection synchronization;
+- `models/` groups the public wire models by the same protocol capabilities;
+- `error.rs` defines the public failure contract; and
+- private `url.rs` and `response.rs` modules enforce transport boundaries and
+  decode buffered responses.
+
+Existing crate-root imports remain supported through re-exports, while the
+public `client`, `models`, and `error` modules provide domain-oriented paths to
+new callers.
+
 ```rust,no_run
 use sbol_registry_client::{RegistryClient, SbolVersion};
 
