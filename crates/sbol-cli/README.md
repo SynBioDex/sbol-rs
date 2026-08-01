@@ -6,7 +6,8 @@ Command-line tool for SBOL 2 and SBOL 3 documents. Ships the `sbol` binary.
 cargo install sbol-cli
 ```
 
-Nine subcommands cover the common workflows:
+The CLI covers both local file workflows and authenticated SBOL registry
+workflows:
 
 | Subcommand | Use it to… |
 |---|---|
@@ -19,10 +20,69 @@ Nine subcommands cover the common workflows:
 | `sbol import-fasta` | Convert a FASTA file to SBOL 3 |
 | `sbol rules list` | Inspect the built-in validation rule catalog |
 | `sbol ontology install` | Manage cached extension ontologies (NCIT, custom) |
+| `sbol registry` | Sign in, inspect a registry, download designs, and preview or publish submissions |
 
 The conversion path is explained in depth in
 [docs/conversion.md](https://github.com/SynBioDex/sbol-rs/blob/master/docs/conversion.md);
 this README focuses on the CLI surface itself.
+
+## `sbol registry`
+
+Use the same `sbol` binary for a local document and its registry copy. Signing
+in with no URL selects the public SBOL DB registry. Pass a URL when working
+with a university, institutional, or local instance:
+
+```sh
+sbol registry login
+sbol registry login https://sbol.my-university.edu
+sbol registry login http://127.0.0.1:8888
+```
+
+The CLI prompts for a username or email and reads the password without
+echoing it. It stores only the returned opaque access token in the local SBOL
+profile. For controlled automation, set `SBOL_ACCESS_TOKEN`; `--password-stdin`
+is also available for login but should only be used with a secret-aware input
+mechanism.
+
+Pull a design by canonical IRI. The registry is inferred from the IRI, and the
+output serialization is inferred from the output extension:
+
+```sh
+sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
+sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.jsonld
+```
+
+For local testing, keep the canonical design IRI but direct the request to the
+development server explicitly:
+
+```sh
+sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 \
+  --registry http://127.0.0.1:8888 \
+  -o design.ttl
+```
+
+Every push first asks the registry to parse and validate the content, mint the
+proposed identities, and analyze collisions. `--preview` stops after that
+read-only analysis:
+
+```sh
+sbol registry push design.ttl --preview
+sbol registry push design.ttl
+```
+
+The default collision policy is `fail`. Replacing or merging an existing
+collection must be chosen explicitly:
+
+```sh
+sbol registry push design.ttl --collision replace
+sbol registry push design.ttl --collision merge
+```
+
+The active profile is the most recently successful login. You can override it
+per command with `--registry`, for a process with `SBOL_REGISTRY_URL`, or supply
+a bearer token with `SBOL_ACCESS_TOKEN`. `sbol registry status` prints the
+registry identity and advertised REST, MCP, and identity endpoints; add
+`--json` for a stable machine-readable response.
 
 ## `sbol validate`
 

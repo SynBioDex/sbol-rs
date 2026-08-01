@@ -1,0 +1,23 @@
+[package]
+name = "sbol-registry-client"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+description = "Typed HTTP client for SBOL registries."
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/sbol-registry-client"
+license.workspace = true
+readme = "README.md"
+keywords = ["sbol", "synthetic-biology", "registry", "synbiohub"]
+categories = ["api-bindings", "science"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror.workspace = true
+ureq.workspace = true
+url = "2"
+
+[dev-dependencies]
+tempfile = "3"

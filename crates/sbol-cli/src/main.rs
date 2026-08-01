@@ -29,5 +29,6 @@ fn main() -> ExitCode {
         Command::ImportFasta(args) => commands::import_fasta(args, styles),
         Command::Rules(command) => commands::rules(command, styles),
         Command::Ontology(command) => commands::ontology(command, styles),
+        Command::Registry(command) => commands::registry(command, styles),
     }
 }

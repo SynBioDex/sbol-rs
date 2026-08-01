@@ -43,6 +43,120 @@ pub(crate) enum Command {
     /// Manage cached extension ontologies (NCIT and others).
     #[command(subcommand)]
     Ontology(OntologyCommand),
+    /// Authenticate, download, and publish designs in an SBOL registry.
+    #[command(subcommand)]
+    Registry(RegistryCommand),
+}
+
+#[derive(Subcommand)]
+pub(crate) enum RegistryCommand {
+    /// Sign in and store a registry token in the local SBOL profile.
+    Login(RegistryLoginArgs),
+    /// Download a design's recursive SBOL closure.
+    Pull(RegistryPullArgs),
+    /// Validate and upload a design as a private registry collection.
+    Push(RegistryPushArgs),
+    /// Show the identity and machine capabilities of a registry.
+    Status(RegistryStatusArgs),
+}
+
+#[derive(Args)]
+pub(crate) struct RegistryLoginArgs {
+    /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`, then
+    /// `https://sbol.io`.
+    pub(crate) registry: Option<String>,
+
+    /// Account username or email. Prompted for when omitted.
+    #[arg(long)]
+    pub(crate) identifier: Option<String>,
+
+    /// Read the password from standard input instead of a hidden terminal
+    /// prompt. Intended for controlled automation; never pass a password as a
+    /// command-line argument.
+    #[arg(long)]
+    pub(crate) password_stdin: bool,
+}
+
+#[derive(Args)]
+pub(crate) struct RegistryPullArgs {
+    /// The complete design IRI to download.
+    pub(crate) iri: String,
+
+    /// Destination path. The RDF serialization is inferred from its extension:
+    /// `.ttl`, `.rdf` / `.xml`, `.jsonld`, or `.nt`.
+    #[arg(long, short = 'o', value_name = "PATH")]
+    pub(crate) output: PathBuf,
+
+    /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`, then to the origin of
+    /// the design IRI. Required for registries mounted below a path prefix.
+    #[arg(long, value_name = "URL")]
+    pub(crate) registry: Option<String>,
+}
+
+#[derive(Args)]
+pub(crate) struct RegistryStatusArgs {
+    /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`.
+    pub(crate) registry: Option<String>,
+
+    /// Print the complete registry metadata as JSON.
+    #[arg(long)]
+    pub(crate) json: bool,
+}
+
+#[derive(Args)]
+pub(crate) struct RegistryPushArgs {
+    /// SBOL, GenBank, or FASTA document to upload.
+    pub(crate) input: PathBuf,
+
+    /// Registry base URL. Defaults to `SBOL_REGISTRY_URL`.
+    #[arg(long, value_name = "URL")]
+    pub(crate) registry: Option<String>,
+
+    /// Collection identifier. Defaults to a display-id-safe form of the input
+    /// file stem.
+    #[arg(long, value_name = "DISPLAY_ID")]
+    pub(crate) id: Option<String>,
+
+    /// Version assigned to the minted collection and its members.
+    #[arg(long = "collection-version", default_value = "1")]
+    pub(crate) collection_version: String,
+
+    /// Human-readable collection title.
+    #[arg(long)]
+    pub(crate) name: Option<String>,
+
+    /// Human-readable collection description.
+    #[arg(long)]
+    pub(crate) description: Option<String>,
+
+    /// PubMed citation identifier. Repeat for multiple citations.
+    #[arg(long = "citation")]
+    pub(crate) citations: Vec<String>,
+
+    /// Creator name stamped on the collection.
+    #[arg(long)]
+    pub(crate) creator_name: Option<String>,
+
+    /// Explicit behavior when the target collection identity already exists.
+    #[arg(long, value_enum, default_value_t = RegistryCollisionPolicy::Fail)]
+    pub(crate) collision: RegistryCollisionPolicy,
+
+    /// Run server-side validation, identity minting, and collision analysis
+    /// without writing anything.
+    #[arg(long)]
+    pub(crate) preview: bool,
+
+    /// Print the preview and commit result as JSON.
+    #[arg(long)]
+    pub(crate) json: bool,
+}
+
+#[derive(Clone, Copy, Debug, Default, ValueEnum)]
+pub(crate) enum RegistryCollisionPolicy {
+    #[default]
+    Fail,
+    Replace,
+    Merge,
 }
 
 #[derive(Subcommand)]

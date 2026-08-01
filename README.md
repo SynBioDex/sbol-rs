@@ -40,6 +40,8 @@ binary named `sbol`:
 ```sh
 cargo install sbol-cli
 sbol validate design.ttl
+sbol registry login
+sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
 ```
 
 `sbol-rs` 1.x follows Cargo's Semantic Versioning compatibility rules
@@ -151,7 +153,8 @@ the version crates are usable directly.
 | [`sbol2`](crates/sbol2/) | SBOL 2.3.0 typed data model, RDF I/O, and validator. |
 | [`sbol-core`](crates/sbol-core/) | Version-neutral machinery both versions build on: field-metadata descriptors, identity newtypes, the RDF-backed document store, and the shared validation reporting and configuration types. |
 | [`sbol-convert`](crates/sbol-convert/) | SBOL 2 ⇄ SBOL 3 conversion at the RDF triple level (`upgrade_from_sbol2`, `downgrade`). |
-| [`sbol-cli`](crates/sbol-cli/) | The `sbol` command-line tool: validate, convert, and import for both versions. |
+| [`sbol-cli`](crates/sbol-cli/) | The `sbol` command-line tool: validate, compare, convert, import, and authenticated registry workflows. |
+| [`sbol-registry-client`](crates/sbol-registry-client/) | Typed SBOL DB discovery, download, login, and collision-aware submission transport used by the CLI. |
 | [`sbol-rulegen`](crates/sbol-rulegen/) | Generates each version's validation rule catalog from its `rules.toml`. |
 | [`sbol-fasta`](crates/sbol-fasta/) / [`sbol-genbank`](crates/sbol-genbank/) | FASTA and GenBank importers to native SBOL 3. |
 | [`sbol-ontology`](crates/sbol-ontology/) / [`sbol-rdf`](crates/sbol-rdf/) | Bundled ontology snapshots and the RDF serialization layer. |

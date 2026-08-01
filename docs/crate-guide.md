@@ -26,7 +26,8 @@ core.
 | `sbol-rdf`     | RDF primitives and multi-format I/O (Turtle, RDF/XML, JSON-LD, N-Triples).                |
 | `sbol-ontology`| Offline ontology facts (EDAM, SBO, SO, GO, ChEBI, CL) plus a runtime cache for opt-in extensions (NCIT, custom). See [`ontology-extensions.md`](ontology-extensions.md).|
 | `sbol-fasta` / `sbol-genbank` | FASTA and GenBank importers to native SBOL 3.                             |
-| `sbol-cli`     | Command-line tool for both versions. Ships the `sbol` binary.                            |
+| `sbol-registry-client` | Typed HTTP transport for SBOL DB discovery, download, login, and submission preview/commit. |
+| `sbol-cli`     | Command-line tool for both versions and authenticated registries. Ships the `sbol` binary. |
 
 Internally each version crate is split into private modules; on `sbol3`
 only `constants`, `identity`, `prelude`, and `schema` are public modules,
@@ -409,11 +410,20 @@ sbol diff old.ttl new.ttl        # compare two documents by identity
 sbol ontology install ncit       # install NCIT into the runtime cache
 sbol ontology list               # show installed extensions
 sbol validate design.rdf --ontology ncit  # opt into the cached extension
+
+sbol registry login              # defaults to https://sbol.io
+sbol registry login http://127.0.0.1:8888  # local or institutional instance
+sbol registry pull https://sbol.io/public/igem/BBa_J23100/1 -o design.ttl
+sbol registry push design.ttl --preview
+sbol registry push design.ttl
 ```
 
 Exit codes are documented in
 [`validation-output.md`](validation-output.md). The CLI uses the
-same validator as the library; there's no separate code path.
+same validator as the library; there's no separate code path. Registry
+transport lives in `sbol-registry-client`, while local RDF parsing and format
+conversion remain in the SBOL crates. Registry state, ACLs, identity minting,
+and collision handling remain server-authoritative.
 
 ## Testing
 

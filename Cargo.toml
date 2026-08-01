@@ -12,6 +12,7 @@ members = [
     "crates/sbol-genbank",
     "crates/sbol-ontology",
     "crates/sbol-rdf",
+    "crates/sbol-registry-client",
     "crates/sbol-utilities",
 ]
 exclude = ["fuzz", "crates/sbol-py"]
@@ -42,6 +43,7 @@ sbol-genbank = { path = "crates/sbol-genbank", version = "1.0.0" }
 sbol-utilities = { path = "crates/sbol-utilities", version = "1.0.0" }
 sbol-ontology = { path = "crates/sbol-ontology", version = "1.0.0" }
 sbol-rdf = { path = "crates/sbol-rdf", version = "1.0.0" }
+sbol-registry-client = { path = "crates/sbol-registry-client", version = "0.1.0" }
 sha3 = "0.10"
 thiserror = "2"
 ureq = "3.3"
