@@ -723,7 +723,7 @@ fn oauth_url(value: &str, kind: &'static str) -> Result<Url, RegistryError> {
     if url.host_str().is_none()
         || !url.username().is_empty()
         || url.password().is_some()
-        || (!matches!(url.scheme(), "https") && !(url.scheme() == "http" && loopback))
+        || !(matches!(url.scheme(), "https") || url.scheme() == "http" && loopback)
     {
         return Err(RegistryError::InvalidOAuthUrl {
             kind,

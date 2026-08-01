@@ -98,10 +98,10 @@ fn revoke_oauth_credential(
         .authorization_server(issuer)
         .map_err(|error| error.to_string())?;
     let mut failures = Vec::new();
-    if let Some(refresh_token) = credential.refresh_token.as_deref() {
-        if let Err(error) = client.revoke_oauth_token(&metadata, refresh_token) {
-            failures.push(error.to_string());
-        }
+    if let Some(refresh_token) = credential.refresh_token.as_deref()
+        && let Err(error) = client.revoke_oauth_token(&metadata, refresh_token)
+    {
+        failures.push(error.to_string());
     }
     if let Err(error) = client.revoke_oauth_token(&metadata, &credential.access_token) {
         failures.push(error.to_string());
@@ -121,16 +121,14 @@ fn login(args: RegistryLoginArgs, styles: Styles) -> ExitCode {
             return ExitCode::from(2);
         }
     };
-    if args.identifier.is_none() && !args.password_stdin {
-        if let Ok(instance) = client.instance() {
-            if let Some(machine_access) = instance.machine_access {
-                if let (Some(issuer), resource) =
-                    (machine_access.authorization_issuer, machine_access.api_url)
-                {
-                    return oauth_login(&client, &issuer, &resource, styles);
-                }
-            }
-        }
+    if args.identifier.is_none()
+        && !args.password_stdin
+        && let Ok(instance) = client.instance()
+        && let Some(machine_access) = instance.machine_access
+        && let (Some(issuer), resource) =
+            (machine_access.authorization_issuer, machine_access.api_url)
+    {
+        return oauth_login(&client, &issuer, &resource, styles);
     }
     password_login(client, args, styles)
 }
