@@ -1,8 +1,23 @@
 //! SBOLInventory Profile 0.2 support for `sbol-rs`.
 //!
 //! The profile adds facility catalogs and run provenance to ordinary SBOL 3
-//! RDF. This crate layers typed views over [`sbol3::Document`] without adding
-//! profile-specific variants to the SBOL 3 core object model.
+//! RDF:
+//!
+//! ```text
+//! a facility contains zones
+//! zones locate assets and material lots
+//! assets expose capabilities
+//! workflows require capabilities
+//! plans bind requirements to qualified assets
+//! runs record material changes and evidence
+//! ```
+//!
+//! This crate provides lossless readers, a full Profile 0.2 validator, typed
+//! graph authoring, deterministic candidate discovery, and standard PROV run
+//! records without adding profile-specific variants to the SBOL 3 core model.
+//! Candidate discovery is not allocation: workflow requirements, planning,
+//! scheduling, reservations, device protocols, and dispatch remain consumer
+//! responsibilities.
 
 #![forbid(unsafe_code)]
 
