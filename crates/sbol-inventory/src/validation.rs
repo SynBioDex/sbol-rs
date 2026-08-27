@@ -11,7 +11,7 @@ use crate::vocabulary::*;
 use crate::{InventoryDocument, ProfileRule};
 
 /// Exact upstream revision from which the embedded Profile 0.2 artifacts were copied.
-pub const PROFILE_SOURCE_REVISION: &str = "aa4d111b5fdd3199066140a4a647885f9a1fb8c0";
+pub const PROFILE_SOURCE_REVISION: &str = "371c919c763c970091a12a6449099b5591deb3ec";
 
 /// The SBOL core validator used by this profile implementation.
 pub const CORE_VALIDATOR: &str = "sbol3::Document::validate";

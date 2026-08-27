@@ -240,7 +240,7 @@ A profile run is a `prov:Activity` that owns at least one `prov:Usage` carrying 
 
 A profile run MUST contain at least one `RunAsset` usage. Manual work can name a workstation or other facility asset when no instrument is involved.
 
-Generated material lots and `sbol:ExperimentalData` SHOULD refer to the run through `prov:wasGeneratedBy`. Material transformations SHOULD state their input lots with `fac:derivedFromMaterial`. This profile property is distinct from `prov:wasDerivedFrom` because SBOL requires that predicate on an Implementation to refer to a Component. Evidence files SHOULD use standard `sbol:Attachment` objects.
+Generated material lots and `sbol:ExperimentalData` SHOULD refer to the run through `prov:wasGeneratedBy`. Material transformations SHOULD state their input lots with `fac:derivedFromMaterial`. Evidence files SHOULD use standard `sbol:Attachment` objects.
 
 A reviewed plan and responsible agent MAY be represented with standard `prov:Association`, `prov:hadPlan`, and `prov:agent`. Those standard objects do not encode a compiler's private requirement or allocation IR.
 
