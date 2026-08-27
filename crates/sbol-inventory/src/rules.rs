@@ -55,7 +55,7 @@ impl ProfileRule {
     }
 }
 
-include!(concat!(env!("OUT_DIR"), "/profile_rule_catalog.rs"));
+include!("profile_rule_catalog.rs");
 
 pub fn profile_rules() -> &'static [ProfileRule] {
     PROFILE_RULES

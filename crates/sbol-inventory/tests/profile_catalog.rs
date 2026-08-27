@@ -4,22 +4,45 @@ use std::path::{Path, PathBuf};
 
 use sbol_inventory::{
     ConformanceClass, PROFILE_RULE_CATALOG_IRI, PROFILE_RULE_CATALOG_STATUS,
-    PROFILE_RULE_CATALOG_VERSION, profile_rules,
+    PROFILE_RULE_CATALOG_VERSION, RuleStrength, profile_rules,
 };
 use sbol3::RdfGraph;
+use serde::Deserialize;
+
+#[derive(Deserialize)]
+struct SourceCatalog {
+    profile: String,
+    version: String,
+    status: String,
+    rules: Vec<SourceRule>,
+}
+
+#[derive(Deserialize)]
+struct SourceRule {
+    id: String,
+    section: String,
+    classes: Vec<String>,
+    strength: String,
+    machine_checkable: bool,
+    shacl_core: bool,
+    fixture: Option<String>,
+    statement: String,
+}
 
 #[test]
-fn generated_catalog_matches_pinned_profile() {
+fn checked_in_catalog_matches_pinned_profile() {
+    let source = fs::read_to_string(profile_root().join("rules.toml")).unwrap();
+    let mut source: SourceCatalog = toml::from_str(&source).unwrap();
+    source.rules.sort_by(|left, right| left.id.cmp(&right.id));
+
     let rules = profile_rules();
     let identifiers: BTreeSet<_> = rules.iter().map(|rule| rule.id).collect();
 
-    assert_eq!(
-        PROFILE_RULE_CATALOG_IRI,
-        "https://draggon.org/spec/sbol-inventory/0.2"
-    );
-    assert_eq!(PROFILE_RULE_CATALOG_VERSION, "0.2");
-    assert_eq!(PROFILE_RULE_CATALOG_STATUS, "draft");
+    assert_eq!(PROFILE_RULE_CATALOG_IRI, source.profile);
+    assert_eq!(PROFILE_RULE_CATALOG_VERSION, source.version);
+    assert_eq!(PROFILE_RULE_CATALOG_STATUS, source.status);
     assert_eq!(rules.len(), 45);
+    assert_eq!(rules.len(), source.rules.len());
     assert_eq!(identifiers.len(), rules.len());
     assert_eq!(
         rules
@@ -29,6 +52,34 @@ fn generated_catalog_matches_pinned_profile() {
         41
     );
     assert!(rules.iter().all(|rule| rule.id.starts_with("sbolinv-")));
+
+    for (rule, source) in rules.iter().zip(source.rules) {
+        let classes: Vec<_> = source
+            .classes
+            .iter()
+            .map(|class| match class.as_str() {
+                "Reader" => ConformanceClass::Reader,
+                "Writer" => ConformanceClass::Writer,
+                "Validator" => ConformanceClass::Validator,
+                "Query" => ConformanceClass::Query,
+                other => panic!("unknown conformance class `{other}`"),
+            })
+            .collect();
+        let strength = match source.strength.as_str() {
+            "required" => RuleStrength::Required,
+            "recommended" => RuleStrength::Recommended,
+            other => panic!("unknown rule strength `{other}`"),
+        };
+
+        assert_eq!(rule.id, source.id);
+        assert_eq!(rule.section, source.section);
+        assert_eq!(rule.classes, classes);
+        assert_eq!(rule.strength, strength);
+        assert_eq!(rule.machine_checkable, source.machine_checkable);
+        assert_eq!(rule.shacl_core, source.shacl_core);
+        assert_eq!(rule.fixture, source.fixture.as_deref());
+        assert_eq!(rule.statement, source.statement);
+    }
 }
 
 #[test]

@@ -1078,7 +1078,6 @@ dependencies = [
 name = "sbol-inventory"
 version = "0.1.0"
 dependencies = [
- "sbol-rulegen",
  "sbol3",
  "serde",
  "thiserror",

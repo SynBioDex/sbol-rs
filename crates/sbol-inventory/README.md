@@ -10,7 +10,7 @@ SBOLInventory remains a profile layered on the SBOL 3 core object model. Workflo
 
 `InventoryDocument::validate` runs the native SBOL 3.1 validator and all 41 required Profile 0.2 Validator rules. `InventoryDocument::check` returns a `ValidatedInventory`, which is the input boundary for deterministic candidate queries.
 
-The crate vendors the versioned rule catalog, SHACL projection, vocabulary, specification, and 43 conformance fixtures. Valid fixtures are round-tripped through Turtle, RDF/XML, JSON-LD, and N-Triples and compared by RDF graph isomorphism.
+The crate vendors the versioned rule catalog, SHACL projection, vocabulary, specification, and 43 conformance fixtures. Its generated Rust rule catalog is checked in so published packages have no build-time dependency on an unreleased generator, and a source-catalog comparison test prevents drift. Valid fixtures are round-tripped through Turtle, RDF/XML, JSON-LD, and N-Triples and compared by RDF graph isomorphism.
 
 ## Authoring
 
