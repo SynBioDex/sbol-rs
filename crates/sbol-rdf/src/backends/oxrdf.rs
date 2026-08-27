@@ -1,6 +1,8 @@
+use ::oxrdf::Graph as OxGraph;
+use ::oxrdf::graph::CanonicalizationAlgorithm;
 use ::oxrdf::{
     BlankNode as OxBlankNode, GraphName, Literal as OxLiteral, NamedNode as OxNamedNode,
-    NamedOrBlankNode as OxNamedOrBlankNode, Quad as OxQuad, Term as OxTerm,
+    NamedOrBlankNode as OxNamedOrBlankNode, Quad as OxQuad, Term as OxTerm, Triple as OxTriple,
 };
 use oxjsonld::JsonLdProfileSet;
 use oxrdfio::{RdfFormat as OxRdfFormat, RdfParser, RdfSerializer};
@@ -16,6 +18,22 @@ use crate::terms::{BlankNode, Iri, Literal, Resource, Term, Triple, XSD_STRING};
 const DEFAULT_BASE_IRI: &str = "http://sbols.org/unspecified/";
 
 pub(crate) enum Backend {}
+
+pub(crate) fn are_isomorphic(left: &[Triple], right: &[Triple]) -> Result<bool, WriteError> {
+    let mut left = canonical_graph(left)?;
+    let mut right = canonical_graph(right)?;
+    left.canonicalize(CanonicalizationAlgorithm::Unstable);
+    right.canonicalize(CanonicalizationAlgorithm::Unstable);
+    Ok(left == right)
+}
+
+fn canonical_graph(triples: &[Triple]) -> Result<OxGraph, WriteError> {
+    triples
+        .iter()
+        .map(convert_triple)
+        .map(|quad| quad.map(OxTriple::from))
+        .collect()
+}
 
 impl RdfBackend for Backend {
     fn parse(input: &str, format: RdfFormat) -> Result<Vec<Triple>, ParseError> {

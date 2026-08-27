@@ -48,6 +48,35 @@ ex:b ex:p "2" .
 }
 
 #[test]
+fn graph_isomorphism_ignores_blank_node_labels() {
+    let first = Graph::parse_turtle(
+        r#"PREFIX ex: <https://example.org/>
+_:first ex:next _:second .
+_:second ex:value "same" .
+"#,
+    )
+    .unwrap();
+    let second = Graph::parse_turtle(
+        r#"PREFIX ex: <https://example.org/>
+_:b ex:value "same" .
+_:a ex:next _:b .
+"#,
+    )
+    .unwrap();
+    let different = Graph::parse_turtle(
+        r#"PREFIX ex: <https://example.org/>
+_:a ex:next _:b .
+_:b ex:value "different" .
+"#,
+    )
+    .unwrap();
+
+    assert_ne!(first.normalized_triples(), second.normalized_triples());
+    assert!(first.is_isomorphic_with(&second).unwrap());
+    assert!(!first.is_isomorphic_with(&different).unwrap());
+}
+
+#[test]
 fn rdf_terms_expose_owned_helpers() {
     let iri = Iri::new("https://example.org/predicate").unwrap();
     assert_eq!(iri.as_str(), "https://example.org/predicate");
