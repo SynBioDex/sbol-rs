@@ -19,6 +19,10 @@ pub const SBOL_IDENTIFIED: &str = "http://sbols.org/v3#Identified";
 pub const SBOL_TOP_LEVEL: &str = "http://sbols.org/v3#TopLevel";
 pub const SBOL_COMPONENT: &str = "http://sbols.org/v3#Component";
 pub const SBOL_IMPLEMENTATION: &str = "http://sbols.org/v3#Implementation";
+pub const SBOL_DISPLAY_ID: &str = "http://sbols.org/v3#displayId";
+pub const SBOL_HAS_NAMESPACE: &str = "http://sbols.org/v3#hasNamespace";
+pub const SBOL_NAME: &str = "http://sbols.org/v3#name";
+pub const SBOL_DESCRIPTION: &str = "http://sbols.org/v3#description";
 pub const SBOL_BUILT: &str = "http://sbols.org/v3#built";
 
 pub const PROV_ACTIVITY: &str = "http://www.w3.org/ns/prov#Activity";

@@ -6,6 +6,7 @@
 
 #![forbid(unsafe_code)]
 
+mod authoring;
 mod document;
 mod query;
 pub mod rules;
@@ -13,6 +14,11 @@ mod validation;
 mod view;
 pub mod vocabulary;
 
+pub use authoring::{
+    AssetBuilder, AssetId, CapabilityBuilder, CapabilityOfferingId, FacilityBuilder, FacilityId,
+    InventoryBuildError, InventoryBuilder, LocationId, MaterialLotBuilder, MaterialLotId,
+    PropertyScalar, PropertyValueBuilder, PropertyValueId, ZoneBuilder, ZoneId,
+};
 pub use document::InventoryDocument;
 pub use query::{CandidateQuery, CapabilityCandidate, QueryError, find_qualified_assets};
 pub use rules::{
@@ -31,9 +37,12 @@ pub use view::{
 pub mod prelude {
     pub use crate::vocabulary::{ControlMode, Qualification};
     pub use crate::{
-        AssetRef, CandidateQuery, CapabilityCandidate, CapabilityOfferingRef, FacilityRef,
-        InventoryDocument, InventoryValidationReport, MaterialLotRef, PropertyValueRef, QueryError,
-        ScalarValueRef, ValidatedInventory, ZoneRef, find_qualified_assets,
+        AssetBuilder, AssetId, AssetRef, CandidateQuery, CapabilityBuilder, CapabilityCandidate,
+        CapabilityOfferingId, CapabilityOfferingRef, FacilityBuilder, FacilityId, FacilityRef,
+        InventoryBuildError, InventoryBuilder, InventoryDocument, InventoryValidationReport,
+        LocationId, MaterialLotBuilder, MaterialLotId, MaterialLotRef, PropertyScalar,
+        PropertyValueBuilder, PropertyValueId, PropertyValueRef, QueryError, ScalarValueRef,
+        ValidatedInventory, ZoneBuilder, ZoneId, ZoneRef, find_qualified_assets,
     };
-    pub use sbol3::{Iri, RdfFormat, Resource};
+    pub use sbol3::{Iri, Namespace, RdfFormat, Resource};
 }
