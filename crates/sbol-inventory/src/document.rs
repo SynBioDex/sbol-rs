@@ -2,6 +2,7 @@ use std::path::Path;
 
 use sbol3::{Document, Object, RdfFormat, ReadError, Resource, WriteError};
 
+use crate::validation::{InventoryValidationReport, ValidatedInventory};
 use crate::view::{
     AssetRef, CapabilityOfferingRef, FacilityRef, MaterialLotRef, PropertyValueRef, ZoneRef,
 };
@@ -41,6 +42,21 @@ impl InventoryDocument {
 
     pub fn write(&self, format: RdfFormat) -> Result<String, WriteError> {
         self.document.write(format)
+    }
+
+    /// Validates SBOL core and every required Profile 0.2 Validator rule.
+    pub fn validate(&self) -> InventoryValidationReport {
+        crate::validation::validate(self)
+    }
+
+    /// Returns a query-safe view when the document fully conforms to Profile 0.2.
+    pub fn check(&self) -> Result<ValidatedInventory<'_>, InventoryValidationReport> {
+        let report = self.validate();
+        if report.is_valid() {
+            Ok(ValidatedInventory::new(self, report))
+        } else {
+            Err(report)
+        }
     }
 
     pub fn facilities(&self) -> impl Iterator<Item = FacilityRef<'_>> {

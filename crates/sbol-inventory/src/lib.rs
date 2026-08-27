@@ -8,6 +8,7 @@
 
 mod document;
 pub mod rules;
+mod validation;
 mod view;
 pub mod vocabulary;
 
@@ -15,6 +16,9 @@ pub use document::InventoryDocument;
 pub use rules::{
     ConformanceClass, PROFILE_RULE_CATALOG_IRI, PROFILE_RULE_CATALOG_STATUS,
     PROFILE_RULE_CATALOG_VERSION, ProfileRule, RuleStrength, profile_rule, profile_rules,
+};
+pub use validation::{
+    CORE_VALIDATOR, InventoryValidationReport, PROFILE_SOURCE_REVISION, ValidatedInventory,
 };
 pub use view::{
     AssetRef, CapabilityOfferingRef, FacilityRef, MaterialLotRef, PropertyValueReadError,
@@ -25,8 +29,8 @@ pub use view::{
 pub mod prelude {
     pub use crate::vocabulary::{ControlMode, Qualification};
     pub use crate::{
-        AssetRef, CapabilityOfferingRef, FacilityRef, InventoryDocument, MaterialLotRef,
-        PropertyValueRef, ScalarValueRef, ZoneRef,
+        AssetRef, CapabilityOfferingRef, FacilityRef, InventoryDocument, InventoryValidationReport,
+        MaterialLotRef, PropertyValueRef, ScalarValueRef, ValidatedInventory, ZoneRef,
     };
     pub use sbol3::{Iri, RdfFormat, Resource};
 }
