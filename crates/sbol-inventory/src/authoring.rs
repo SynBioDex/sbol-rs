@@ -723,7 +723,24 @@ impl InventoryBuilder {
         ))
     }
 
-    fn commit_triples(&mut self, triples: Vec<Triple>) -> Result<(), InventoryBuildError> {
+    pub(crate) fn contains_identity(&self, identity: &Resource) -> bool {
+        self.identities.contains(identity)
+    }
+
+    pub(crate) fn extend_existing_triples(&mut self, triples: impl IntoIterator<Item = Triple>) {
+        let triples: Vec<_> = triples.into_iter().collect();
+        debug_assert!(
+            triples
+                .iter()
+                .all(|triple| self.identities.contains(&triple.subject))
+        );
+        self.triples.extend(triples);
+    }
+
+    pub(crate) fn commit_triples(
+        &mut self,
+        triples: Vec<Triple>,
+    ) -> Result<(), InventoryBuildError> {
         let subjects: BTreeSet<_> = triples
             .iter()
             .map(|triple| triple.subject.clone())

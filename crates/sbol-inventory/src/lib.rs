@@ -8,6 +8,7 @@
 
 mod authoring;
 mod document;
+mod provenance;
 mod query;
 pub mod rules;
 mod validation;
@@ -20,6 +21,7 @@ pub use authoring::{
     PropertyScalar, PropertyValueBuilder, PropertyValueId, ZoneBuilder, ZoneId,
 };
 pub use document::InventoryDocument;
+pub use provenance::{RunBuildError, RunBuilder, RunId};
 pub use query::{CandidateQuery, CapabilityCandidate, QueryError, find_qualified_assets};
 pub use rules::{
     ConformanceClass, PROFILE_RULE_CATALOG_IRI, PROFILE_RULE_CATALOG_STATUS,
@@ -41,8 +43,9 @@ pub mod prelude {
         CapabilityOfferingId, CapabilityOfferingRef, FacilityBuilder, FacilityId, FacilityRef,
         InventoryBuildError, InventoryBuilder, InventoryDocument, InventoryValidationReport,
         LocationId, MaterialLotBuilder, MaterialLotId, MaterialLotRef, PropertyScalar,
-        PropertyValueBuilder, PropertyValueId, PropertyValueRef, QueryError, ScalarValueRef,
-        ValidatedInventory, ZoneBuilder, ZoneId, ZoneRef, find_qualified_assets,
+        PropertyValueBuilder, PropertyValueId, PropertyValueRef, QueryError, RunBuildError,
+        RunBuilder, RunId, ScalarValueRef, ValidatedInventory, ZoneBuilder, ZoneId, ZoneRef,
+        find_qualified_assets,
     };
     pub use sbol3::{Iri, Namespace, RdfFormat, Resource};
 }
