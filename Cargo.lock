@@ -1075,6 +1075,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "sbol-inventory"
+version = "0.1.0"
+dependencies = [
+ "sbol3",
+ "thiserror",
+]
+
+[[package]]
 name = "sbol-ontology"
 version = "1.0.0"
 dependencies = [

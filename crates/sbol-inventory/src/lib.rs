@@ -1,0 +1,27 @@
+//! SBOLInventory Profile 0.2 support for `sbol-rs`.
+//!
+//! The profile adds facility catalogs and run provenance to ordinary SBOL 3
+//! RDF. This crate layers typed views over [`sbol3::Document`] without adding
+//! profile-specific variants to the SBOL 3 core object model.
+
+#![forbid(unsafe_code)]
+
+mod document;
+mod view;
+pub mod vocabulary;
+
+pub use document::InventoryDocument;
+pub use view::{
+    AssetRef, CapabilityOfferingRef, FacilityRef, MaterialLotRef, PropertyValueReadError,
+    PropertyValueRef, ScalarValueRef, ZoneRef,
+};
+
+/// Common imports for reading SBOLInventory documents.
+pub mod prelude {
+    pub use crate::vocabulary::{ControlMode, Qualification};
+    pub use crate::{
+        AssetRef, CapabilityOfferingRef, FacilityRef, InventoryDocument, MaterialLotRef,
+        PropertyValueRef, ScalarValueRef, ZoneRef,
+    };
+    pub use sbol3::{Iri, RdfFormat, Resource};
+}

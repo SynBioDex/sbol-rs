@@ -1,0 +1,17 @@
+[package]
+name = "sbol-inventory"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+description = "Native Rust support for the SBOLInventory facility catalog and run-ledger profile."
+repository.workspace = true
+homepage.workspace = true
+documentation = "https://docs.rs/sbol-inventory"
+license.workspace = true
+readme = "README.md"
+keywords = ["sbol", "inventory", "laboratory", "rdf"]
+categories = ["science"]
+
+[dependencies]
+sbol3.workspace = true
+thiserror.workspace = true
