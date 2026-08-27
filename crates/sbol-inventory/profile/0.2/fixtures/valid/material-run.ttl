@@ -1,0 +1,88 @@
+@prefix ex: <https://example.org/sbolinventory-run/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix inv: <https://draggon.org/ns/inventory#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "facility" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> .
+
+ex:room
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "room" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    fac:facility ex:facility ;
+    fac:zoneKind fac:Room ;
+    fac:isActive true .
+
+ex:workstation
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "workstation" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    fac:facility ex:facility ;
+    fac:assetKind fac:Workstation ;
+    fac:locatedIn ex:room ;
+    fac:isActive true .
+
+ex:design
+    a sbol:Component ;
+    sbol:displayId "design" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    sbol:type <https://identifiers.org/SBO:0000251> .
+
+ex:input_lot
+    a sbol:Implementation ;
+    sbol:displayId "input_lot" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    sbol:built ex:design ;
+    fac:materialKind inv:BacterialStock ;
+    fac:facility ex:facility ;
+    fac:locatedIn ex:room ;
+    fac:isActive true .
+
+ex:output_lot
+    a sbol:Implementation ;
+    sbol:displayId "output_lot" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    sbol:built ex:design ;
+    fac:materialKind inv:BacterialStock ;
+    fac:facility ex:facility ;
+    fac:locatedIn ex:room ;
+    fac:isActive true ;
+    fac:derivedFromMaterial ex:input_lot ;
+    prov:wasGeneratedBy ex:run .
+
+ex:evidence_file
+    a sbol:Attachment ;
+    sbol:displayId "evidence_file" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    sbol:source <https://example.org/evidence/run.csv> ;
+    sbol:format <http://edamontology.org/format_3752> .
+
+ex:evidence
+    a sbol:ExperimentalData ;
+    sbol:displayId "evidence" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    sbol:hasAttachment ex:evidence_file ;
+    prov:wasGeneratedBy ex:run .
+
+ex:run
+    a sbol:TopLevel, prov:Activity ;
+    sbol:displayId "run" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-run> ;
+    prov:qualifiedUsage <https://example.org/sbolinventory-run/run/asset_usage>, <https://example.org/sbolinventory-run/run/input_usage> .
+
+<https://example.org/sbolinventory-run/run/asset_usage>
+    a sbol:Identified, prov:Usage ;
+    sbol:displayId "asset_usage" ;
+    prov:entity ex:workstation ;
+    prov:hadRole fac:RunAsset .
+
+<https://example.org/sbolinventory-run/run/input_usage>
+    a sbol:Identified, prov:Usage ;
+    sbol:displayId "input_usage" ;
+    prov:entity ex:input_lot ;
+    prov:hadRole fac:RunInputMaterial .

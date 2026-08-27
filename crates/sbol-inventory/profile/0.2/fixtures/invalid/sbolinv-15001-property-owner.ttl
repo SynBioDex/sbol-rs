@@ -1,0 +1,9 @@
+@prefix ex: <https://example.org/invalid-15001/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:orphan
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "orphan" ;
+    fac:propertyKind ex:Temperature ;
+    fac:integerValue 20 .

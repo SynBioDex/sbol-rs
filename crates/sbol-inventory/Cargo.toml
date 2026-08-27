@@ -15,3 +15,10 @@ categories = ["science"]
 [dependencies]
 sbol3.workspace = true
 thiserror.workspace = true
+
+[build-dependencies]
+sbol-rulegen.workspace = true
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+toml = { version = "1.1", default-features = false, features = ["parse", "serde"] }

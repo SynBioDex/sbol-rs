@@ -1,0 +1,25 @@
+@prefix ex: <https://example.org/invalid-17002/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-17002> .
+ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/invalid-17002> ; fac:facility ex:facility ; fac:assetKind fac:Workstation ; fac:isActive true .
+
+ex:run
+    a sbol:TopLevel, prov:Activity ;
+    sbol:displayId "run" ;
+    sbol:hasNamespace <https://example.org/invalid-17002> ;
+    prov:qualifiedUsage <https://example.org/invalid-17002/run/asset_usage>, <https://example.org/invalid-17002/run/input_usage> .
+
+<https://example.org/invalid-17002/run/asset_usage>
+    a sbol:Identified, prov:Usage ;
+    sbol:displayId "asset_usage" ;
+    prov:entity ex:asset ;
+    prov:hadRole fac:RunAsset .
+
+<https://example.org/invalid-17002/run/input_usage>
+    a sbol:Identified, prov:Usage ;
+    sbol:displayId "input_usage" ;
+    prov:entity ex:asset ;
+    prov:hadRole fac:RunInputMaterial .

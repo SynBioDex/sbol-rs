@@ -1,0 +1,41 @@
+@prefix cap: <https://draggon.org/ns/capability#> .
+@prefix ex: <https://example.org/sbolinventory-extension/> .
+@prefix ext: <https://example.org/vendor-extension#> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "facility" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-extension> ;
+    ext:catalogOwner "Example operator" .
+
+ex:room
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "room" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-extension> ;
+    fac:facility ex:facility ;
+    fac:zoneKind ext:CustomRoomKind ;
+    fac:policy ext:LocalAccessPolicy ;
+    fac:isActive true .
+
+ex:instrument
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "instrument" ;
+    sbol:hasNamespace <https://example.org/sbolinventory-extension> ;
+    fac:facility ex:facility ;
+    fac:assetKind ext:CustomInstrumentKind ;
+    fac:locatedIn ex:room ;
+    fac:isActive true ;
+    fac:capability <https://example.org/sbolinventory-extension/instrument/custom_operation> ;
+    ext:serviceTag "site-local-tag" .
+
+<https://example.org/sbolinventory-extension/instrument/custom_operation>
+    a sbol:Identified, fac:CapabilityOffering ;
+    sbol:displayId "custom_operation" ;
+    fac:capabilityKind cap:LiquidHandling ;
+    fac:qualification fac:Described ;
+    fac:controlMode fac:UnspecifiedControl ;
+    fac:isActive true ;
+    ext:vendorFeature ext:OptionA .

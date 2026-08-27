@@ -1,0 +1,55 @@
+@prefix cap: <https://draggon.org/ns/capability#> .
+@prefix ex: <https://example.org/sbolinventory/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "facility" ;
+    sbol:hasNamespace <https://example.org/sbolinventory> ;
+    sbol:name "Example facility" .
+
+ex:room
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "room" ;
+    sbol:hasNamespace <https://example.org/sbolinventory> ;
+    fac:facility ex:facility ;
+    fac:zoneKind fac:Room ;
+    fac:condition <https://example.org/sbolinventory/room/ambient_temperature> ;
+    fac:isActive true .
+
+<https://example.org/sbolinventory/room/ambient_temperature>
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "ambient_temperature" ;
+    fac:propertyKind ex:AmbientTemperature ;
+    fac:realValue "21.0"^^xsd:double ;
+    fac:unit <http://qudt.org/vocab/unit/DEG_C> .
+
+ex:cycler
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "cycler" ;
+    sbol:hasNamespace <https://example.org/sbolinventory> ;
+    fac:facility ex:facility ;
+    fac:assetKind fac:Instrument ;
+    fac:locatedIn ex:room ;
+    fac:manufacturer "Example Instruments" ;
+    fac:model "TC-1" ;
+    fac:isActive true ;
+    fac:capability <https://example.org/sbolinventory/cycler/thermal_cycling> .
+
+<https://example.org/sbolinventory/cycler/thermal_cycling>
+    a sbol:Identified, fac:CapabilityOffering ;
+    sbol:displayId "thermal_cycling" ;
+    fac:capabilityKind cap:ThermalCycling ;
+    fac:qualification fac:Plannable ;
+    fac:controlMode fac:ReviewedFileControl ;
+    fac:isActive true ;
+    fac:parameter <https://example.org/sbolinventory/cycler/thermal_cycling/sample_capacity> .
+
+<https://example.org/sbolinventory/cycler/thermal_cycling/sample_capacity>
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "sample_capacity" ;
+    fac:propertyKind ex:SampleCapacity ;
+    fac:integerValue 96 .

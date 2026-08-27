@@ -5,7 +5,8 @@ version's `rules.toml` validation catalog into Rust source consumed at compile
 time.
 
 Each SBOL version crate calls [`generate`] from its `build.rs`, pointing at its
-own `rules.toml`. The generator parses the catalog, checks each entry's status,
+own `rules.toml`. Extension-profile crates call [`generate_profile`] for the
+separate conformance-class schema. The generator parses the catalog, checks each entry's status,
 normative severity, blocker, and coverage-kind against the shared taxonomy in
 [`sbol_core::validation`], enforces that policy-blocked rules have an ADR file,
 and emits two files into `OUT_DIR`:

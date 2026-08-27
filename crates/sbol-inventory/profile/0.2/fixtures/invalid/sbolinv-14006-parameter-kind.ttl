@@ -1,0 +1,28 @@
+@prefix cap: <https://draggon.org/ns/capability#> .
+@prefix ex: <https://example.org/invalid-14006/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-14006> .
+ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/invalid-14006> ; fac:facility ex:facility ; fac:assetKind fac:Instrument ; fac:isActive true ; fac:capability <https://example.org/invalid-14006/asset/offering> .
+
+<https://example.org/invalid-14006/asset/offering>
+    a sbol:Identified, fac:CapabilityOffering ;
+    sbol:displayId "offering" ;
+    fac:capabilityKind cap:ThermalCycling ;
+    fac:qualification fac:Plannable ;
+    fac:controlMode fac:ManualControl ;
+    fac:isActive true ;
+    fac:parameter <https://example.org/invalid-14006/asset/offering/first>, <https://example.org/invalid-14006/asset/offering/second> .
+
+<https://example.org/invalid-14006/asset/offering/first>
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "first" ;
+    fac:propertyKind ex:Temperature ;
+    fac:integerValue 20 .
+
+<https://example.org/invalid-14006/asset/offering/second>
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "second" ;
+    fac:propertyKind ex:Temperature ;
+    fac:integerValue 21 .

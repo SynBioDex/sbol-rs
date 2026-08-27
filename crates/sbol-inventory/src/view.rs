@@ -356,7 +356,7 @@ impl<'a> MaterialLotRef<'a> {
     }
 
     pub fn derived_from_ids(&self) -> impl Iterator<Item = &'a Resource> {
-        self.object.resources(PROV_WAS_DERIVED_FROM)
+        self.object.resources(DERIVED_FROM_MATERIAL)
     }
 }
 

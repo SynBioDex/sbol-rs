@@ -7,10 +7,15 @@
 #![forbid(unsafe_code)]
 
 mod document;
+pub mod rules;
 mod view;
 pub mod vocabulary;
 
 pub use document::InventoryDocument;
+pub use rules::{
+    ConformanceClass, PROFILE_RULE_CATALOG_IRI, PROFILE_RULE_CATALOG_STATUS,
+    PROFILE_RULE_CATALOG_VERSION, ProfileRule, RuleStrength, profile_rule, profile_rules,
+};
 pub use view::{
     AssetRef, CapabilityOfferingRef, FacilityRef, MaterialLotRef, PropertyValueReadError,
     PropertyValueRef, ScalarValueRef, ZoneRef,

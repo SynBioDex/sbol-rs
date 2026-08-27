@@ -67,6 +67,7 @@ pub const URI_VALUE: &str = "https://draggon.org/ns/facility#uriValue";
 pub const UNIT: &str = "https://draggon.org/ns/facility#unit";
 
 pub const MATERIAL_KIND: &str = "https://draggon.org/ns/facility#materialKind";
+pub const DERIVED_FROM_MATERIAL: &str = "https://draggon.org/ns/facility#derivedFromMaterial";
 pub const BARCODE: &str = "https://draggon.org/ns/facility#barcode";
 pub const LOT_ID: &str = "https://draggon.org/ns/facility#lotId";
 pub const NOTES: &str = "https://draggon.org/ns/facility#notes";

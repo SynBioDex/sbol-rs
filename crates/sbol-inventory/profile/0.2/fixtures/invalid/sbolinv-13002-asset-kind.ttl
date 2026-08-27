@@ -1,0 +1,15 @@
+@prefix ex: <https://example.org/invalid-13002/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "facility" ;
+    sbol:hasNamespace <https://example.org/invalid-13002> .
+
+ex:asset
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "asset" ;
+    sbol:hasNamespace <https://example.org/invalid-13002> ;
+    fac:facility ex:facility ;
+    fac:isActive true .

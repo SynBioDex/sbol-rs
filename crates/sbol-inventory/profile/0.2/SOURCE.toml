@@ -1,0 +1,13 @@
+repository = "https://github.com/DRAGGON-Lab/SBOLInventory"
+revision = "aa4d111b5fdd3199066140a4a647885f9a1fb8c0"
+profile = "https://draggon.org/spec/sbol-inventory/0.2"
+status = "draft"
+vendored_at = "2026-08-27"
+
+[[compatibility_errata]]
+id = "core-compatible-material-lineage"
+description = "Use fac:derivedFromMaterial instead of prov:wasDerivedFrom between Implementations, because SBOL 3 rules sbol3-12301 and sbol3-12302 reserve an Implementation's prov:wasDerivedFrom values for Components."
+
+[[compatibility_errata]]
+id = "canonical-attachment-property"
+description = "Use the SBOL 3 sbol:hasAttachment property instead of the undefined sbol:attachment spelling in the material-run fixture."

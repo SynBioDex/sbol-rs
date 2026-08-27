@@ -1,0 +1,23 @@
+@prefix ex: <https://example.org/invalid-13501/> .
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:first_facility a sbol:TopLevel, fac:Facility ; sbol:displayId "first_facility" ; sbol:hasNamespace <https://example.org/invalid-13501> .
+ex:second_facility a sbol:TopLevel, fac:Facility ; sbol:displayId "second_facility" ; sbol:hasNamespace <https://example.org/invalid-13501> .
+
+ex:room
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "room" ;
+    sbol:hasNamespace <https://example.org/invalid-13501> ;
+    fac:facility ex:second_facility ;
+    fac:zoneKind fac:Room ;
+    fac:isActive true .
+
+ex:asset
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "asset" ;
+    sbol:hasNamespace <https://example.org/invalid-13501> ;
+    fac:facility ex:first_facility ;
+    fac:assetKind fac:Instrument ;
+    fac:locatedIn ex:room ;
+    fac:isActive true .

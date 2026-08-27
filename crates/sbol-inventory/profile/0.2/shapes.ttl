@@ -1,0 +1,351 @@
+@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix shape: <https://draggon.org/spec/sbol-inventory/0.2/shape#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+shape:LocationTargetShape
+    a sh:NodeShape ;
+    sh:nodeKind sh:IRI ;
+    sh:or (
+        [ sh:class fac:Zone ]
+        [ sh:class fac:Asset ]
+    ) .
+
+shape:MaterialLotValueShape
+    a sh:NodeShape ;
+    sh:class sbol:Implementation ;
+    sh:property [
+        sh:path fac:materialKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI
+    ] .
+
+shape:FacilityShape
+    a sh:NodeShape ;
+    sh:targetClass fac:Facility ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:TopLevel ;
+        sh:message "[sbolinv-10002] A Facility must also be an SBOL TopLevel."
+    ] .
+
+shape:ZoneShape
+    a sh:NodeShape ;
+    sh:targetClass fac:Zone ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:TopLevel ;
+        sh:message "[sbolinv-10002] A Zone must also be an SBOL TopLevel."
+    ] ;
+    sh:property [
+        sh:path fac:facility ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Facility ;
+        sh:message "[sbolinv-12001] A Zone must name exactly one local Facility."
+    ] ;
+    sh:property [
+        sh:path fac:zoneKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-12002] A Zone must have exactly one IRI-valued zoneKind."
+    ] ;
+    sh:property [
+        sh:path fac:parentZone ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Zone ;
+        sh:message "[sbolinv-10004] parentZone must be an IRI naming a Zone."
+    ] ;
+    sh:property [
+        sh:path fac:policy ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-12006] Every Zone policy must be an IRI."
+    ] ;
+    sh:property [
+        sh:path fac:condition ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:PropertyValue ;
+        sh:message "[sbolinv-10004] Every condition must name a PropertyValue."
+    ] ;
+    sh:property [
+        sh:path fac:isActive ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:message "[sbolinv-12003] A Zone must have exactly one boolean isActive value."
+    ] .
+
+shape:AssetShape
+    a sh:NodeShape ;
+    sh:targetClass fac:Asset ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:TopLevel ;
+        sh:message "[sbolinv-10002] An Asset must also be an SBOL TopLevel."
+    ] ;
+    sh:property [
+        sh:path fac:facility ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Facility ;
+        sh:message "[sbolinv-13001] An Asset must name exactly one local Facility."
+    ] ;
+    sh:property [
+        sh:path fac:assetKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-13002] An Asset must have exactly one IRI-valued assetKind."
+    ] ;
+    sh:property [
+        sh:path fac:locatedIn ;
+        sh:maxCount 1 ;
+        sh:node shape:LocationTargetShape ;
+        sh:message "[sbolinv-10004] locatedIn must be an IRI naming a Zone or Asset."
+    ] ;
+    sh:property [
+        sh:path fac:position ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:string ;
+        sh:message "[sbolinv-10004] position must be a single string."
+    ] ;
+    sh:property [
+        sh:path fac:position ;
+        sh:pattern "\\S" ;
+        sh:message "[sbolinv-13502] position must contain a non-whitespace character."
+    ] ;
+    sh:property [
+        sh:path fac:partOf ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Asset ;
+        sh:message "[sbolinv-10004] partOf must be an IRI naming an Asset."
+    ] ;
+    sh:property [
+        sh:path fac:establishesZone ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Zone ;
+        sh:message "[sbolinv-10004] establishesZone must name a Zone."
+    ] ;
+    sh:property [ sh:path fac:manufacturer ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] manufacturer must be a single string." ] ;
+    sh:property [ sh:path fac:model ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] model must be a single string." ] ;
+    sh:property [ sh:path fac:serialNumber ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] serialNumber must be a single string." ] ;
+    sh:property [
+        sh:path fac:isActive ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:message "[sbolinv-13003] An Asset must have exactly one boolean isActive value."
+    ] ;
+    sh:property [
+        sh:path fac:allowedPosition ;
+        sh:datatype xsd:string ;
+        sh:minLength 1 ;
+        sh:pattern "\\S" ;
+        sh:message "[sbolinv-13006] allowedPosition values must be non-blank strings."
+    ] ;
+    sh:property [
+        sh:path fac:capability ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:CapabilityOffering ;
+        sh:message "[sbolinv-10004] capability must name a CapabilityOffering."
+    ] .
+
+shape:CapabilityOfferingShape
+    a sh:NodeShape ;
+    sh:targetClass fac:CapabilityOffering ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:Identified ;
+        sh:message "[sbolinv-10002] A CapabilityOffering must also be an SBOL Identified object."
+    ] ;
+    sh:property [
+        sh:path [ sh:inversePath fac:capability ] ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:class fac:Asset ;
+        sh:message "[sbolinv-14001] A CapabilityOffering must be owned by exactly one Asset."
+    ] ;
+    sh:property [
+        sh:path fac:capabilityKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-14002] A CapabilityOffering must have exactly one IRI-valued capabilityKind."
+    ] ;
+    sh:property [
+        sh:path fac:qualification ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:in ( fac:Discovered fac:Described fac:Plannable fac:Simulatable fac:Executable fac:Qualified ) ;
+        sh:message "[sbolinv-14003] qualification must be a Profile 0.2 qualification value."
+    ] ;
+    sh:property [
+        sh:path fac:controlMode ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:in ( fac:UnspecifiedControl fac:ManualControl fac:ReviewedFileControl fac:VendorSessionControl fac:ApiControl fac:SiLA2Control fac:OpcUaControl ) ;
+        sh:message "[sbolinv-14004] controlMode must be a Profile 0.2 control value."
+    ] ;
+    sh:property [
+        sh:path fac:isActive ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:message "[sbolinv-14005] A CapabilityOffering must have exactly one boolean isActive value."
+    ] ;
+    sh:property [
+        sh:path fac:parameter ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:PropertyValue ;
+        sh:message "[sbolinv-10004] parameter must name a PropertyValue."
+    ] .
+
+shape:PropertyValueShape
+    a sh:NodeShape ;
+    sh:targetClass fac:PropertyValue ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:Identified ;
+        sh:message "[sbolinv-10002] A PropertyValue must also be an SBOL Identified object."
+    ] ;
+    sh:xone (
+        [
+            sh:property [ sh:path [ sh:inversePath fac:condition ] ; sh:minCount 1 ; sh:maxCount 1 ; sh:class fac:Zone ] ;
+            sh:property [ sh:path [ sh:inversePath fac:parameter ] ; sh:maxCount 0 ]
+        ]
+        [
+            sh:property [ sh:path [ sh:inversePath fac:parameter ] ; sh:minCount 1 ; sh:maxCount 1 ; sh:class fac:CapabilityOffering ] ;
+            sh:property [ sh:path [ sh:inversePath fac:condition ] ; sh:maxCount 0 ]
+        ]
+    ) ;
+    sh:message "[sbolinv-15001] A PropertyValue must be owned by exactly one Zone or CapabilityOffering." ;
+    sh:property [
+        sh:path fac:propertyKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-15002] A PropertyValue must have exactly one IRI-valued propertyKind."
+    ] ;
+    sh:xone (
+        [ sh:property [ sh:path fac:textValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:string ] ]
+        [ sh:property [ sh:path fac:integerValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:integer ] ]
+        [ sh:property [ sh:path fac:realValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:double ] ]
+        [ sh:property [ sh:path fac:booleanValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:datatype xsd:boolean ] ]
+        [ sh:property [ sh:path fac:uriValue ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ] ]
+    ) ;
+    sh:message "[sbolinv-15003] A PropertyValue must contain exactly one correctly typed value." ;
+    sh:property [
+        sh:path fac:uriValue ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-15004] uriValue must be an IRI."
+    ] ;
+    sh:property [
+        sh:path fac:unit ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-15004] unit must be an IRI."
+    ] ;
+    sh:or (
+        [ sh:property [ sh:path fac:unit ; sh:maxCount 0 ] ]
+        [
+            sh:or (
+                [ sh:property [ sh:path fac:integerValue ; sh:minCount 1 ] ]
+                [ sh:property [ sh:path fac:realValue ; sh:minCount 1 ] ]
+            )
+        ]
+    ) ;
+    sh:message "[sbolinv-15005] unit is permitted only for a numeric PropertyValue." .
+
+shape:MaterialLotShape
+    a sh:NodeShape ;
+    sh:targetSubjectsOf fac:materialKind ;
+    sh:property [
+        sh:path rdf:type ;
+        sh:hasValue sbol:Implementation ;
+        sh:message "[sbolinv-16001] A node carrying materialKind must be an SBOL Implementation."
+    ] ;
+    sh:property [
+        sh:path fac:materialKind ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:message "[sbolinv-16002] A MaterialLot must have exactly one IRI-valued materialKind."
+    ] ;
+    sh:property [
+        sh:path fac:facility ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class fac:Facility ;
+        sh:message "[sbolinv-16003] A MaterialLot must name exactly one local Facility."
+    ] ;
+    sh:property [
+        sh:path sbol:built ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:nodeKind sh:IRI ;
+        sh:class sbol:Component ;
+        sh:message "[sbolinv-16004] A MaterialLot must be built from exactly one local Component."
+    ] ;
+    sh:property [
+        sh:path fac:locatedIn ;
+        sh:maxCount 1 ;
+        sh:node shape:LocationTargetShape ;
+        sh:message "[sbolinv-10004] locatedIn must be an IRI naming a Zone or Asset."
+    ] ;
+    sh:property [ sh:path fac:position ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] position must be a single string." ] ;
+    sh:property [ sh:path fac:position ; sh:pattern "\\S" ; sh:message "[sbolinv-13502] position must contain a non-whitespace character." ] ;
+    sh:property [
+        sh:path fac:isActive ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
+        sh:datatype xsd:boolean ;
+        sh:message "[sbolinv-16005] A MaterialLot must have exactly one boolean isActive value."
+    ] ;
+    sh:property [ sh:path fac:barcode ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] barcode must be a single string." ] ;
+    sh:property [ sh:path fac:lotId ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] lotId must be a single string." ] ;
+    sh:property [ sh:path fac:notes ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] notes must be a single string." ] ;
+    sh:property [ sh:path fac:freezeDate ; sh:maxCount 1 ; sh:datatype xsd:dateTime ; sh:message "[sbolinv-10004] freezeDate must be a single xsd:dateTime value." ] ;
+    sh:property [ sh:path fac:derivedFromMaterial ; sh:nodeKind sh:IRI ; sh:class sbol:Implementation ; sh:message "[sbolinv-16006] derivedFromMaterial must name a local MaterialLot." ] .
+
+shape:ProfileUsageShape
+    a sh:NodeShape ;
+    sh:targetClass prov:Usage ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path prov:hadRole ; sh:hasValue fac:RunAsset ] ] ]
+        [ sh:property [ sh:path prov:entity ; sh:minCount 1 ; sh:maxCount 1 ; sh:class fac:Asset ] ]
+    ) ;
+    sh:message "[sbolinv-17001] A RunAsset Usage must name exactly one local Asset." ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path prov:hadRole ; sh:hasValue fac:RunInputMaterial ] ] ]
+        [ sh:property [ sh:path prov:entity ; sh:minCount 1 ; sh:maxCount 1 ; sh:node shape:MaterialLotValueShape ] ]
+    ) ;
+    sh:message "[sbolinv-17002] A RunInputMaterial Usage must name exactly one local MaterialLot." .
+
+shape:ProfileRunShape
+    a sh:NodeShape ;
+    sh:targetClass prov:Activity ;
+    sh:or (
+        [
+            sh:not [
+                sh:or (
+                    [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunAsset ] ]
+                    [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunInputMaterial ] ]
+                )
+            ]
+        ]
+        [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunAsset ] ]
+    ) ;
+    sh:message "[sbolinv-17003] A profile run must contain at least one RunAsset Usage." .

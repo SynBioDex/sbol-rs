@@ -1,0 +1,449 @@
+profile = "https://draggon.org/spec/sbol-inventory/0.2"
+version = "0.2"
+status = "draft"
+
+[[rules]]
+id = "sbolinv-10001"
+section = "Scope"
+classes = ["Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+statement = "The document MUST conform to the SBOL 3 version declared by the implementation."
+
+[[rules]]
+id = "sbolinv-10002"
+section = "Common requirements"
+classes = ["Reader", "Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-10002-wrong-base-type.ttl"
+statement = "Facility, Zone, and Asset MUST be SBOL TopLevel objects; CapabilityOffering and PropertyValue MUST be SBOL Identified children; a material lot MUST be an SBOL Implementation."
+
+[[rules]]
+id = "sbolinv-10003"
+section = "Extension policy"
+classes = ["Reader", "Writer"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/valid/open-extensions.ttl"
+statement = "A read-write round trip MUST preserve unknown non-SBOL triples on identified objects unless a caller explicitly requests a lossy projection."
+
+[[rules]]
+id = "sbolinv-10004"
+section = "Common requirements"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-10004-property-range.ttl"
+statement = "Every profile property MUST satisfy the maximum cardinality, RDF node kind, and datatype stated by the profile tables."
+
+[[rules]]
+id = "sbolinv-12001"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-12001-zone-facility.ttl"
+statement = "A Zone MUST name exactly one document-local Facility."
+
+[[rules]]
+id = "sbolinv-12002"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-12002-zone-kind.ttl"
+statement = "A Zone MUST have exactly one zoneKind and its value MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-12003"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-12003-zone-active.ttl"
+statement = "A Zone MUST have exactly one boolean isActive value; absence does not imply true."
+
+[[rules]]
+id = "sbolinv-12004"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-12004-zone-parent-facility.ttl"
+statement = "A parentZone reference MUST resolve to a document-local Zone in the same Facility."
+
+[[rules]]
+id = "sbolinv-12005"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-12005-zone-cycle.ttl"
+statement = "The parentZone graph MUST be acyclic."
+
+[[rules]]
+id = "sbolinv-12006"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-12006-zone-policy.ttl"
+statement = "Every policy value on a Zone MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-12007"
+section = "Zone"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-12007-condition-kind.ttl"
+statement = "No two conditions owned by one Zone MAY have the same propertyKind."
+
+[[rules]]
+id = "sbolinv-13001"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-13001-asset-facility.ttl"
+statement = "An Asset MUST name exactly one document-local Facility."
+
+[[rules]]
+id = "sbolinv-13002"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-13002-asset-kind.ttl"
+statement = "An Asset MUST have exactly one assetKind and its value MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-13003"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-13003-asset-active.ttl"
+statement = "An Asset MUST have exactly one boolean isActive value; absence does not imply true."
+
+[[rules]]
+id = "sbolinv-13004"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13004-part-of-facility.ttl"
+statement = "A partOf reference MUST resolve to a document-local Asset in the same Facility."
+
+[[rules]]
+id = "sbolinv-13005"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13005-established-zone-facility.ttl"
+statement = "Every establishesZone reference MUST resolve to a document-local Zone in the same Facility."
+
+[[rules]]
+id = "sbolinv-13006"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-13006-allowed-position.ttl"
+statement = "An Asset's allowedPosition values MUST contain at least one non-whitespace character and be unique."
+
+[[rules]]
+id = "sbolinv-13007"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13007-containment-cycle.ttl"
+statement = "The graph formed by partOf and Asset-valued locatedIn edges MUST be acyclic."
+
+[[rules]]
+id = "sbolinv-13008"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13008-duplicate-capability.ttl"
+statement = "One Asset MUST NOT own two CapabilityOfferings with the same capabilityKind."
+
+[[rules]]
+id = "sbolinv-13501"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13501-location-facility.ttl"
+statement = "A locatedIn reference MUST resolve to a document-local Zone or Asset in the same Facility."
+
+[[rules]]
+id = "sbolinv-13502"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13502-position.ttl"
+statement = "A position MUST contain at least one non-whitespace character, MUST be absent without a location and for Zone locations, and MUST use one of a container's declared positions when that set is non-empty."
+
+[[rules]]
+id = "sbolinv-13503"
+section = "Asset"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-13503-occupancy.ttl"
+statement = "At most one Asset or MaterialLot, active or inactive, MAY occupy one container and position pair."
+
+[[rules]]
+id = "sbolinv-14001"
+section = "Capability offering"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-14001-capability-owner.ttl"
+statement = "A CapabilityOffering MUST be owned through fac:capability by exactly one Asset."
+
+[[rules]]
+id = "sbolinv-14002"
+section = "Capability offering"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-14002-capability-kind.ttl"
+statement = "A CapabilityOffering MUST have exactly one capabilityKind and its value MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-14003"
+section = "Qualification"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-14003-qualification.ttl"
+statement = "A CapabilityOffering MUST have exactly one qualification from the closed Profile 0.2 qualification vocabulary."
+
+[[rules]]
+id = "sbolinv-14004"
+section = "Control mode"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-14004-control-mode.ttl"
+statement = "A CapabilityOffering MUST have exactly one controlMode from the closed Profile 0.2 control vocabulary."
+
+[[rules]]
+id = "sbolinv-14005"
+section = "Capability offering"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-14005-capability-active.ttl"
+statement = "A CapabilityOffering MUST have exactly one boolean isActive value; absence does not imply true."
+
+[[rules]]
+id = "sbolinv-14006"
+section = "Capability offering"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-14006-parameter-kind.ttl"
+statement = "No two parameters owned by one CapabilityOffering MAY have the same propertyKind."
+
+[[rules]]
+id = "sbolinv-15001"
+section = "Property value"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-15001-property-owner.ttl"
+statement = "A PropertyValue MUST be owned by exactly one Zone condition or CapabilityOffering parameter."
+
+[[rules]]
+id = "sbolinv-15002"
+section = "Property value"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-15002-property-kind.ttl"
+statement = "A PropertyValue MUST have exactly one propertyKind and its value MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-15003"
+section = "Property value"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-15003-property-value.ttl"
+statement = "A PropertyValue MUST have exactly one correctly typed textValue, integerValue, realValue, booleanValue, or uriValue."
+
+[[rules]]
+id = "sbolinv-15004"
+section = "Property value"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-15004-property-iri.ttl"
+statement = "uriValue and unit values MUST be absolute IRIs."
+
+[[rules]]
+id = "sbolinv-15005"
+section = "Property value"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-15005-nonnumeric-unit.ttl"
+statement = "A unit MAY be present only when the PropertyValue contains integerValue or realValue."
+
+[[rules]]
+id = "sbolinv-16001"
+section = "Material lot"
+classes = ["Reader", "Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-16001-material-base-type.ttl"
+statement = "A node carrying materialKind MUST be typed sbol:Implementation."
+
+[[rules]]
+id = "sbolinv-16002"
+section = "Material lot"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-16002-material-kind.ttl"
+statement = "A MaterialLot MUST have exactly one materialKind and its value MUST be an absolute IRI."
+
+[[rules]]
+id = "sbolinv-16003"
+section = "Material lot"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-16003-material-facility.ttl"
+statement = "A MaterialLot MUST name exactly one document-local Facility."
+
+[[rules]]
+id = "sbolinv-16004"
+section = "Material lot"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-16004-material-built.ttl"
+statement = "A MaterialLot MUST have exactly one sbol:built reference to a document-local sbol:Component."
+
+[[rules]]
+id = "sbolinv-16005"
+section = "Material lot"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-16005-material-active.ttl"
+statement = "A MaterialLot MUST have exactly one boolean isActive value; absence does not imply true."
+
+[[rules]]
+id = "sbolinv-16006"
+section = "Material lot"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+fixture = "fixtures/invalid/sbolinv-16006-material-lineage.ttl"
+statement = "Every derivedFromMaterial value on a MaterialLot MUST resolve to another document-local MaterialLot, and material lineage MUST contain no self-reference or cycle."
+
+[[rules]]
+id = "sbolinv-17001"
+section = "Run provenance"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-17001-run-asset.ttl"
+statement = "A Usage carrying the RunAsset role MUST have exactly one entity that resolves to a document-local Asset."
+
+[[rules]]
+id = "sbolinv-17002"
+section = "Run provenance"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-17002-run-input.ttl"
+statement = "A Usage carrying the RunInputMaterial role MUST have exactly one entity that resolves to a document-local MaterialLot."
+
+[[rules]]
+id = "sbolinv-17003"
+section = "Run provenance"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-17003-run-without-asset.ttl"
+statement = "A profile run Activity MUST own at least one Usage carrying the RunAsset role."
+
+[[rules]]
+id = "sbolinv-18001"
+section = "Candidate-query behavior"
+classes = ["Query"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+statement = "Query implementations MUST use the closed total qualification order defined by Profile 0.2 and reject unknown qualification values."
+
+[[rules]]
+id = "sbolinv-18002"
+section = "Candidate-query behavior"
+classes = ["Query"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+statement = "A Query implementation MUST reject a non-IRI capability-kind argument, and a candidate MUST satisfy exact capability kind, minimum qualification, facility filter, offering activity, and effective asset activity."
+
+[[rules]]
+id = "sbolinv-18003"
+section = "Candidate-query behavior"
+classes = ["Query"]
+strength = "required"
+machine_checkable = true
+shacl_core = false
+statement = "Candidate-query results MUST be ordered lexicographically by Asset IRI."

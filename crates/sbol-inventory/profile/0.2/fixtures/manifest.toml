@@ -1,0 +1,303 @@
+profile = "https://draggon.org/spec/sbol-inventory/0.2"
+version = "0.2"
+
+[[fixtures]]
+path = "valid/minimal-catalog.ttl"
+expect = "valid"
+shacl = true
+python_semantic = true
+round_trip = true
+
+[[fixtures]]
+path = "valid/material-run.ttl"
+expect = "valid"
+shacl = true
+python_semantic = true
+round_trip = true
+
+[[fixtures]]
+path = "valid/open-extensions.ttl"
+expect = "valid"
+shacl = true
+python_semantic = true
+round_trip = true
+
+[[fixtures]]
+path = "invalid/sbolinv-10002-wrong-base-type.ttl"
+expect = "invalid"
+rule = "sbolinv-10002"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-10004-property-range.ttl"
+expect = "invalid"
+rule = "sbolinv-10004"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-12001-zone-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-12001"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12002-zone-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-12002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12003-zone-active.ttl"
+expect = "invalid"
+rule = "sbolinv-12003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12004-zone-parent-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-12004"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12005-zone-cycle.ttl"
+expect = "invalid"
+rule = "sbolinv-12005"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12006-zone-policy.ttl"
+expect = "invalid"
+rule = "sbolinv-12006"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-12007-condition-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-12007"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13001-asset-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-13001"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13002-asset-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-13002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13003-asset-active.ttl"
+expect = "invalid"
+rule = "sbolinv-13003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13004-part-of-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-13004"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13005-established-zone-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-13005"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13006-allowed-position.ttl"
+expect = "invalid"
+rule = "sbolinv-13006"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13007-containment-cycle.ttl"
+expect = "invalid"
+rule = "sbolinv-13007"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13008-duplicate-capability.ttl"
+expect = "invalid"
+rule = "sbolinv-13008"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13501-location-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-13501"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13502-position.ttl"
+expect = "invalid"
+rule = "sbolinv-13502"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-13503-occupancy.ttl"
+expect = "invalid"
+rule = "sbolinv-13503"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-14001-capability-owner.ttl"
+expect = "invalid"
+rule = "sbolinv-14001"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-14002-capability-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-14002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-14003-qualification.ttl"
+expect = "invalid"
+rule = "sbolinv-14003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-14004-control-mode.ttl"
+expect = "invalid"
+rule = "sbolinv-14004"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-14005-capability-active.ttl"
+expect = "invalid"
+rule = "sbolinv-14005"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-14006-parameter-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-14006"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-15001-property-owner.ttl"
+expect = "invalid"
+rule = "sbolinv-15001"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-15002-property-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-15002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-15003-property-value.ttl"
+expect = "invalid"
+rule = "sbolinv-15003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-15004-property-iri.ttl"
+expect = "invalid"
+rule = "sbolinv-15004"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-15005-nonnumeric-unit.ttl"
+expect = "invalid"
+rule = "sbolinv-15005"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-16001-material-base-type.ttl"
+expect = "invalid"
+rule = "sbolinv-16001"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-16002-material-kind.ttl"
+expect = "invalid"
+rule = "sbolinv-16002"
+shacl = true
+python_semantic = false
+
+[[fixtures]]
+path = "invalid/sbolinv-16003-material-facility.ttl"
+expect = "invalid"
+rule = "sbolinv-16003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-16004-material-built.ttl"
+expect = "invalid"
+rule = "sbolinv-16004"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-16005-material-active.ttl"
+expect = "invalid"
+rule = "sbolinv-16005"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-16006-material-lineage.ttl"
+expect = "invalid"
+rule = "sbolinv-16006"
+shacl = false
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-17001-run-asset.ttl"
+expect = "invalid"
+rule = "sbolinv-17001"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-17002-run-input.ttl"
+expect = "invalid"
+rule = "sbolinv-17002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-17003-run-without-asset.ttl"
+expect = "invalid"
+rule = "sbolinv-17003"
+shacl = true
+python_semantic = true
