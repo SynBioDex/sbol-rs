@@ -30,7 +30,7 @@ const SOURCES: &[Source] = &[
     Source {
         name: "so.owl",
         url: "http://purl.obolibrary.org/obo/so.owl",
-        sha256: "f53c3005ea3c3b6756fa00ec709acc90e7daad8151720d09881523ede55a3366",
+        sha256: "28d19f7767d8848ceb9088658079ede9b467f4ee95205220520229a45582c6aa",
     },
     Source {
         name: "go-basic.obo",
@@ -40,7 +40,7 @@ const SOURCES: &[Source] = &[
     Source {
         name: "chebi.owl",
         url: "http://purl.obolibrary.org/obo/chebi.owl",
-        sha256: "f0a91ba0cfc60e252a2bd08e85d953991df07c500725b56c1e52d7eba61f98ab",
+        sha256: "4557df5b668394b371e6e75158ec9f7728424852ffdaa2e6a6975cfc31e461ba",
     },
     Source {
         name: "cl-basic.obo",
