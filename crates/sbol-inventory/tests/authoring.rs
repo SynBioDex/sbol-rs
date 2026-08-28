@@ -77,7 +77,7 @@ fn typed_builders_compose_profile_and_ordinary_sbol_objects() {
             MaterialLotBuilder::new(
                 "lot",
                 facility,
-                Iri::new("https://draggon.org/ns/inventory#BacterialStock").unwrap(),
+                Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
             .unwrap()

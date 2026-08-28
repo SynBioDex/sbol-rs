@@ -1,7 +1,7 @@
-@prefix cap: <https://draggon.org/ns/capability#> .
+@prefix cap: <https://sbol.io/ns/capability#> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
-@prefix inv: <https://draggon.org/ns/inventory#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix inv: <https://sbol.io/ns/inventory#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -10,7 +10,7 @@
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-<https://draggon.org/spec/sbol-inventory/0.2>
+<https://sbol.io/spec/sbol-inventory/0.2>
     a owl:Ontology ;
     dcterms:title "SBOLInventory Profile 0.2 vocabulary"@en ;
     dcterms:description "RDF terms for facilities, assets, material custody, capability offerings, and run provenance."@en ;

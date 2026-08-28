@@ -1,5 +1,5 @@
 repository = "https://github.com/DRAGGON-Lab/SBOLInventory"
-revision = "371c919c763c970091a12a6449099b5591deb3ec"
-profile = "https://draggon.org/spec/sbol-inventory/0.2"
+revision = "7d8cb750dd2d5e3c6c7602e575c3a551b890724f"
+profile = "https://sbol.io/spec/sbol-inventory/0.2"
 status = "draft"
-vendored_at = "2026-08-27"
+vendored_at = "2026-08-28"

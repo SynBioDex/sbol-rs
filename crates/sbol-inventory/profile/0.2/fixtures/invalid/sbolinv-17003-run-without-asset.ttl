@@ -1,6 +1,6 @@
 @prefix ex: <https://example.org/invalid-17003/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
-@prefix inv: <https://draggon.org/ns/inventory#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix inv: <https://sbol.io/ns/inventory#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix sbol: <http://sbols.org/v3#> .
 

@@ -2,9 +2,9 @@ use sbol_inventory::vocabulary::{ABSORBANCE_MEASUREMENT, Qualification};
 use sbol_inventory::{CandidateQuery, InventoryDocument};
 use sbol3::{Iri, RdfFormat};
 
-const CATALOG: &str = r#"@prefix cap: <https://draggon.org/ns/capability#> .
+const CATALOG: &str = r#"@prefix cap: <https://sbol.io/ns/capability#> .
 @prefix ex: <https://example.org/query/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:facility_a a sbol:TopLevel, fac:Facility ; sbol:displayId "facility_a" ; sbol:hasNamespace <https://example.org/query> .

@@ -1,6 +1,6 @@
 @prefix ex: <https://example.org/invalid-16005/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
-@prefix inv: <https://draggon.org/ns/inventory#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix inv: <https://sbol.io/ns/inventory#> .
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-16005> .

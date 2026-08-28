@@ -5,7 +5,7 @@
 This document is the draft normative specification for SBOLInventory Profile 0.2. The profile IRI is:
 
 ```text
-https://draggon.org/spec/sbol-inventory/0.2
+https://sbol.io/spec/sbol-inventory/0.2
 ```
 
 Package versions and profile versions are independent. The Python package version `0.2.x` implements this profile draft, but a package version is not an RDF vocabulary namespace.
@@ -47,9 +47,9 @@ Profile 0.2 uses three stable term namespaces:
 
 | Prefix | Namespace | Purpose |
 |----|----|----|
-| `inv:` | `https://draggon.org/ns/inventory#` | Reusable material and legacy inventory kinds |
-| `fac:` | `https://draggon.org/ns/facility#` | Facility classes, properties, states, and run roles |
-| `cap:` | `https://draggon.org/ns/capability#` | Reusable operation-oriented capability kinds |
+| `inv:` | `https://sbol.io/ns/inventory#` | Reusable material and legacy inventory kinds |
+| `fac:` | `https://sbol.io/ns/facility#` | Facility classes, properties, states, and run roles |
+| `cap:` | `https://sbol.io/ns/capability#` | Reusable operation-oriented capability kinds |
 
 Term IRIs do not contain the profile version. Compatible clarification or constraint strengthening does not require new term IRIs. An incompatible change to a term's meaning MUST mint a new term or a new namespace. Profile releases are versioned by their profile IRI and specification artifacts.
 

@@ -1,5 +1,5 @@
 @prefix ex: <https://example.org/invalid-13004/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:first_facility a sbol:TopLevel, fac:Facility ; sbol:displayId "first_facility" ; sbol:hasNamespace <https://example.org/invalid-13004> .

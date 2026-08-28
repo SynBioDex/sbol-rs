@@ -45,7 +45,7 @@ fn validation_report_identifies_both_conformance_layers() {
 fn owned_profile_links_must_resolve_to_their_declared_class() {
     let inventory = InventoryDocument::read(
         r#"@prefix ex: <https://example.org/wrong-owned-type/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/wrong-owned-type> .

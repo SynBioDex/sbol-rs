@@ -3,10 +3,10 @@ use sbol_inventory::{InventoryDocument, ScalarValueRef};
 use sbol3::{RdfFormat, Resource};
 
 const CATALOG: &str = r#"
-@prefix cap: <https://draggon.org/ns/capability#> .
+@prefix cap: <https://sbol.io/ns/capability#> .
 @prefix ex: <https://example.org/inventory/> .
-@prefix fac: <https://draggon.org/ns/facility#> .
-@prefix inv: <https://draggon.org/ns/inventory#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix inv: <https://sbol.io/ns/inventory#> .
 @prefix sbol: <http://sbols.org/v3#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 

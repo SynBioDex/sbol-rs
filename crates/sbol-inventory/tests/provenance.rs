@@ -42,7 +42,7 @@ fn run_builder_records_assets_inputs_outputs_evidence_and_responsibility() {
             MaterialLotBuilder::new(
                 "input",
                 facility.clone(),
-                Iri::new("https://draggon.org/ns/inventory#BacterialStock").unwrap(),
+                Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
             .unwrap()
@@ -54,7 +54,7 @@ fn run_builder_records_assets_inputs_outputs_evidence_and_responsibility() {
             MaterialLotBuilder::new(
                 "output",
                 facility,
-                Iri::new("https://draggon.org/ns/inventory#BacterialStock").unwrap(),
+                Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
             .unwrap()

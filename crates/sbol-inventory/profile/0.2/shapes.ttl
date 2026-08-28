@@ -1,9 +1,9 @@
-@prefix fac: <https://draggon.org/ns/facility#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix sbol: <http://sbols.org/v3#> .
 @prefix sh: <http://www.w3.org/ns/shacl#> .
-@prefix shape: <https://draggon.org/spec/sbol-inventory/0.2/shape#> .
+@prefix shape: <https://sbol.io/spec/sbol-inventory/0.2/shape#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
 shape:LocationTargetShape
