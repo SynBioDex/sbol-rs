@@ -2,8 +2,6 @@
 
 ## Status
 
-The September 2026 revision removes direct facility edges on Assets and MaterialLots and adds Component and repository provenance. This revises an unreleased draft in place; consumers of earlier 0.2 snapshots must migrate their graphs. Rule identifiers remain stable within this draft, and conformance reports must identify the specification source revision.
-
 This document is the draft normative specification for SBOLInventory Profile 0.2. The profile IRI is:
 
 ```text
