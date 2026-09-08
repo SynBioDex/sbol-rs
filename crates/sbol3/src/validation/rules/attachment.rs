@@ -163,20 +163,20 @@ impl<'a> Validator<'a> {
                         continue;
                     }
                 }
-                crate::HashAlgorithmRegistry::Strict => {
-                    if !is_known_hash_algorithm(algorithm.value()) {
-                        self.error(
-                            "sbol3-12806",
-                            object,
-                            Some(SBOL_HASH_ALGORITHM),
-                            format!(
-                                "Attachment hashAlgorithm `{}` is not in the known set \
-                                 (sha2-256, sha3-256, blake3, sha2-512, sha3-512)",
-                                algorithm.value()
-                            ),
-                        );
-                        continue;
-                    }
+                crate::HashAlgorithmRegistry::Strict
+                    if !is_known_hash_algorithm(algorithm.value()) =>
+                {
+                    self.error(
+                        "sbol3-12806",
+                        object,
+                        Some(SBOL_HASH_ALGORITHM),
+                        format!(
+                            "Attachment hashAlgorithm `{}` is not in the known set \
+                             (sha2-256, sha3-256, blake3, sha2-512, sha3-512)",
+                            algorithm.value()
+                        ),
+                    );
+                    continue;
                 }
                 _ => {}
             }

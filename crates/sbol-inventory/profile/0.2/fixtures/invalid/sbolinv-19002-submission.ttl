@@ -1,0 +1,6 @@
+@prefix ex: <https://example.org/digital/> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+ex:data a sbol:ExperimentalData ; sbol:displayId "data" ; sbol:hasNamespace <https://example.org/digital> ; fac:submittedTo ex:metadata .
+ex:metadata a sbol:TopLevel, fac:MetadataDatabase ; sbol:displayId "metadata" ; sbol:hasNamespace <https://example.org/digital> .

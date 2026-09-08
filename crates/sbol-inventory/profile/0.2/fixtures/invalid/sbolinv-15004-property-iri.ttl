@@ -1,0 +1,13 @@
+@prefix ex: <https://example.org/invalid-15004/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-15004> .
+ex:zone a sbol:TopLevel, fac:Zone ; sbol:displayId "zone" ; sbol:hasNamespace <https://example.org/invalid-15004> ; fac:facility ex:facility ; fac:zoneKind fac:Room ; fac:isActive true ; fac:condition <https://example.org/invalid-15004/zone/value> .
+
+<https://example.org/invalid-15004/zone/value>
+    a sbol:Identified, fac:PropertyValue ;
+    sbol:displayId "value" ;
+    fac:propertyKind ex:Temperature ;
+    fac:integerValue 20 ;
+    fac:unit "degrees Celsius" .

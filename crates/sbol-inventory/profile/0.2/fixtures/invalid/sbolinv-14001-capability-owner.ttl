@@ -1,0 +1,12 @@
+@prefix cap: <https://sbol.io/ns/capability#> .
+@prefix ex: <https://example.org/invalid-14001/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:orphan
+    a sbol:Identified, fac:CapabilityOffering ;
+    sbol:displayId "orphan" ;
+    fac:capabilityKind cap:ThermalCycling ;
+    fac:qualification fac:Plannable ;
+    fac:controlMode fac:ManualControl ;
+    fac:isActive true .

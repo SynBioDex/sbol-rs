@@ -10,6 +10,7 @@ members = [
     "crates/sbol-cli",
     "crates/sbol-fasta",
     "crates/sbol-genbank",
+    "crates/sbol-inventory",
     "crates/sbol-ontology",
     "crates/sbol-rdf",
     "crates/sbol-utilities",
@@ -39,6 +40,7 @@ sbol-core = { path = "crates/sbol-core", version = "1.0.0" }
 sbol-rulegen = { path = "crates/sbol-rulegen", version = "1.0.0" }
 sbol-fasta = { path = "crates/sbol-fasta", version = "1.0.0" }
 sbol-genbank = { path = "crates/sbol-genbank", version = "1.0.0" }
+sbol-inventory = { path = "crates/sbol-inventory", version = "0.1.0" }
 sbol-utilities = { path = "crates/sbol-utilities", version = "1.0.0" }
 sbol-ontology = { path = "crates/sbol-ontology", version = "1.0.0" }
 sbol-rdf = { path = "crates/sbol-rdf", version = "1.0.0" }

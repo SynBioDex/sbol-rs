@@ -1,0 +1,30 @@
+@prefix ex: <https://example.org/invalid-12004/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:first_facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "first_facility" ;
+    sbol:hasNamespace <https://example.org/invalid-12004> .
+
+ex:second_facility
+    a sbol:TopLevel, fac:Facility ;
+    sbol:displayId "second_facility" ;
+    sbol:hasNamespace <https://example.org/invalid-12004> .
+
+ex:parent
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "parent" ;
+    sbol:hasNamespace <https://example.org/invalid-12004> ;
+    fac:facility ex:first_facility ;
+    fac:zoneKind fac:Room ;
+    fac:isActive true .
+
+ex:child
+    a sbol:TopLevel, fac:Zone ;
+    sbol:displayId "child" ;
+    sbol:hasNamespace <https://example.org/invalid-12004> ;
+    fac:facility ex:second_facility ;
+    fac:zoneKind fac:WorkArea ;
+    fac:parentZone ex:parent ;
+    fac:isActive true .

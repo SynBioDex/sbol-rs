@@ -1,0 +1,325 @@
+@prefix cap: <https://sbol.io/ns/capability#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix inv: <https://sbol.io/ns/inventory#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://sbol.io/spec/sbol-inventory/0.2>
+    a owl:Ontology ;
+    dcterms:title "SBOLInventory Profile 0.2 vocabulary"@en ;
+    dcterms:description "RDF terms for facilities, assets, material custody, capability offerings, and run provenance."@en ;
+    dcterms:issued "2026-08-27"^^xsd:date ;
+    owl:versionInfo "0.2" .
+
+fac:Facility
+    a rdfs:Class ;
+    rdfs:subClassOf sbol:TopLevel ;
+    rdfs:label "Facility"@en ;
+    rdfs:comment "A governed laboratory site or administrative facility boundary."@en .
+
+fac:Zone
+    a rdfs:Class ;
+    rdfs:subClassOf sbol:TopLevel ;
+    rdfs:label "Zone"@en ;
+    rdfs:comment "A spatial, environmental, containment, storage, or policy boundary in a facility."@en .
+
+fac:Asset
+    a rdfs:Class ;
+    rdfs:subClassOf sbol:TopLevel ;
+    rdfs:label "Asset"@en ;
+    rdfs:comment "A physical resource, instrument, container, storage unit, workstation, or independently bindable functional unit."@en .
+
+fac:CapabilityOffering
+    a rdfs:Class ;
+    rdfs:subClassOf sbol:Identified ;
+    rdfs:label "Capability offering"@en ;
+    rdfs:comment "An operation offered by one installed asset with explicit control and qualification state."@en .
+
+fac:PropertyValue
+    a rdfs:Class ;
+    rdfs:subClassOf sbol:Identified ;
+    rdfs:label "Property value"@en ;
+    rdfs:comment "One typed capability parameter or descriptive zone condition."@en .
+
+fac:facility
+    a rdf:Property ;
+    rdfs:label "facility"@en ;
+    rdfs:comment "The document-local Facility governing a Zone. Assets and MaterialLots derive membership through containment."@en ;
+    rdfs:range fac:Facility .
+
+fac:zoneKind
+    a rdf:Property ;
+    rdfs:domain fac:Zone ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "zone kind"@en .
+
+fac:parentZone
+    a rdf:Property ;
+    rdfs:domain fac:Zone ;
+    rdfs:range fac:Zone ;
+    rdfs:label "parent zone"@en .
+
+fac:policy
+    a rdf:Property ;
+    rdfs:domain fac:Zone ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "policy"@en .
+
+fac:condition
+    a rdf:Property ;
+    rdfs:domain fac:Zone ;
+    rdfs:range fac:PropertyValue ;
+    rdfs:label "condition"@en .
+
+fac:isActive
+    a rdf:Property ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "is active"@en ;
+    rdfs:comment "Whether the described Zone, Asset, CapabilityOffering, or MaterialLot is currently available."@en .
+
+fac:assetKind
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "asset kind"@en .
+
+fac:locatedIn
+    a rdf:Property ;
+    rdfs:label "located in"@en ;
+    rdfs:comment "The direct Zone or container Asset locating an Asset or MaterialLot."@en .
+
+fac:position
+    a rdf:Property ;
+    rdfs:range xsd:string ;
+    rdfs:label "position"@en ;
+    rdfs:comment "A named position inside the Asset referenced by locatedIn."@en .
+
+fac:partOf
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range fac:Asset ;
+    rdfs:label "part of"@en .
+
+fac:establishesZone
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range fac:Zone ;
+    rdfs:label "establishes zone"@en ;
+    rdfs:comment "A controlled Zone created or maintained by an Asset."@en .
+
+fac:manufacturer
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range xsd:string ;
+    rdfs:label "manufacturer"@en .
+
+fac:model
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range xsd:string ;
+    rdfs:label "model"@en .
+
+fac:serialNumber
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range xsd:string ;
+    rdfs:label "serial number"@en .
+
+fac:allowedPosition
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range xsd:string ;
+    rdfs:label "allowed position"@en .
+
+fac:capability
+    a rdf:Property ;
+    rdfs:domain fac:Asset ;
+    rdfs:range fac:CapabilityOffering ;
+    rdfs:label "capability"@en .
+
+fac:capabilityKind
+    a rdf:Property ;
+    rdfs:domain fac:CapabilityOffering ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "capability kind"@en .
+
+fac:qualification
+    a rdf:Property ;
+    rdfs:domain fac:CapabilityOffering ;
+    rdfs:range skos:Concept ;
+    rdfs:label "qualification"@en .
+
+fac:controlMode
+    a rdf:Property ;
+    rdfs:domain fac:CapabilityOffering ;
+    rdfs:range skos:Concept ;
+    rdfs:label "control mode"@en .
+
+fac:parameter
+    a rdf:Property ;
+    rdfs:domain fac:CapabilityOffering ;
+    rdfs:range fac:PropertyValue ;
+    rdfs:label "parameter"@en .
+
+fac:propertyKind
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "property kind"@en .
+
+fac:textValue
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range xsd:string ;
+    rdfs:label "text value"@en .
+
+fac:integerValue
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range xsd:integer ;
+    rdfs:label "integer value"@en .
+
+fac:realValue
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range xsd:double ;
+    rdfs:label "real value"@en .
+
+fac:booleanValue
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range xsd:boolean ;
+    rdfs:label "boolean value"@en .
+
+fac:uriValue
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "IRI value"@en .
+
+fac:unit
+    a rdf:Property ;
+    rdfs:domain fac:PropertyValue ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "unit"@en .
+
+fac:materialKind
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range rdfs:Resource ;
+    rdfs:label "material kind"@en .
+
+fac:derivedFromMaterial
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range sbol:Implementation ;
+    rdfs:label "derived from material"@en .
+
+fac:barcode
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range xsd:string ;
+    rdfs:label "barcode"@en .
+
+fac:lotId
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range xsd:string ;
+    rdfs:label "lot identifier"@en .
+
+fac:notes
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range xsd:string ;
+    rdfs:label "notes"@en .
+
+fac:freezeDate
+    a rdf:Property ;
+    rdfs:domain sbol:Implementation ;
+    rdfs:range xsd:dateTime ;
+    rdfs:label "freeze date"@en .
+
+fac:Room a skos:Concept ; skos:prefLabel "room"@en .
+fac:WorkArea a skos:Concept ; skos:prefLabel "work area"@en .
+fac:ContainmentZone a skos:Concept ; skos:prefLabel "containment zone"@en .
+fac:EnvironmentZone a skos:Concept ; skos:prefLabel "environment zone"@en .
+fac:StorageZone a skos:Concept ; skos:prefLabel "storage zone"@en .
+
+fac:Instrument a skos:Concept ; skos:prefLabel "instrument"@en .
+fac:Container a skos:Concept ; skos:prefLabel "container"@en .
+fac:StorageAsset a skos:Concept ; skos:prefLabel "storage asset"@en .
+fac:FunctionalUnit a skos:Concept ; skos:prefLabel "functional unit"@en .
+fac:EnvironmentController a skos:Concept ; skos:prefLabel "environment controller"@en .
+fac:Workstation a skos:Concept ; skos:prefLabel "workstation"@en .
+
+fac:Discovered a skos:Concept ; skos:prefLabel "discovered"@en ; skos:definition "The offering is known to exist."@en .
+fac:Described a skos:Concept ; skos:prefLabel "described"@en ; skos:definition "Relevant catalog facts have been represented and reviewed."@en .
+fac:Plannable a skos:Concept ; skos:prefLabel "plannable"@en ; skos:definition "A consumer has a checked parameter and capacity model."@en .
+fac:Simulatable a skos:Concept ; skos:prefLabel "simulatable"@en ; skos:definition "Planned behavior can be exercised without operating hardware."@en .
+fac:Executable a skos:Concept ; skos:prefLabel "executable"@en ; skos:definition "A reviewed execution path can invoke or direct the installed asset."@en .
+fac:Qualified a skos:Concept ; skos:prefLabel "qualified"@en ; skos:definition "The end-to-end path has been accepted for a stated laboratory use."@en .
+
+fac:UnspecifiedControl a skos:Concept ; skos:prefLabel "unspecified control"@en .
+fac:ManualControl a skos:Concept ; skos:prefLabel "manual control"@en .
+fac:ReviewedFileControl a skos:Concept ; skos:prefLabel "reviewed-file control"@en .
+fac:VendorSessionControl a skos:Concept ; skos:prefLabel "vendor-session control"@en .
+fac:ApiControl a skos:Concept ; skos:prefLabel "API control"@en .
+fac:SiLA2Control a skos:Concept ; skos:prefLabel "SiLA 2 control"@en .
+fac:OpcUaControl a skos:Concept ; skos:prefLabel "OPC UA control"@en .
+
+fac:RunAsset
+    a skos:Concept ;
+    skos:prefLabel "run asset"@en ;
+    skos:definition "PROV Usage role for an Asset used by a profile run."@en .
+
+fac:RunInputMaterial
+    a skos:Concept ;
+    skos:prefLabel "run input material"@en ;
+    skos:definition "PROV Usage role for a MaterialLot used as run input."@en .
+
+inv:DilutedPlasmid a skos:Concept ; skos:prefLabel "diluted plasmid"@en .
+inv:BacterialStock a skos:Concept ; skos:prefLabel "bacterial stock"@en .
+inv:PlatedStrain a skos:Concept ; skos:prefLabel "plated strain"@en .
+inv:ProcuredMaterial a skos:Concept ; skos:prefLabel "procured material"@en .
+inv:SolidMediaPlate a skos:Concept ; skos:prefLabel "solid-media plate"@en .
+inv:Box a skos:Concept ; skos:prefLabel "box"@en .
+inv:FridgeMinus80C a skos:Concept ; skos:prefLabel "minus 80 Celsius fridge"@en .
+inv:FridgeMinus20C a skos:Concept ; skos:prefLabel "minus 20 Celsius fridge"@en .
+inv:Fridge4C a skos:Concept ; skos:prefLabel "4 Celsius fridge"@en .
+inv:Shelf a skos:Concept ; skos:prefLabel "shelf"@en .
+
+cap:LiquidHandling a skos:Concept ; skos:prefLabel "liquid handling"@en .
+cap:AbsorbanceMeasurement a skos:Concept ; skos:prefLabel "absorbance measurement"@en .
+cap:Incubation a skos:Concept ; skos:prefLabel "incubation"@en .
+cap:ShakingIncubation a skos:Concept ; skos:prefLabel "shaking incubation"@en .
+cap:StaticIncubation a skos:Concept ; skos:prefLabel "static incubation"@en .
+cap:Shaking a skos:Concept ; skos:prefLabel "shaking"@en .
+cap:ThermalCycling a skos:Concept ; skos:prefLabel "thermal cycling"@en .
+cap:EnvironmentControl a skos:Concept ; skos:prefLabel "environment control"@en .
+cap:AnaerobicEnvironmentControl a skos:Concept ; skos:prefLabel "anaerobic environment control"@en .
+cap:ConfocalMicroscopy a skos:Concept ; skos:prefLabel "confocal microscopy"@en .
+cap:PlasmaCleaning a skos:Concept ; skos:prefLabel "plasma cleaning"@en .
+cap:ElectrochemicalMeasurement a skos:Concept ; skos:prefLabel "electrochemical measurement"@en .
+cap:GelImaging a skos:Concept ; skos:prefLabel "gel imaging"@en .
+cap:Electrophoresis a skos:Concept ; skos:prefLabel "electrophoresis"@en .
+cap:Centrifugation a skos:Concept ; skos:prefLabel "centrifugation"@en .
+cap:MediaPreparation a skos:Concept ; skos:prefLabel "media preparation"@en .
+cap:PhMeasurement a skos:Concept ; skos:prefLabel "pH measurement"@en .
+cap:WaterPurification a skos:Concept ; skos:prefLabel "water purification"@en .
+cap:BiosafetyContainment a skos:Concept ; skos:prefLabel "biosafety containment"@en .
+cap:SteamSterilization a skos:Concept ; skos:prefLabel "steam sterilization"@en .
+cap:ColdStorage a skos:Concept ; skos:prefLabel "cold storage"@en .
+cap:PlantGrowth a skos:Concept ; skos:prefLabel "plant growth"@en .
+
+fac:RunComponent a prov:Role ; rdfs:label "Run component"@en ; rdfs:comment "A Component design used by a laboratory run."@en .
+fac:ExperimentalDataDatabase a rdfs:Class ; rdfs:subClassOf sbol:TopLevel ; rdfs:label "Experimental data database"@en .
+fac:MetadataDatabase a rdfs:Class ; rdfs:subClassOf sbol:TopLevel ; rdfs:label "Metadata database"@en .
+fac:forComponent a rdf:Property ; rdfs:domain sbol:ExperimentalData ; rdfs:range sbol:Component ; rdfs:comment "The local Component described by these experimental data."@en .
+fac:submittedTo a rdf:Property ; rdfs:comment "Repository to which these ExperimentalData or this Component have been submitted. This is a recorded fact, not a transfer request."@en .
+fac:retrievedFrom a rdf:Property ; rdfs:domain sbol:Component ; rdfs:range fac:MetadataDatabase ; rdfs:comment "Repository from which this Component was retrieved."@en .

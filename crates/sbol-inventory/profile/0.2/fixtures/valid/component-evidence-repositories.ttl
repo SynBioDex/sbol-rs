@@ -1,0 +1,85 @@
+@prefix ns1: <https://sbol.io/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://example.org/digital/data> a sbol:ExperimentalData ;
+    sbol:displayId "data" ;
+    sbol:hasAttachment <https://example.org/digital/file> ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    prov:wasGeneratedBy <https://example.org/digital/run> ;
+    ns1:forComponent <https://example.org/digital/revised> ;
+    ns1:submittedTo <https://example.org/digital/journal> .
+
+<https://example.org/digital/design> a sbol:Component ;
+    sbol:displayId "design" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    sbol:type <https://identifiers.org/SBO:0000241> ;
+    ns1:retrievedFrom <https://example.org/digital/registry> .
+
+<https://example.org/digital/facility> a sbol:TopLevel,
+        ns1:Facility ;
+    sbol:displayId "facility" ;
+    sbol:hasNamespace <https://example.org/digital> .
+
+<https://example.org/digital/journal> a sbol:TopLevel,
+        ns1:ExperimentalDataDatabase ;
+    sbol:displayId "journal" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    sbol:name "Field Journal" .
+
+<https://example.org/digital/reader> a sbol:TopLevel,
+        ns1:Asset ;
+    sbol:displayId "reader" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    ns1:assetKind ns1:Instrument ;
+    ns1:isActive true ;
+    ns1:locatedIn <https://example.org/digital/room> .
+
+<https://example.org/digital/revised> a sbol:Component ;
+    sbol:displayId "revised" ;
+    sbol:hasAttachment <https://example.org/digital/file> ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    sbol:type <https://identifiers.org/SBO:0000241> ;
+    prov:wasGeneratedBy <https://example.org/digital/run> ;
+    ns1:submittedTo <https://example.org/digital/registry> .
+
+<https://example.org/digital/room> a sbol:TopLevel,
+        ns1:Zone ;
+    sbol:displayId "room" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    ns1:facility <https://example.org/digital/facility> ;
+    ns1:isActive true ;
+    ns1:zoneKind ns1:Room .
+
+<https://example.org/digital/run/Usage1> a sbol:Identified,
+        prov:Usage ;
+    sbol:displayId "Usage1" ;
+    prov:entity <https://example.org/digital/reader> ;
+    prov:hadRole ns1:RunAsset .
+
+<https://example.org/digital/run/Usage2> a sbol:Identified,
+        prov:Usage ;
+    sbol:displayId "Usage2" ;
+    prov:entity <https://example.org/digital/design> ;
+    prov:hadRole ns1:RunComponent .
+
+<https://example.org/digital/file> a sbol:Attachment ;
+    sbol:displayId "file" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    sbol:source <https://example.org/records/result.csv> .
+
+<https://example.org/digital/registry> a sbol:TopLevel,
+        ns1:MetadataDatabase ;
+    sbol:displayId "registry" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    sbol:name "SynBioHub" .
+
+<https://example.org/digital/run> a sbol:TopLevel,
+        prov:Activity ;
+    sbol:displayId "run" ;
+    sbol:hasNamespace <https://example.org/digital> ;
+    prov:qualifiedUsage <https://example.org/digital/run/Usage1>,
+        <https://example.org/digital/run/Usage2> .
+
+

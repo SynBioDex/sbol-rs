@@ -1,4 +1,4 @@
-use crate::backends::{Backend, DefaultBackend};
+use crate::backends::{Backend, DefaultBackend, are_isomorphic};
 use crate::traits::{RdfGraph, RdfIo};
 use crate::{ParseError, RdfFormat, Triple, WriteError};
 
@@ -20,6 +20,16 @@ impl Graph {
 
     pub fn normalized_triples(&self) -> Vec<Triple> {
         <Self as RdfGraph>::normalized_triples(self)
+    }
+
+    /// Tests RDF graph isomorphism, treating blank-node identifiers as local
+    /// labels rather than observable identities.
+    ///
+    /// This is the semantic comparison required for RDF read/write
+    /// conformance. Use [`normalized_triples`](Self::normalized_triples) only
+    /// when the graph is known to contain no blank nodes.
+    pub fn is_isomorphic_with(&self, other: &Self) -> Result<bool, WriteError> {
+        are_isomorphic(&self.triples, &other.triples)
     }
 
     /// Parses an RDF document in the given format.

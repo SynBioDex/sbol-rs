@@ -1,0 +1,19 @@
+@prefix ex: <https://example.org/invalid-17001/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-17001> .
+ex:room a sbol:TopLevel, fac:Zone ; sbol:displayId "room" ; sbol:hasNamespace <https://example.org/invalid-17001> ; fac:facility ex:facility ; fac:zoneKind fac:Room ; fac:isActive true .
+
+ex:run
+    a sbol:TopLevel, prov:Activity ;
+    sbol:displayId "run" ;
+    sbol:hasNamespace <https://example.org/invalid-17001> ;
+    prov:qualifiedUsage <https://example.org/invalid-17001/run/usage> .
+
+<https://example.org/invalid-17001/run/usage>
+    a sbol:Identified, prov:Usage ;
+    sbol:displayId "usage" ;
+    prov:entity ex:room ;
+    prov:hadRole fac:RunAsset .

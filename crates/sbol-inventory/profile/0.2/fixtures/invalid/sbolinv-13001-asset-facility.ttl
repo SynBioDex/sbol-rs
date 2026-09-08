@@ -1,0 +1,11 @@
+@prefix ex: <https://example.org/invalid-13001/> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix sbol: <http://sbols.org/v3#> .
+
+ex:asset
+    a sbol:TopLevel, fac:Asset ;
+    sbol:displayId "asset" ;
+    sbol:hasNamespace <https://example.org/invalid-13001> ;
+    fac:facility ex:obsolete_facility ;
+    fac:assetKind fac:Instrument ;
+    fac:isActive true .

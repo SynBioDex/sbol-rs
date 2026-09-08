@@ -154,6 +154,7 @@ the version crates are usable directly.
 | [`sbol-cli`](crates/sbol-cli/) | The `sbol` command-line tool: validate, convert, and import for both versions. |
 | [`sbol-rulegen`](crates/sbol-rulegen/) | Generates each version's validation rule catalog from its `rules.toml`. |
 | [`sbol-fasta`](crates/sbol-fasta/) / [`sbol-genbank`](crates/sbol-genbank/) | FASTA and GenBank importers to native SBOL 3. |
+| [`sbol-inventory`](crates/sbol-inventory/) | SBOLInventory Profile 0.2 facility catalogs, material lots, capability offerings, and run provenance. |
 | [`sbol-ontology`](crates/sbol-ontology/) / [`sbol-rdf`](crates/sbol-rdf/) | Bundled ontology snapshots and the RDF serialization layer. |
 
 ## Validation
