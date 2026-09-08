@@ -108,7 +108,7 @@ impl<'a> AssetRef<'a> {
     common_accessors!();
 
     pub fn facility_id(&self) -> Option<&'a Resource> {
-        self.object.first_resource(FACILITY_PROPERTY)
+        self.document.facility_id_for(self.object.identity())
     }
 
     pub fn facility(&self) -> Option<FacilityRef<'a>> {
@@ -315,7 +315,7 @@ impl<'a> MaterialLotRef<'a> {
     }
 
     pub fn facility_id(&self) -> Option<&'a Resource> {
-        self.object.first_resource(FACILITY_PROPERTY)
+        self.document.facility_id_for(self.object.identity())
     }
 
     pub fn facility(&self) -> Option<FacilityRef<'a>> {

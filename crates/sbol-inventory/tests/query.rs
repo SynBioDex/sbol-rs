@@ -14,16 +14,16 @@ ex:building a sbol:TopLevel, fac:Zone ; sbol:displayId "building" ; sbol:hasName
 ex:room a sbol:TopLevel, fac:Zone ; sbol:displayId "room" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_a ; fac:zoneKind fac:Room ; fac:parentZone ex:building ; fac:isActive true .
 ex:other_room a sbol:TopLevel, fac:Zone ; sbol:displayId "other_room" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_b ; fac:zoneKind fac:Room ; fac:isActive true .
 
-ex:container a sbol:TopLevel, fac:Asset ; sbol:displayId "container" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_a ; fac:assetKind fac:Container ; fac:locatedIn ex:room ; fac:isActive true ; ex:marker "container" .
-ex:parent a sbol:TopLevel, fac:Asset ; sbol:displayId "parent" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_a ; fac:assetKind fac:Instrument ; fac:isActive true ; ex:marker "parent" .
+ex:container a sbol:TopLevel, fac:Asset ; sbol:displayId "container" ; sbol:hasNamespace <https://example.org/query> ; fac:assetKind fac:Container ; fac:locatedIn ex:room ; fac:isActive true ; ex:marker "container" .
+ex:parent a sbol:TopLevel, fac:Asset ; sbol:displayId "parent" ; sbol:hasNamespace <https://example.org/query> ; fac:assetKind fac:Instrument ; fac:isActive true ; ex:marker "parent" .
 
-ex:a_child a sbol:TopLevel, fac:Asset ; sbol:displayId "a_child" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_a ; fac:assetKind fac:FunctionalUnit ; fac:locatedIn ex:container ; fac:partOf ex:parent ; fac:isActive true ; fac:capability <https://example.org/query/a_child/absorbance> .
+ex:a_child a sbol:TopLevel, fac:Asset ; sbol:displayId "a_child" ; sbol:hasNamespace <https://example.org/query> ; fac:assetKind fac:FunctionalUnit ; fac:locatedIn ex:container ; fac:partOf ex:parent ; fac:isActive true ; fac:capability <https://example.org/query/a_child/absorbance> .
 <https://example.org/query/a_child/absorbance> a sbol:Identified, fac:CapabilityOffering ; sbol:displayId "absorbance" ; fac:capabilityKind cap:AbsorbanceMeasurement ; fac:qualification fac:Plannable ; fac:controlMode fac:ReviewedFileControl ; fac:isActive true .
 
-ex:b_direct a sbol:TopLevel, fac:Asset ; sbol:displayId "b_direct" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_a ; fac:assetKind fac:Instrument ; fac:locatedIn ex:room ; fac:isActive true ; fac:capability <https://example.org/query/b_direct/absorbance> .
+ex:b_direct a sbol:TopLevel, fac:Asset ; sbol:displayId "b_direct" ; sbol:hasNamespace <https://example.org/query> ; fac:assetKind fac:Instrument ; fac:locatedIn ex:room ; fac:isActive true ; fac:capability <https://example.org/query/b_direct/absorbance> .
 <https://example.org/query/b_direct/absorbance> a sbol:Identified, fac:CapabilityOffering ; sbol:displayId "absorbance" ; fac:capabilityKind cap:AbsorbanceMeasurement ; fac:qualification fac:Qualified ; fac:controlMode fac:ApiControl ; fac:isActive true ; ex:marker "offering" .
 
-ex:c_other a sbol:TopLevel, fac:Asset ; sbol:displayId "c_other" ; sbol:hasNamespace <https://example.org/query> ; fac:facility ex:facility_b ; fac:assetKind fac:Instrument ; fac:locatedIn ex:other_room ; fac:isActive true ; fac:capability <https://example.org/query/c_other/absorbance> .
+ex:c_other a sbol:TopLevel, fac:Asset ; sbol:displayId "c_other" ; sbol:hasNamespace <https://example.org/query> ; fac:assetKind fac:Instrument ; fac:locatedIn ex:other_room ; fac:isActive true ; fac:capability <https://example.org/query/c_other/absorbance> .
 <https://example.org/query/c_other/absorbance> a sbol:Identified, fac:CapabilityOffering ; sbol:displayId "absorbance" ; fac:capabilityKind cap:AbsorbanceMeasurement ; fac:qualification fac:Qualified ; fac:controlMode fac:ApiControl ; fac:isActive true .
 "#;
 

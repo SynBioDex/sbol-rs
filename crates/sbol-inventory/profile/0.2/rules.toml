@@ -19,7 +19,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = true
 fixture = "fixtures/invalid/sbolinv-10002-wrong-base-type.ttl"
-statement = "Facility, Zone, and Asset MUST be SBOL TopLevel objects; CapabilityOffering and PropertyValue MUST be SBOL Identified children; a material lot MUST be an SBOL Implementation."
+statement = "Facility, Zone, Asset, ExperimentalDataDatabase, and MetadataDatabase MUST be SBOL TopLevel objects; CapabilityOffering and PropertyValue MUST be SBOL Identified children; a material lot MUST be an SBOL Implementation."
 
 [[rules]]
 id = "sbolinv-10003"
@@ -79,7 +79,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = false
 fixture = "fixtures/invalid/sbolinv-12004-zone-parent-facility.ttl"
-statement = "A parentZone reference MUST resolve to a document-local Zone in the same Facility."
+statement = "A parentZone reference MUST resolve to a document-local Zone with compatible derived facility membership."
 
 [[rules]]
 id = "sbolinv-12005"
@@ -119,7 +119,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = true
 fixture = "fixtures/invalid/sbolinv-13001-asset-facility.ttl"
-statement = "An Asset MUST name exactly one document-local Facility."
+statement = "An Asset MUST NOT carry fac:facility; facility membership is derived through a Zone."
 
 [[rules]]
 id = "sbolinv-13002"
@@ -149,7 +149,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = false
 fixture = "fixtures/invalid/sbolinv-13004-part-of-facility.ttl"
-statement = "A partOf reference MUST resolve to a document-local Asset in the same Facility."
+statement = "A partOf reference MUST resolve to a document-local Asset with compatible derived facility membership."
 
 [[rules]]
 id = "sbolinv-13005"
@@ -159,7 +159,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = false
 fixture = "fixtures/invalid/sbolinv-13005-established-zone-facility.ttl"
-statement = "Every establishesZone reference MUST resolve to a document-local Zone in the same Facility."
+statement = "Every establishesZone reference MUST resolve to a document-local Zone with compatible derived facility membership."
 
 [[rules]]
 id = "sbolinv-13006"
@@ -197,9 +197,9 @@ section = "Asset"
 classes = ["Writer", "Validator"]
 strength = "required"
 machine_checkable = true
-shacl_core = false
+shacl_core = true
 fixture = "fixtures/invalid/sbolinv-13501-location-facility.ttl"
-statement = "A locatedIn reference MUST resolve to a document-local Zone or Asset in the same Facility."
+statement = "A locatedIn reference MUST resolve to a document-local Zone or Asset."
 
 [[rules]]
 id = "sbolinv-13502"
@@ -359,7 +359,7 @@ strength = "required"
 machine_checkable = true
 shacl_core = true
 fixture = "fixtures/invalid/sbolinv-16003-material-facility.ttl"
-statement = "A MaterialLot MUST name exactly one document-local Facility."
+statement = "A MaterialLot MUST NOT carry fac:facility; facility membership is derived through a Zone."
 
 [[rules]]
 id = "sbolinv-16004"
@@ -447,3 +447,43 @@ strength = "required"
 machine_checkable = true
 shacl_core = false
 statement = "Candidate-query results MUST be ordered lexicographically by Asset IRI."
+
+[[rules]]
+id = "sbolinv-17004"
+section = "Run provenance"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-17004-run-component.ttl"
+statement = "A Usage carrying RunComponent MUST name exactly one document-local Component."
+
+[[rules]]
+id = "sbolinv-19001"
+section = "Digital records and repositories"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-19001-evidence-component.ttl"
+statement = "Every forComponent edge MUST link ExperimentalData to a document-local Component."
+
+[[rules]]
+id = "sbolinv-19002"
+section = "Digital records and repositories"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-19002-submission.ttl"
+statement = "Every submittedTo edge MUST link ExperimentalData to a local ExperimentalDataDatabase, or a Component to a local MetadataDatabase."
+
+[[rules]]
+id = "sbolinv-19003"
+section = "Digital records and repositories"
+classes = ["Writer", "Validator"]
+strength = "required"
+machine_checkable = true
+shacl_core = true
+fixture = "fixtures/invalid/sbolinv-19003-retrieval.ttl"
+statement = "Every retrievedFrom edge MUST link a Component to a local MetadataDatabase."

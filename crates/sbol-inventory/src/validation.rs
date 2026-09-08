@@ -11,7 +11,7 @@ use crate::vocabulary::*;
 use crate::{InventoryDocument, ProfileRule};
 
 /// Exact upstream revision from which the embedded Profile 0.2 artifacts were copied.
-pub const PROFILE_SOURCE_REVISION: &str = "7d8cb750dd2d5e3c6c7602e575c3a551b890724f";
+pub const PROFILE_SOURCE_REVISION: &str = "e992f18494c2a363ee9675ac8e12ca37ecc4538a";
 
 /// The SBOL core validator used by this profile implementation.
 pub const CORE_VALIDATOR: &str = "sbol3::Document::validate";
@@ -280,6 +280,7 @@ impl<'a> Validator<'a> {
         self.validate_property_values();
         self.validate_material_lots();
         self.validate_runs();
+        self.validate_digital_links();
     }
 
     fn error(
@@ -300,6 +301,8 @@ impl<'a> Validator<'a> {
     fn validate_base_types(&mut self) {
         let checks = [
             (FACILITY, SBOL_TOP_LEVEL),
+            (EXPERIMENTAL_DATA_DATABASE, SBOL_TOP_LEVEL),
+            (METADATA_DATABASE, SBOL_TOP_LEVEL),
             (ZONE, SBOL_TOP_LEVEL),
             (ASSET, SBOL_TOP_LEVEL),
             (CAPABILITY_OFFERING, SBOL_IDENTIFIED),
@@ -411,7 +414,7 @@ impl<'a> Validator<'a> {
                     "parentZone",
                     "Zone",
                 )
-                && !same_facility(zone, parent)
+                && !same_facility(self.inventory, zone, parent)
             {
                 self.error(
                     "sbolinv-12004",
@@ -454,14 +457,14 @@ impl<'a> Validator<'a> {
     fn validate_assets(&mut self) {
         let assets = self.objects_with_type(ASSET);
         for asset in &assets {
-            self.require_local_typed_reference(
-                asset,
-                FACILITY_PROPERTY,
-                FACILITY,
-                "sbolinv-13001",
-                "Asset",
-                "Facility",
-            );
+            if !asset.values(FACILITY_PROPERTY).is_empty() {
+                self.error(
+                    "sbolinv-13001",
+                    asset.identity().clone(),
+                    Some(FACILITY_PROPERTY),
+                    "facility must be derived through a Zone; direct fac:facility is forbidden",
+                );
+            }
             self.require_one_iri(asset, ASSET_KIND, "sbolinv-13002", "assetKind");
             self.require_one_boolean(asset, IS_ACTIVE, "sbolinv-13003", "Asset isActive");
 
@@ -474,7 +477,7 @@ impl<'a> Validator<'a> {
                     "partOf",
                     "Asset",
                 )
-                && !same_facility(asset, parent)
+                && !compatible_facility(self.inventory, asset, parent)
             {
                 self.error(
                     "sbolinv-13004",
@@ -490,7 +493,7 @@ impl<'a> Validator<'a> {
                 .collect::<Vec<_>>()
             {
                 match self.document().get(&established) {
-                    Some(zone) if has_type(zone, ZONE) && same_facility(asset, zone) => {}
+                    Some(zone) if has_type(zone, ZONE) && same_facility(self.inventory, asset, zone) => {}
                     _ => self.error(
                         "sbolinv-13005",
                         asset.identity().clone(),
@@ -548,14 +551,12 @@ impl<'a> Validator<'a> {
 
             if !location_values.is_empty() {
                 match location.and_then(|identity| self.document().get(identity)) {
-                    Some(target)
-                        if (has_type(target, ZONE) || has_type(target, ASSET))
-                            && same_facility(object, target) => {}
+                    Some(target) if (has_type(target, ZONE) || has_type(target, ASSET)) => {}
                     _ => self.error(
                         "sbolinv-13501",
                         object.identity().clone(),
                         Some(LOCATED_IN),
-                        "locatedIn must resolve to a local Zone or Asset in the same Facility",
+                        "locatedIn must resolve to a local Zone or Asset",
                     ),
                 }
             }
@@ -745,14 +746,14 @@ impl<'a> Validator<'a> {
         let materials = self.material_objects();
         for material in &materials {
             self.require_one_iri(material, MATERIAL_KIND, "sbolinv-16002", "materialKind");
-            self.require_local_typed_reference(
-                material,
-                FACILITY_PROPERTY,
-                FACILITY,
-                "sbolinv-16003",
-                "MaterialLot",
-                "Facility",
-            );
+            if !material.values(FACILITY_PROPERTY).is_empty() {
+                self.error(
+                    "sbolinv-16003",
+                    material.identity().clone(),
+                    Some(FACILITY_PROPERTY),
+                    "facility must be derived through a Zone; direct fac:facility is forbidden",
+                );
+            }
             self.require_local_typed_reference(
                 material,
                 SBOL_BUILT,
@@ -823,6 +824,16 @@ impl<'a> Validator<'a> {
                     "Asset",
                 );
             }
+            if roles.contains(RUN_COMPONENT) {
+                self.require_local_typed_reference(
+                    usage,
+                    PROV_ENTITY,
+                    SBOL_COMPONENT,
+                    "sbolinv-17004",
+                    "RunComponent Usage entity",
+                    "Component",
+                );
+            }
             if roles.contains(RUN_INPUT_MATERIAL) {
                 let valid = usage.values(PROV_ENTITY).len() == 1
                     && one_resource(usage, PROV_ENTITY)
@@ -858,6 +869,41 @@ impl<'a> Validator<'a> {
                     Some(PROV_QUALIFIED_USAGE),
                     "profile run Activity must own at least one RunAsset Usage",
                 );
+            }
+        }
+    }
+
+    fn validate_digital_links(&mut self) {
+        for object in self.document().objects().values() {
+            for (predicate, rule) in [
+                (FOR_COMPONENT, "sbolinv-19001"),
+                (SUBMITTED_TO, "sbolinv-19002"),
+                (RETRIEVED_FROM, "sbolinv-19003"),
+            ] {
+                for value in object.values(predicate) {
+                    let target = value
+                        .as_iri()
+                        .and_then(|iri| self.document().get(&Resource::Iri(iri.clone())));
+                    let valid = target.is_some_and(|target| match predicate {
+                        FOR_COMPONENT => {
+                            has_type(object, SBOL_EXPERIMENTAL_DATA)
+                                && has_type(target, SBOL_COMPONENT)
+                        }
+                        RETRIEVED_FROM => {
+                            has_type(object, SBOL_COMPONENT) && has_type(target, METADATA_DATABASE)
+                        }
+                        _ => {
+                            (has_type(object, SBOL_EXPERIMENTAL_DATA)
+                                && has_type(target, EXPERIMENTAL_DATA_DATABASE))
+                                || (has_type(object, SBOL_COMPONENT)
+                                    && has_type(target, METADATA_DATABASE))
+                        }
+                    });
+                    if !valid {
+                        self.error(rule, object.identity().clone(), Some(predicate),
+                                   "digital record link has an invalid subject or repository/Component target");
+                    }
+                }
             }
         }
     }
@@ -1042,9 +1088,12 @@ fn is_material_lot(object: &Object) -> bool {
 }
 
 fn is_profile_usage(object: &Object) -> bool {
-    object
-        .iris(PROV_HAD_ROLE)
-        .any(|role| matches!(role.as_str(), RUN_ASSET | RUN_INPUT_MATERIAL))
+    object.iris(PROV_HAD_ROLE).any(|role| {
+        matches!(
+            role.as_str(),
+            RUN_ASSET | RUN_INPUT_MATERIAL | RUN_COMPONENT
+        )
+    })
 }
 
 fn one_resource<'a>(object: &'a Object, predicate: &str) -> Option<&'a Resource> {
@@ -1067,10 +1116,18 @@ fn one_string<'a>(object: &'a Object, predicate: &str) -> Option<&'a str> {
     values[0].as_literal().map(Literal::value)
 }
 
-fn same_facility(left: &Object, right: &Object) -> bool {
-    one_resource(left, FACILITY_PROPERTY)
-        .zip(one_resource(right, FACILITY_PROPERTY))
+fn same_facility(inventory: &InventoryDocument, left: &Object, right: &Object) -> bool {
+    inventory
+        .facility_id_for(left.identity())
+        .zip(inventory.facility_id_for(right.identity()))
         .is_some_and(|(left, right)| left == right)
+}
+
+fn compatible_facility(inventory: &InventoryDocument, left: &Object, right: &Object) -> bool {
+    inventory
+        .facility_id_for(left.identity())
+        .zip(inventory.facility_id_for(right.identity()))
+        .is_none_or(|(left, right)| left == right)
 }
 
 fn property_kind_for(ownership_predicate: &str) -> &'static str {

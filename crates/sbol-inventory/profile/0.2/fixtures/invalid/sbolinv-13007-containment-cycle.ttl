@@ -8,7 +8,6 @@ ex:first
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "first" ;
     sbol:hasNamespace <https://example.org/invalid-13007> ;
-    fac:facility ex:facility ;
     fac:assetKind fac:Instrument ;
     fac:partOf ex:second ;
     fac:isActive true .
@@ -17,7 +16,6 @@ ex:second
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "second" ;
     sbol:hasNamespace <https://example.org/invalid-13007> ;
-    fac:facility ex:facility ;
     fac:assetKind fac:Container ;
     fac:locatedIn ex:first ;
     fac:isActive true .

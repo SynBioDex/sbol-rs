@@ -2,6 +2,8 @@
 
 ## Status
 
+The September 2026 revision removes direct facility edges on Assets and MaterialLots and adds Component and repository provenance. This revises an unreleased draft in place; consumers of earlier 0.2 snapshots must migrate their graphs. Rule identifiers remain stable within this draft, and conformance reports must identify the specification source revision.
+
 This document is the draft normative specification for SBOLInventory Profile 0.2. The profile IRI is:
 
 ```text
@@ -59,10 +61,11 @@ Profile 0.2 does not require a conformance marker inside each data graph. A syst
 
 The following nodes are in profile scope:
 
-- nodes typed `fac:Facility`, `fac:Zone`, or `fac:Asset`;
+- nodes typed `fac:Facility`, `fac:Zone`, `fac:Asset`, `fac:ExperimentalDataDatabase`, or `fac:MetadataDatabase`;
+- subjects of `fac:forComponent`, `fac:submittedTo`, or `fac:retrievedFrom`;
 - nodes typed `fac:CapabilityOffering` or `fac:PropertyValue` and owned through profile properties;
 - `sbol:Implementation` nodes with a `fac:materialKind` property;
-- `prov:Usage` nodes carrying `fac:RunAsset` or `fac:RunInputMaterial` as a `prov:hadRole` value;
+- `prov:Usage` nodes carrying `fac:RunAsset`, `fac:RunInputMaterial`, or `fac:RunComponent` as a `prov:hadRole` value;
 - `prov:Activity` nodes that own at least one such usage.
 
 An ordinary `sbol:Implementation` with no `fac:materialKind` is not a `MaterialLot` and MUST NOT be subjected to material-lot rules.
@@ -80,7 +83,8 @@ A conformant document is closed over each required structural reference:
 - `fac:establishesZone`;
 - `sbol:built` on a material lot;
 - profile run-usage entities;
-- `fac:derivedFromMaterial` on a material lot.
+- `fac:derivedFromMaterial` on a material lot;
+- digital record and repository links listed below.
 
 Those references MUST resolve to objects of the required type in the same RDF document. Open vocabulary values such as kinds, policies, parameter kinds, units, and control-independent ontology terms need not resolve locally.
 
@@ -90,7 +94,7 @@ The Python construction API MAY temporarily hold an incomplete object while a ca
 
 `fac:Facility` is a custom SBOL `TopLevel` representing one governed laboratory site or administrative facility boundary. It has no REQUIRED profile-specific properties. A document MAY contain multiple facilities.
 
-The profile does not infer facility membership from identity prefixes or spatial containment. Every zone, asset, and material lot states its governing facility explicitly.
+Only zones state `fac:facility`. Assets and material lots MUST NOT carry this property. Their governing facility is derived by following `locatedIn` to a zone, using `partOf` as a fallback for an asset without a direct location. Identity prefixes never determine membership. An object with no path to a zone has no known facility and does not match a facility-filtered query. Such objects MAY be retained as unlocated catalog or historical records.
 
 ## Zone
 
@@ -115,7 +119,6 @@ No two conditions owned by one zone MAY have the same `fac:propertyKind`. Applic
 
 | Property | Cardinality | Value | Semantics |
 |----|---:|----|----|
-| `fac:facility` | 1 | local `fac:Facility` | Governing facility |
 | `fac:assetKind` | 1 | IRI | Open classification vocabulary |
 | `fac:locatedIn` | 0..1 | local `fac:Zone` or `fac:Asset` | Direct location or custody container |
 | `fac:position` | 0..1 | `xsd:string` | Named position inside an asset |
@@ -130,7 +133,7 @@ No two conditions owned by one zone MAY have the same `fac:propertyKind`. Applic
 
 `locatedIn` and `partOf` are independent. `locatedIn` states physical location or custody. `partOf` states composition. A thermocycler block can be part of a parent instrument while the instrument is located in a room.
 
-All `partOf`, asset-valued `locatedIn`, and mixed `partOf` plus asset-valued `locatedIn` paths MUST be acyclic. References on either edge MUST remain within one facility. An established zone MUST belong to the same facility as the asset that establishes it.
+All `partOf`, asset-valued `locatedIn`, and mixed `partOf` plus asset-valued `locatedIn` paths MUST be acyclic. When both an asset and its `partOf` parent have a known facility, their derived facilities MUST agree. A direct location determines custody, so moving an independent asset or lot to another facility changes its derived membership without editing a redundant facility field. An established zone MUST belong to the same known facility as the asset that establishes it.
 
 An asset's `allowedPosition` values MUST contain at least one non-whitespace character and be unique. A `position` value, when present, MUST also contain at least one non-whitespace character. If a located asset or material lot names an asset with at least one allowed position, it MUST provide exactly one `fac:position`, and that value MUST occur in the container's allowed-position set. A position MUST NOT be supplied without a location or for a zone-valued location.
 
@@ -176,7 +179,6 @@ A material lot is a standard `sbol:Implementation` carrying `fac:materialKind`. 
 |----|---:|----|----|
 | `sbol:built` | 1 | local `sbol:Component` | Design realized by the physical material |
 | `fac:materialKind` | 1 | IRI | Open material classification vocabulary |
-| `fac:facility` | 1 | local `fac:Facility` | Governing facility |
 | `fac:locatedIn` | 0..1 | local `fac:Zone` or `fac:Asset` | Direct location or container |
 | `fac:position` | 0..1 | `xsd:string` | Position inside an asset |
 | `fac:isActive` | 1 | `xsd:boolean` | Whether the lot is available for use |
@@ -237,12 +239,30 @@ A profile run is a `prov:Activity` that owns at least one `prov:Usage` carrying 
 
 - `fac:RunAsset`: `prov:entity` MUST resolve locally to `fac:Asset`.
 - `fac:RunInputMaterial`: `prov:entity` MUST resolve locally to a material lot.
+- `fac:RunComponent`: `prov:entity` MUST resolve locally to a standard `sbol:Component`.
 
 A profile run MUST contain at least one `RunAsset` usage. Manual work can name a workstation or other facility asset when no instrument is involved.
 
-Generated material lots and `sbol:ExperimentalData` SHOULD refer to the run through `prov:wasGeneratedBy`. Material transformations SHOULD state their input lots with `fac:derivedFromMaterial`. Evidence files SHOULD use standard `sbol:Attachment` objects.
+Generated Components, material lots, and `sbol:ExperimentalData` SHOULD refer to the run through `prov:wasGeneratedBy`. Material transformations SHOULD state their input lots with `fac:derivedFromMaterial`. Evidence files SHOULD use standard `sbol:Attachment` objects.
+
+Component usage records informational design input. Generating a new Component records design creation or revision; realizing a physical lot from an existing design does not regenerate that design. Plans and responsible agents remain standard `prov:Plan` and `prov:Agent` objects, even when a Component describes their biological context. Assets are used entities; a device is not automatically a PROV agent.
 
 A reviewed plan and responsible agent MAY be represented with standard `prov:Association`, `prov:hadPlan`, and `prov:agent`. Those standard objects do not encode a compiler's private requirement or allocation IR.
+
+## Digital records and repositories
+
+`fac:ExperimentalDataDatabase` and `fac:MetadataDatabase` are custom SBOL `TopLevel` objects identifying repositories such as Field Journal and SynBioHub. They have no required profile-specific properties. A database identity names the repository; record identities and Attachment sources identify its content.
+
+| Subject | Property | Cardinality | Target |
+|----|----|---:|----|
+| `sbol:ExperimentalData` | `fac:forComponent` | 0..* | local `sbol:Component` described by the data |
+| `sbol:ExperimentalData` | `fac:submittedTo` | 0..* | local `fac:ExperimentalDataDatabase` |
+| `sbol:Component` | `fac:submittedTo` | 0..* | local `fac:MetadataDatabase` |
+| `sbol:Component` | `fac:retrievedFrom` | 0..* | local `fac:MetadataDatabase` |
+
+These references MUST be absolute IRIs and resolve locally to the stated types. They MUST NOT occur on other subject types. They record completed submission or retrieval facts, not requests, credentials, synchronization state, or proof that remote content is currently available. Consumers perform transfers and record these links only after success. A consumer MAY use standard PROV Activities, Usages, and Associations to add transfer timestamps and responsible agents.
+
+ExperimentalData is linked to the Component it describes with `forComponent`. Evidence files remain standard `sbol:Attachment` objects referenced by `sbol:hasAttachment` on ExperimentalData and, when useful, on the Component. An ExperimentalData or Component object MUST NOT be used as the target of `sbol:hasAttachment` in place of an Attachment.
 
 ## Candidate-query behavior
 

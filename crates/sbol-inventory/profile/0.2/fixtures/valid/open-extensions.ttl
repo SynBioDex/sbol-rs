@@ -24,7 +24,6 @@ ex:instrument
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "instrument" ;
     sbol:hasNamespace <https://example.org/sbolinventory-extension> ;
-    fac:facility ex:facility ;
     fac:assetKind ext:CustomInstrumentKind ;
     fac:locatedIn ex:room ;
     fac:isActive true ;

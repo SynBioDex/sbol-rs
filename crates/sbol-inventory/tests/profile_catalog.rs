@@ -41,7 +41,7 @@ fn checked_in_catalog_matches_pinned_profile() {
     assert_eq!(PROFILE_RULE_CATALOG_IRI, source.profile);
     assert_eq!(PROFILE_RULE_CATALOG_VERSION, source.version);
     assert_eq!(PROFILE_RULE_CATALOG_STATUS, source.status);
-    assert_eq!(rules.len(), 45);
+    assert_eq!(rules.len(), 49);
     assert_eq!(rules.len(), source.rules.len());
     assert_eq!(identifiers.len(), rules.len());
     assert_eq!(
@@ -49,7 +49,7 @@ fn checked_in_catalog_matches_pinned_profile() {
             .iter()
             .filter(|rule| rule.applies_to(ConformanceClass::Validator))
             .count(),
-        41
+        45
     );
     assert!(rules.iter().all(|rule| rule.id.starts_with("sbolinv-")));
 

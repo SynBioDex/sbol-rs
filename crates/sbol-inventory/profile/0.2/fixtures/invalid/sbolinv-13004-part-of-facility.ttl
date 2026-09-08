@@ -9,7 +9,7 @@ ex:parent
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "parent" ;
     sbol:hasNamespace <https://example.org/invalid-13004> ;
-    fac:facility ex:first_facility ;
+    fac:locatedIn ex:first_room ;
     fac:assetKind fac:Instrument ;
     fac:isActive true .
 
@@ -17,7 +17,11 @@ ex:child
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "child" ;
     sbol:hasNamespace <https://example.org/invalid-13004> ;
-    fac:facility ex:second_facility ;
+    fac:locatedIn ex:second_room ;
     fac:assetKind fac:FunctionalUnit ;
     fac:partOf ex:parent ;
     fac:isActive true .
+
+ex:first_room a sbol:TopLevel, fac:Zone ; sbol:displayId "first_room" ; sbol:hasNamespace <https://example.org/invalid-13004> ; fac:facility ex:first_facility ; fac:zoneKind fac:Room ; fac:isActive true .
+
+ex:second_room a sbol:TopLevel, fac:Zone ; sbol:displayId "second_room" ; sbol:hasNamespace <https://example.org/invalid-13004> ; fac:facility ex:second_facility ; fac:zoneKind fac:Room ; fac:isActive true .

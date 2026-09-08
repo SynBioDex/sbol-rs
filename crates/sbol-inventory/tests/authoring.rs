@@ -49,7 +49,7 @@ fn typed_builders_compose_profile_and_ordinary_sbol_objects() {
         .parameter(capacity);
     let asset = builder
         .add_asset(
-            AssetBuilder::new("handler", facility.clone(), Iri::new(INSTRUMENT).unwrap())
+            AssetBuilder::new("handler", Iri::new(INSTRUMENT).unwrap())
                 .unwrap()
                 .name("Liquid handler")
                 .located_in(zone.clone())
@@ -76,7 +76,6 @@ fn typed_builders_compose_profile_and_ordinary_sbol_objects() {
         .add_material_lot(
             MaterialLotBuilder::new(
                 "lot",
-                facility,
                 Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
@@ -159,7 +158,7 @@ fn builders_reject_incomplete_or_ambiguous_owned_objects_transactionally() {
     };
     let error = builder
         .add_asset(
-            AssetBuilder::new("handler", facility, Iri::new(INSTRUMENT).unwrap())
+            AssetBuilder::new("handler", Iri::new(INSTRUMENT).unwrap())
                 .unwrap()
                 .active(true)
                 .capability(duplicate())

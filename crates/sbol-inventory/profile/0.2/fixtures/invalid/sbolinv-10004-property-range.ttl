@@ -11,7 +11,6 @@ ex:asset
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "asset" ;
     sbol:hasNamespace <https://example.org/invalid-10004> ;
-    fac:facility ex:facility ;
     fac:assetKind fac:Instrument ;
     fac:manufacturer 42 ;
     fac:isActive true .

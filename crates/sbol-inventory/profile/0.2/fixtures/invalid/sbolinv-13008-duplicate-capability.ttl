@@ -9,7 +9,6 @@ ex:asset
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "asset" ;
     sbol:hasNamespace <https://example.org/invalid-13008> ;
-    fac:facility ex:facility ;
     fac:assetKind fac:Instrument ;
     fac:isActive true ;
     fac:capability <https://example.org/invalid-13008/asset/first>, <https://example.org/invalid-13008/asset/second> .

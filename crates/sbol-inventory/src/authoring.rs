@@ -41,6 +41,8 @@ typed_identity!(AssetId);
 typed_identity!(CapabilityOfferingId);
 typed_identity!(PropertyValueId);
 typed_identity!(MaterialLotId);
+typed_identity!(ExperimentalDataDatabaseId);
+typed_identity!(MetadataDatabaseId);
 
 /// A typed physical location target.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -164,6 +166,22 @@ impl FacilityBuilder {
     metadata_methods!();
 }
 
+/// Metadata for a repository, authored with the corresponding add-database method.
+#[derive(Clone, Debug)]
+pub struct DatabaseBuilder {
+    metadata: Metadata,
+}
+
+impl DatabaseBuilder {
+    pub fn new(display_id: impl Into<String>) -> Result<Self, InventoryBuildError> {
+        Ok(Self {
+            metadata: Metadata::new(display_id)?,
+        })
+    }
+
+    metadata_methods!();
+}
+
 /// Builder for a governed spatial, environmental, containment, or policy zone.
 #[derive(Clone, Debug)]
 pub struct ZoneBuilder {
@@ -220,7 +238,6 @@ impl ZoneBuilder {
 #[derive(Clone, Debug)]
 pub struct AssetBuilder {
     metadata: Metadata,
-    facility: FacilityId,
     kind: Iri,
     location: Option<LocationId>,
     position: Option<String>,
@@ -235,14 +252,9 @@ pub struct AssetBuilder {
 }
 
 impl AssetBuilder {
-    pub fn new(
-        display_id: impl Into<String>,
-        facility: FacilityId,
-        kind: Iri,
-    ) -> Result<Self, InventoryBuildError> {
+    pub fn new(display_id: impl Into<String>, kind: Iri) -> Result<Self, InventoryBuildError> {
         Ok(Self {
             metadata: Metadata::new(display_id)?,
-            facility,
             kind,
             location: None,
             position: None,
@@ -431,7 +443,6 @@ impl PropertyValueBuilder {
 #[derive(Clone, Debug)]
 pub struct MaterialLotBuilder {
     metadata: Metadata,
-    facility: FacilityId,
     kind: Iri,
     built: Resource,
     location: Option<LocationId>,
@@ -447,23 +458,20 @@ pub struct MaterialLotBuilder {
 impl MaterialLotBuilder {
     pub fn new(
         display_id: impl Into<String>,
-        facility: FacilityId,
         kind: Iri,
         built: &Component,
     ) -> Result<Self, InventoryBuildError> {
-        Self::from_built_identity(display_id, facility, kind, built.identity.clone())
+        Self::from_built_identity(display_id, kind, built.identity.clone())
     }
 
     /// Raw interoperability escape hatch for a Component identity not held as a Rust value.
     pub fn from_built_identity(
         display_id: impl Into<String>,
-        facility: FacilityId,
         kind: Iri,
         built: Resource,
     ) -> Result<Self, InventoryBuildError> {
         Ok(Self {
             metadata: Metadata::new(display_id)?,
-            facility,
             kind,
             built,
             location: None,
@@ -555,6 +563,35 @@ impl InventoryBuilder {
         self.commit_triples(document.rdf_graph().triples().to_vec())
     }
 
+    pub fn add_experimental_data_database(
+        &mut self,
+        builder: DatabaseBuilder,
+    ) -> Result<ExperimentalDataDatabaseId, InventoryBuildError> {
+        self.add_database(builder, EXPERIMENTAL_DATA_DATABASE)
+            .map(ExperimentalDataDatabaseId)
+    }
+
+    pub fn add_metadata_database(
+        &mut self,
+        builder: DatabaseBuilder,
+    ) -> Result<MetadataDatabaseId, InventoryBuildError> {
+        self.add_database(builder, METADATA_DATABASE)
+            .map(MetadataDatabaseId)
+    }
+
+    fn add_database(
+        &mut self,
+        builder: DatabaseBuilder,
+        kind: &'static str,
+    ) -> Result<Iri, InventoryBuildError> {
+        let identity = self.top_level_identity(&builder.metadata.display_id);
+        let subject = Resource::Iri(identity.clone());
+        let mut triples = top_level_triples(&subject, kind, &self.namespace, &builder.metadata);
+        add_annotations(&mut triples, &subject, &builder.metadata.annotations);
+        self.commit_triples(triples)?;
+        Ok(identity)
+    }
+
     pub fn add_facility(
         &mut self,
         builder: FacilityBuilder,
@@ -609,7 +646,6 @@ impl InventoryBuilder {
             .ok_or_else(|| missing("Asset", &subject, IS_ACTIVE))?;
         let mut triples = top_level_triples(&subject, ASSET, &self.namespace, &builder.metadata);
         triples.extend([
-            resource_triple(&subject, FACILITY_PROPERTY, builder.facility.as_resource()),
             iri_triple(&subject, ASSET_KIND, builder.kind),
             boolean_triple(&subject, IS_ACTIVE, active),
         ]);
@@ -673,7 +709,6 @@ impl InventoryBuilder {
         triples.extend([
             resource_triple(&subject, SBOL_BUILT, builder.built),
             iri_triple(&subject, MATERIAL_KIND, builder.kind),
-            resource_triple(&subject, FACILITY_PROPERTY, builder.facility.as_resource()),
             boolean_triple(&subject, IS_ACTIVE, active),
         ]);
         if let Some(location) = builder.location {
@@ -721,6 +756,25 @@ impl InventoryBuilder {
             self.namespace.as_str(),
             display_id.as_str()
         ))
+    }
+
+    pub(crate) fn resource_values(&self, identity: &Resource, predicate: &str) -> Vec<Resource> {
+        self.triples
+            .iter()
+            .filter(|triple| &triple.subject == identity && triple.predicate.as_str() == predicate)
+            .filter_map(|triple| triple.object.as_resource().cloned())
+            .collect()
+    }
+
+    pub(crate) fn has_rdf_type(&self, identity: &Resource, kind: &str) -> bool {
+        self.triples.iter().any(|triple| {
+            &triple.subject == identity
+                && triple.predicate.as_str() == RDF_TYPE
+                && triple
+                    .object
+                    .as_iri()
+                    .is_some_and(|iri| iri.as_str() == kind)
+        })
     }
 
     pub(crate) fn contains_identity(&self, identity: &Resource) -> bool {

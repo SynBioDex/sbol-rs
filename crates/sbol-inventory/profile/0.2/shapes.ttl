@@ -26,7 +26,7 @@ shape:MaterialLotValueShape
 
 shape:FacilityShape
     a sh:NodeShape ;
-    sh:targetClass fac:Facility ;
+    sh:targetClass fac:Facility, fac:ExperimentalDataDatabase, fac:MetadataDatabase ;
     sh:property [
         sh:path rdf:type ;
         sh:hasValue sbol:TopLevel ;
@@ -92,11 +92,8 @@ shape:AssetShape
     ] ;
     sh:property [
         sh:path fac:facility ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ;
-        sh:class fac:Facility ;
-        sh:message "[sbolinv-13001] An Asset must name exactly one local Facility."
+        sh:maxCount 0 ;
+        sh:message "[sbolinv-13001] Asset must derive facility membership through a Zone."
     ] ;
     sh:property [
         sh:path fac:assetKind ;
@@ -109,7 +106,7 @@ shape:AssetShape
         sh:path fac:locatedIn ;
         sh:maxCount 1 ;
         sh:node shape:LocationTargetShape ;
-        sh:message "[sbolinv-10004] locatedIn must be an IRI naming a Zone or Asset."
+        sh:message "[sbolinv-10004] [sbolinv-13501] locatedIn must be an IRI naming a Zone or Asset."
     ] ;
     sh:property [
         sh:path fac:position ;
@@ -285,11 +282,8 @@ shape:MaterialLotShape
     ] ;
     sh:property [
         sh:path fac:facility ;
-        sh:minCount 1 ;
-        sh:maxCount 1 ;
-        sh:nodeKind sh:IRI ;
-        sh:class fac:Facility ;
-        sh:message "[sbolinv-16003] A MaterialLot must name exactly one local Facility."
+        sh:maxCount 0 ;
+        sh:message "[sbolinv-16003] MaterialLot must derive facility membership through a Zone."
     ] ;
     sh:property [
         sh:path sbol:built ;
@@ -303,7 +297,7 @@ shape:MaterialLotShape
         sh:path fac:locatedIn ;
         sh:maxCount 1 ;
         sh:node shape:LocationTargetShape ;
-        sh:message "[sbolinv-10004] locatedIn must be an IRI naming a Zone or Asset."
+        sh:message "[sbolinv-10004] [sbolinv-13501] locatedIn must be an IRI naming a Zone or Asset."
     ] ;
     sh:property [ sh:path fac:position ; sh:maxCount 1 ; sh:datatype xsd:string ; sh:message "[sbolinv-10004] position must be a single string." ] ;
     sh:property [ sh:path fac:position ; sh:pattern "\\S" ; sh:message "[sbolinv-13502] position must contain a non-whitespace character." ] ;
@@ -343,9 +337,32 @@ shape:ProfileRunShape
                 sh:or (
                     [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunAsset ] ]
                     [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunInputMaterial ] ]
+                    [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunComponent ] ]
                 )
             ]
         ]
         [ sh:property [ sh:path ( prov:qualifiedUsage prov:hadRole ) ; sh:hasValue fac:RunAsset ] ]
     ) ;
     sh:message "[sbolinv-17003] A profile run must contain at least one RunAsset Usage." .
+
+shape:ComponentUsageShape a sh:NodeShape ; sh:targetClass prov:Usage ;
+    sh:or (
+        [ sh:not [ sh:property [ sh:path prov:hadRole ; sh:hasValue fac:RunComponent ] ] ]
+        [ sh:property [ sh:path prov:entity ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:class sbol:Component ] ]
+    ) ; sh:message "[sbolinv-17004] RunComponent must name a local Component." .
+
+shape:EvidenceComponentShape a sh:NodeShape ; sh:targetSubjectsOf fac:forComponent ;
+    sh:class sbol:ExperimentalData ;
+    sh:property [ sh:path fac:forComponent ; sh:nodeKind sh:IRI ; sh:class sbol:Component ; sh:message "[sbolinv-19001] Evidence must describe a local Component." ] ;
+    sh:message "[sbolinv-19001] Only ExperimentalData may carry forComponent." .
+
+shape:SubmissionShape a sh:NodeShape ; sh:targetSubjectsOf fac:submittedTo ;
+    sh:or (
+        [ sh:class sbol:ExperimentalData ; sh:property [ sh:path fac:submittedTo ; sh:nodeKind sh:IRI ; sh:class fac:ExperimentalDataDatabase ] ]
+        [ sh:class sbol:Component ; sh:property [ sh:path fac:submittedTo ; sh:nodeKind sh:IRI ; sh:class fac:MetadataDatabase ] ]
+    ) ; sh:message "[sbolinv-19002] Data and Components must link to their corresponding local repository type." .
+
+shape:RetrievalShape a sh:NodeShape ; sh:targetSubjectsOf fac:retrievedFrom ;
+    sh:class sbol:Component ;
+    sh:property [ sh:path fac:retrievedFrom ; sh:nodeKind sh:IRI ; sh:class fac:MetadataDatabase ; sh:message "[sbolinv-19003] Component retrieval must name a local MetadataDatabase." ] ;
+    sh:message "[sbolinv-19003] Only Components may carry retrievedFrom." .

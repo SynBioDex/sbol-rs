@@ -3,12 +3,14 @@
 use std::fmt;
 
 use sbol3::{
-    Activity, Agent, Association, DisplayId, ExperimentalData, Iri, Plan, Resource, Term, ToRdf,
-    Triple, Usage,
+    Activity, Agent, Association, Component, DisplayId, ExperimentalData, Iri, Plan, Resource,
+    Term, ToRdf, Triple, Usage,
 };
 use thiserror::Error;
 
-use crate::vocabulary::{PROV_WAS_GENERATED_BY, RUN_ASSET, RUN_INPUT_MATERIAL};
+use crate::vocabulary::{
+    PROV_WAS_GENERATED_BY, RUN_ASSET, RUN_COMPONENT, RUN_INPUT_MATERIAL, SBOL_COMPONENT,
+};
 use crate::{AssetId, InventoryBuildError, InventoryBuilder, MaterialLotId};
 
 /// Identity of one run Activity added through [`InventoryBuilder::add_run`].
@@ -41,6 +43,8 @@ pub struct RunBuilder {
     ended_at_time: Option<String>,
     assets: Vec<AssetId>,
     inputs: Vec<MaterialLotId>,
+    input_components: Vec<Resource>,
+    generated_components: Vec<Resource>,
     generated_materials: Vec<MaterialLotId>,
     evidence: Vec<Resource>,
     responsibility: Option<(Resource, Resource)>,
@@ -60,6 +64,8 @@ impl RunBuilder {
             ended_at_time: None,
             assets: Vec::new(),
             inputs: Vec::new(),
+            input_components: Vec::new(),
+            generated_components: Vec::new(),
             generated_materials: Vec::new(),
             evidence: Vec::new(),
             responsibility: None,
@@ -93,6 +99,26 @@ impl RunBuilder {
 
     pub fn input_material(mut self, material: MaterialLotId) -> Self {
         self.inputs.push(material);
+        self
+    }
+
+    /// A design used as informational input, independently of physical lot usage.
+    pub fn input_component(self, component: &Component) -> Self {
+        self.input_component_identity(component.identity.clone())
+    }
+
+    pub fn input_component_identity(mut self, identity: Resource) -> Self {
+        self.input_components.push(identity);
+        self
+    }
+
+    /// A newly created design. Realizing a lot does not regenerate its design.
+    pub fn generated_component(self, component: &Component) -> Self {
+        self.generated_component_identity(component.identity.clone())
+    }
+
+    pub fn generated_component_identity(mut self, identity: Resource) -> Self {
+        self.generated_components.push(identity);
         self
     }
 
@@ -146,6 +172,8 @@ impl InventoryBuilder {
                     .map(MaterialLotId::as_resource),
             )
             .chain(builder.evidence.iter().cloned())
+            .chain(builder.input_components.iter().cloned())
+            .chain(builder.generated_components.iter().cloned())
             .chain(
                 builder
                     .responsibility
@@ -160,6 +188,15 @@ impl InventoryBuilder {
             return Err(RunBuildError::MissingReferencedObject(missing.clone()));
         }
 
+        for identity in builder
+            .input_components
+            .iter()
+            .chain(&builder.generated_components)
+        {
+            if !self.has_rdf_type(identity, SBOL_COMPONENT) {
+                return Err(RunBuildError::NotComponent(identity.clone()));
+            }
+        }
         let mut usages = Vec::new();
         for (index, asset) in builder.assets.iter().enumerate() {
             usages.push(
@@ -174,6 +211,15 @@ impl InventoryBuilder {
                 Usage::builder(&run_resource, format!("input_{}", index + 1))?
                     .entity(material.as_resource())
                     .had_role([Iri::from_static(RUN_INPUT_MATERIAL)])
+                    .build()?,
+            );
+        }
+
+        for (index, component) in builder.input_components.iter().enumerate() {
+            usages.push(
+                Usage::builder(&run_resource, format!("component_{}", index + 1))?
+                    .entity(component.clone())
+                    .had_role([Iri::from_static(RUN_COMPONENT)])
                     .build()?,
             );
         }
@@ -222,6 +268,7 @@ impl InventoryBuilder {
             .iter()
             .map(MaterialLotId::as_resource)
             .chain(builder.evidence)
+            .chain(builder.generated_components)
             .map(|subject| Triple {
                 subject,
                 predicate: Iri::from_static(PROV_WAS_GENERATED_BY),
@@ -244,4 +291,6 @@ pub enum RunBuildError {
     RequiresAsset,
     #[error("run references object `{0}` before it has been added to the inventory")]
     MissingReferencedObject(Resource),
+    #[error("run Component reference `{0}` is not a local SBOL Component")]
+    NotComponent(Resource),
 }

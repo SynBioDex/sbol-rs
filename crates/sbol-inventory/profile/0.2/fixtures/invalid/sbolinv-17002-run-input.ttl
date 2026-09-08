@@ -4,7 +4,7 @@
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/invalid-17002> .
-ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/invalid-17002> ; fac:facility ex:facility ; fac:assetKind fac:Workstation ; fac:isActive true .
+ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/invalid-17002> ; fac:assetKind fac:Workstation ; fac:isActive true .
 
 ex:run
     a sbol:TopLevel, prov:Activity ;

@@ -50,7 +50,7 @@ fac:PropertyValue
 fac:facility
     a rdf:Property ;
     rdfs:label "facility"@en ;
-    rdfs:comment "The document-local Facility governing a Zone, Asset, or MaterialLot."@en ;
+    rdfs:comment "The document-local Facility governing a Zone. Assets and MaterialLots derive membership through containment."@en ;
     rdfs:range fac:Facility .
 
 fac:zoneKind
@@ -316,3 +316,10 @@ cap:BiosafetyContainment a skos:Concept ; skos:prefLabel "biosafety containment"
 cap:SteamSterilization a skos:Concept ; skos:prefLabel "steam sterilization"@en .
 cap:ColdStorage a skos:Concept ; skos:prefLabel "cold storage"@en .
 cap:PlantGrowth a skos:Concept ; skos:prefLabel "plant growth"@en .
+
+fac:RunComponent a prov:Role ; rdfs:label "Run component"@en ; rdfs:comment "A Component design used by a laboratory run."@en .
+fac:ExperimentalDataDatabase a rdfs:Class ; rdfs:subClassOf sbol:TopLevel ; rdfs:label "Experimental data database"@en .
+fac:MetadataDatabase a rdfs:Class ; rdfs:subClassOf sbol:TopLevel ; rdfs:label "Metadata database"@en .
+fac:forComponent a rdf:Property ; rdfs:domain sbol:ExperimentalData ; rdfs:range sbol:Component ; rdfs:comment "The local Component described by these experimental data."@en .
+fac:submittedTo a rdf:Property ; rdfs:comment "Repository to which these ExperimentalData or this Component have been submitted. This is a recorded fact, not a transfer request."@en .
+fac:retrievedFrom a rdf:Property ; rdfs:domain sbol:Component ; rdfs:range fac:MetadataDatabase ; rdfs:comment "Repository from which this Component was retrieved."@en .

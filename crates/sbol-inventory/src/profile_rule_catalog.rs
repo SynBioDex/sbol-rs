@@ -27,7 +27,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         true,
         Some("fixtures/invalid/sbolinv-10002-wrong-base-type.ttl"),
-        "Facility, Zone, and Asset MUST be SBOL TopLevel objects; CapabilityOffering and PropertyValue MUST be SBOL Identified children; a material lot MUST be an SBOL Implementation.",
+        "Facility, Zone, Asset, ExperimentalDataDatabase, and MetadataDatabase MUST be SBOL TopLevel objects; CapabilityOffering and PropertyValue MUST be SBOL Identified children; a material lot MUST be an SBOL Implementation.",
     ),
     ProfileRule::new(
         "sbolinv-10003",
@@ -105,7 +105,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         false,
         Some("fixtures/invalid/sbolinv-12004-zone-parent-facility.ttl"),
-        "A parentZone reference MUST resolve to a document-local Zone in the same Facility.",
+        "A parentZone reference MUST resolve to a document-local Zone with compatible derived facility membership.",
     ),
     ProfileRule::new(
         "sbolinv-12005",
@@ -157,7 +157,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         true,
         Some("fixtures/invalid/sbolinv-13001-asset-facility.ttl"),
-        "An Asset MUST name exactly one document-local Facility.",
+        "An Asset MUST NOT carry fac:facility; facility membership is derived through a Zone.",
     ),
     ProfileRule::new(
         "sbolinv-13002",
@@ -196,7 +196,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         false,
         Some("fixtures/invalid/sbolinv-13004-part-of-facility.ttl"),
-        "A partOf reference MUST resolve to a document-local Asset in the same Facility.",
+        "A partOf reference MUST resolve to a document-local Asset with compatible derived facility membership.",
     ),
     ProfileRule::new(
         "sbolinv-13005",
@@ -209,7 +209,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         false,
         Some("fixtures/invalid/sbolinv-13005-established-zone-facility.ttl"),
-        "Every establishesZone reference MUST resolve to a document-local Zone in the same Facility.",
+        "Every establishesZone reference MUST resolve to a document-local Zone with compatible derived facility membership.",
     ),
     ProfileRule::new(
         "sbolinv-13006",
@@ -259,9 +259,9 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         ],
         RuleStrength::Required,
         true,
-        false,
+        true,
         Some("fixtures/invalid/sbolinv-13501-location-facility.ttl"),
-        "A locatedIn reference MUST resolve to a document-local Zone or Asset in the same Facility.",
+        "A locatedIn reference MUST resolve to a document-local Zone or Asset.",
     ),
     ProfileRule::new(
         "sbolinv-13502",
@@ -470,7 +470,7 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         true,
         true,
         Some("fixtures/invalid/sbolinv-16003-material-facility.ttl"),
-        "A MaterialLot MUST name exactly one document-local Facility.",
+        "A MaterialLot MUST NOT carry fac:facility; facility membership is derived through a Zone.",
     ),
     ProfileRule::new(
         "sbolinv-16004",
@@ -551,6 +551,19 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         "A profile run Activity MUST own at least one Usage carrying the RunAsset role.",
     ),
     ProfileRule::new(
+        "sbolinv-17004",
+        "Run provenance",
+        &[
+            ConformanceClass::Writer,
+            ConformanceClass::Validator,
+        ],
+        RuleStrength::Required,
+        true,
+        true,
+        Some("fixtures/invalid/sbolinv-17004-run-component.ttl"),
+        "A Usage carrying RunComponent MUST name exactly one document-local Component.",
+    ),
+    ProfileRule::new(
         "sbolinv-18001",
         "Candidate-query behavior",
         &[
@@ -585,5 +598,44 @@ pub const PROFILE_RULES: &[ProfileRule] = &[
         false,
         None,
         "Candidate-query results MUST be ordered lexicographically by Asset IRI.",
+    ),
+    ProfileRule::new(
+        "sbolinv-19001",
+        "Digital records and repositories",
+        &[
+            ConformanceClass::Writer,
+            ConformanceClass::Validator,
+        ],
+        RuleStrength::Required,
+        true,
+        true,
+        Some("fixtures/invalid/sbolinv-19001-evidence-component.ttl"),
+        "Every forComponent edge MUST link ExperimentalData to a document-local Component.",
+    ),
+    ProfileRule::new(
+        "sbolinv-19002",
+        "Digital records and repositories",
+        &[
+            ConformanceClass::Writer,
+            ConformanceClass::Validator,
+        ],
+        RuleStrength::Required,
+        true,
+        true,
+        Some("fixtures/invalid/sbolinv-19002-submission.ttl"),
+        "Every submittedTo edge MUST link ExperimentalData to a local ExperimentalDataDatabase, or a Component to a local MetadataDatabase.",
+    ),
+    ProfileRule::new(
+        "sbolinv-19003",
+        "Digital records and repositories",
+        &[
+            ConformanceClass::Writer,
+            ConformanceClass::Validator,
+        ],
+        RuleStrength::Required,
+        true,
+        true,
+        Some("fixtures/invalid/sbolinv-19003-retrieval.ttl"),
+        "Every retrievedFrom edge MUST link a Component to a local MetadataDatabase.",
     ),
 ];

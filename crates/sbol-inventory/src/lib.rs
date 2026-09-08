@@ -22,6 +22,7 @@
 #![forbid(unsafe_code)]
 
 mod authoring;
+mod digital;
 mod document;
 mod provenance;
 mod query;
@@ -31,10 +32,12 @@ mod view;
 pub mod vocabulary;
 
 pub use authoring::{
-    AssetBuilder, AssetId, CapabilityBuilder, CapabilityOfferingId, FacilityBuilder, FacilityId,
-    InventoryBuildError, InventoryBuilder, LocationId, MaterialLotBuilder, MaterialLotId,
-    PropertyScalar, PropertyValueBuilder, PropertyValueId, ZoneBuilder, ZoneId,
+    AssetBuilder, AssetId, CapabilityBuilder, CapabilityOfferingId, DatabaseBuilder,
+    ExperimentalDataDatabaseId, FacilityBuilder, FacilityId, InventoryBuildError, InventoryBuilder,
+    LocationId, MaterialLotBuilder, MaterialLotId, MetadataDatabaseId, PropertyScalar,
+    PropertyValueBuilder, PropertyValueId, ZoneBuilder, ZoneId,
 };
+pub use digital::DigitalLinkError;
 pub use document::InventoryDocument;
 pub use provenance::{RunBuildError, RunBuilder, RunId};
 pub use query::{CandidateQuery, CapabilityCandidate, QueryError, find_qualified_assets};

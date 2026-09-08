@@ -1,0 +1,8 @@
+@prefix ex: <https://example.org/digital/> .
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix fac: <https://sbol.io/ns/facility#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/digital> ; fac:assetKind fac:Instrument ; fac:isActive true .
+ex:run a sbol:TopLevel, prov:Activity ; sbol:displayId "run" ; sbol:hasNamespace <https://example.org/digital> ; prov:qualifiedUsage <https://example.org/digital/run/asset_use>, <https://example.org/digital/run/component_use> .
+<https://example.org/digital/run/asset_use> a sbol:Identified, prov:Usage ; sbol:displayId "asset_use" ; prov:entity ex:asset ; prov:hadRole fac:RunAsset .
+<https://example.org/digital/run/component_use> a sbol:Identified, prov:Usage ; sbol:displayId "component_use" ; prov:entity ex:asset ; prov:hadRole fac:RunComponent .

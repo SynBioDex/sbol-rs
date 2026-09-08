@@ -10,5 +10,6 @@ ex:lot
     sbol:displayId "lot" ;
     sbol:hasNamespace <https://example.org/invalid-16003> ;
     sbol:built ex:design ;
+    fac:facility ex:obsolete_facility ;
     fac:materialKind inv:BacterialStock ;
     fac:isActive true .

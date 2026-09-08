@@ -12,5 +12,4 @@ ex:lot
     sbol:hasNamespace <https://example.org/invalid-16002> ;
     sbol:built ex:design ;
     fac:materialKind inv:BacterialStock, inv:ProcuredMaterial ;
-    fac:facility ex:facility ;
     fac:isActive true .

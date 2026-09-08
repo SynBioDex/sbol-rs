@@ -6,5 +6,6 @@ ex:asset
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "asset" ;
     sbol:hasNamespace <https://example.org/invalid-13001> ;
+    fac:facility ex:obsolete_facility ;
     fac:assetKind fac:Instrument ;
     fac:isActive true .

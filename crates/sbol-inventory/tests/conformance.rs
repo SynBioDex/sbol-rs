@@ -38,7 +38,7 @@ fn validation_report_identifies_both_conformance_layers() {
     assert_eq!(report.profile_source_revision(), PROFILE_SOURCE_REVISION);
     assert_eq!(report.sbol_core_version(), sbol3::SPEC_VERSION);
     assert_eq!(report.core_validator(), CORE_VALIDATOR);
-    assert_eq!(report.applied_profile_rules().count(), 41);
+    assert_eq!(report.applied_profile_rules().count(), 45);
 }
 
 #[test]
@@ -49,7 +49,7 @@ fn owned_profile_links_must_resolve_to_their_declared_class() {
 @prefix sbol: <http://sbols.org/v3#> .
 
 ex:facility a sbol:TopLevel, fac:Facility ; sbol:displayId "facility" ; sbol:hasNamespace <https://example.org/wrong-owned-type> .
-ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/wrong-owned-type> ; fac:facility ex:facility ; fac:assetKind fac:Instrument ; fac:isActive true ; fac:capability ex:facility .
+ex:asset a sbol:TopLevel, fac:Asset ; sbol:displayId "asset" ; sbol:hasNamespace <https://example.org/wrong-owned-type> ; fac:assetKind fac:Instrument ; fac:isActive true ; fac:capability ex:facility .
 "#,
         RdfFormat::Turtle,
     )
@@ -63,7 +63,7 @@ fn every_vendored_fixture_matches_full_validator() {
     let manifest = fixture_manifest();
     assert_eq!(manifest.profile, PROFILE_RULE_CATALOG_IRI);
     assert_eq!(manifest.version, PROFILE_RULE_CATALOG_VERSION);
-    assert_eq!(manifest.fixtures.len(), 43);
+    assert_eq!(manifest.fixtures.len(), 48);
 
     for fixture in manifest.fixtures {
         let path = profile_root().join("fixtures").join(&fixture.path);

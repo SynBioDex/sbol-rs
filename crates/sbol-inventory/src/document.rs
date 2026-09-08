@@ -128,6 +128,70 @@ impl InventoryDocument {
             .map(|object| MaterialLotRef::new(self, object))
     }
 
+    pub fn experimental_data_databases(&self) -> impl Iterator<Item = &Object> {
+        self.objects_with_type(crate::vocabulary::EXPERIMENTAL_DATA_DATABASE)
+    }
+
+    pub fn metadata_databases(&self) -> impl Iterator<Item = &Object> {
+        self.objects_with_type(crate::vocabulary::METADATA_DATABASE)
+    }
+
+    pub fn evidence_component_ids<'a>(
+        &'a self,
+        evidence: &Resource,
+    ) -> impl Iterator<Item = &'a Resource> {
+        self.document
+            .get(evidence)
+            .into_iter()
+            .flat_map(|object| object.resources(crate::vocabulary::FOR_COMPONENT))
+    }
+
+    pub fn submission_database_ids<'a>(
+        &'a self,
+        record: &Resource,
+    ) -> impl Iterator<Item = &'a Resource> {
+        self.document
+            .get(record)
+            .into_iter()
+            .flat_map(|object| object.resources(crate::vocabulary::SUBMITTED_TO))
+    }
+
+    pub fn retrieval_database_ids<'a>(
+        &'a self,
+        component: &Resource,
+    ) -> impl Iterator<Item = &'a Resource> {
+        self.document
+            .get(component)
+            .into_iter()
+            .flat_map(|object| object.resources(crate::vocabulary::RETRIEVED_FROM))
+    }
+
+    /// Resolves facility membership from a Zone through location, falling back to
+    /// physical composition for assets without a direct location. Unlocated or
+    /// cyclic paths have no known facility; validation reports malformed graphs.
+    pub fn facility_id_for(&self, identity: &Resource) -> Option<&Resource> {
+        use crate::vocabulary::{FACILITY_PROPERTY, LOCATED_IN, PART_OF};
+        let mut object = self.document.get(identity)?;
+        let mut visited = std::collections::BTreeSet::new();
+        loop {
+            if !visited.insert(object.identity()) {
+                return None;
+            }
+            if has_type(object, ZONE) {
+                return object.first_resource(FACILITY_PROPERTY);
+            }
+            if !has_type(object, ASSET) && object.values(MATERIAL_KIND).is_empty() {
+                return None;
+            }
+            let parent = object.first_resource(LOCATED_IN).or_else(|| {
+                has_type(object, ASSET)
+                    .then(|| object.first_resource(PART_OF))
+                    .flatten()
+            })?;
+            object = self.document.get(parent)?;
+        }
+    }
+
     pub(crate) fn object_with_type(&self, identity: &Resource, rdf_type: &str) -> Option<&Object> {
         self.document
             .get(identity)

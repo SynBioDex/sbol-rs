@@ -17,7 +17,6 @@ ex:asset
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "asset" ;
     sbol:hasNamespace <https://example.org/invalid-13501> ;
-    fac:facility ex:first_facility ;
     fac:assetKind fac:Instrument ;
-    fac:locatedIn ex:room ;
+    fac:locatedIn ex:first_facility ;
     fac:isActive true .

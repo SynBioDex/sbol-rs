@@ -16,7 +16,7 @@ ex:room a sbol:TopLevel, fac:Zone ; sbol:displayId "room" ;
     sbol:hasNamespace <https://example.org/inventory> ; fac:facility ex:facility ;
     fac:zoneKind fac:Room ; fac:isActive true .
 ex:handler a sbol:TopLevel, fac:Asset ; sbol:displayId "handler" ;
-    sbol:hasNamespace <https://example.org/inventory> ; fac:facility ex:facility ;
+    sbol:hasNamespace <https://example.org/inventory> ;
     fac:assetKind fac:Instrument ; fac:locatedIn ex:room ; fac:isActive true ;
     fac:manufacturer "Example" ; fac:capability <https://example.org/inventory/handler/liquid> .
 <https://example.org/inventory/handler/liquid> a sbol:Identified, fac:CapabilityOffering ; sbol:displayId "liquid" ;
@@ -31,7 +31,7 @@ ex:design a sbol:Component ; sbol:displayId "design" ;
     sbol:type <https://identifiers.org/SBO:0000251> .
 ex:lot a sbol:Implementation ; sbol:displayId "lot" ;
     sbol:hasNamespace <https://example.org/inventory> ; sbol:built ex:design ;
-    fac:materialKind inv:BacterialStock ; fac:facility ex:facility ;
+    fac:materialKind inv:BacterialStock ;
     fac:locatedIn ex:room ; fac:isActive true .
 ex:ordinary a sbol:Implementation ; sbol:displayId "ordinary" ;
     sbol:hasNamespace <https://example.org/inventory> ; sbol:built ex:design .

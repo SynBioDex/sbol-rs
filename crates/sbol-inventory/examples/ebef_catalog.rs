@@ -105,7 +105,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
     )?;
 
     catalog.add_asset(
-        asset("anaerobic_chamber_1", &facility, ENVIRONMENT_CONTROLLER)?
+        asset("anaerobic_chamber_1", ENVIRONMENT_CONTROLLER)?
             .name("Anaerobic chamber 1")
             .located_in(microbiology.clone())
             .establishes_zone(chamber_1_interior.clone())
@@ -118,7 +118,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("anaerobic_chamber_2", &facility, ENVIRONMENT_CONTROLLER)?
+        asset("anaerobic_chamber_2", ENVIRONMENT_CONTROLLER)?
             .name("Anaerobic chamber 2")
             .located_in(microbiology.clone())
             .establishes_zone(chamber_2_interior.clone())
@@ -131,7 +131,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("microlab_prep", &facility, INSTRUMENT)?
+        asset("microlab_prep", INSTRUMENT)?
             .name("Anaerobic liquid handler")
             .located_in(chamber_1_interior.clone())
             .manufacturer("Hamilton")
@@ -150,7 +150,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("potentiostat_96_well", &facility, INSTRUMENT)?
+        asset("potentiostat_96_well", INSTRUMENT)?
             .name("96-well potentiostat")
             .located_in(chamber_1_interior)
             .capability(described(
@@ -164,18 +164,14 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset(
-            "anaerobic_swinging_bucket_centrifuge",
-            &facility,
-            INSTRUMENT,
-        )?
-        .name("Anaerobic swinging-bucket centrifuge")
-        .located_in(chamber_2_interior)
-        .capability(described("centrifugation", CENTRIFUGATION, vec![])?),
+        asset("anaerobic_swinging_bucket_centrifuge", INSTRUMENT)?
+            .name("Anaerobic swinging-bucket centrifuge")
+            .located_in(chamber_2_interior)
+            .capability(described("centrifugation", CENTRIFUGATION, vec![])?),
     )?;
 
     catalog.add_asset(
-        asset("dragonfly_confocal", &facility, INSTRUMENT)?
+        asset("dragonfly_confocal", INSTRUMENT)?
             .name("Dragonfly spinning disk confocal microscope")
             .located_in(microscopy.clone())
             .model("Dragonfly spinning disk confocal")
@@ -190,7 +186,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("plasma_cleaner", &facility, INSTRUMENT)?
+        asset("plasma_cleaner", INSTRUMENT)?
             .name("Plasma cleaner")
             .located_in(microscopy)
             .capability(described("plasma_cleaning", PLASMA_CLEANING, vec![])?),
@@ -218,7 +214,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?);
         }
         catalog.add_asset(
-            asset(&format!("eppendorf_s44i_{index}"), &facility, INSTRUMENT)?
+            asset(&format!("eppendorf_s44i_{index}"), INSTRUMENT)?
                 .name(format!("Shaking incubator {index}"))
                 .located_in(microbiology.clone())
                 .manufacturer("Eppendorf")
@@ -231,7 +227,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
         )?;
     }
     catalog.add_asset(
-        asset("static_incubator_group", &facility, WORKSTATION)?
+        asset("static_incubator_group", WORKSTATION)?
             .name("Static incubators")
             .description(
                 "Public page describes several units; individual asset IDs are not public.",
@@ -255,7 +251,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("biotek_epoch_2", &facility, INSTRUMENT)?
+        asset("biotek_epoch_2", INSTRUMENT)?
             .name("Epoch 2 plate reader")
             .located_in(microbiology.clone())
             .manufacturer("Agilent BioTek")
@@ -284,7 +280,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
     )?;
 
     let proflex = catalog.add_asset(
-        asset("proflex", &facility, INSTRUMENT)?
+        asset("proflex", INSTRUMENT)?
             .name("ProFlex thermocycler")
             .description("Composite parent; independently runnable blocks are child assets.")
             .located_in(microbiology.clone())
@@ -292,40 +288,36 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
     )?;
     for index in 1..=3 {
         catalog.add_asset(
-            asset(
-                &format!("proflex_block_{index}"),
-                &facility,
-                FUNCTIONAL_UNIT,
-            )?
-            .name(format!("ProFlex independent block {index}"))
-            .part_of(proflex.clone())
-            .capability(described(
-                "thermal_cycling",
-                THERMAL_CYCLING,
-                vec![property(
-                    "temperature_zones",
-                    PropertyScalar::Integer(2),
-                    None,
-                )?],
-            )?),
+            asset(&format!("proflex_block_{index}"), FUNCTIONAL_UNIT)?
+                .name(format!("ProFlex independent block {index}"))
+                .part_of(proflex.clone())
+                .capability(described(
+                    "thermal_cycling",
+                    THERMAL_CYCLING,
+                    vec![property(
+                        "temperature_zones",
+                        PropertyScalar::Integer(2),
+                        None,
+                    )?],
+                )?),
         )?;
     }
 
     catalog.add_asset(
-        asset("azure_300", &facility, INSTRUMENT)?
+        asset("azure_300", INSTRUMENT)?
             .name("Gel imager")
             .located_in(microbiology.clone())
             .model("Azure 300")
             .capability(described("gel_imaging", GEL_IMAGING, vec![])?),
     )?;
     catalog.add_asset(
-        asset("electrophoresis_station", &facility, WORKSTATION)?
+        asset("electrophoresis_station", WORKSTATION)?
             .name("DNA and protein electrophoresis station")
             .located_in(microbiology.clone())
             .capability(described("electrophoresis", ELECTROPHORESIS, vec![])?),
     )?;
     catalog.add_asset(
-        asset("media_prep_station", &facility, WORKSTATION)?
+        asset("media_prep_station", WORKSTATION)?
             .name("Media and buffer preparation station")
             .located_in(media_prep)
             .capability(described("media_preparation", MEDIA_PREPARATION, vec![])?)
@@ -333,7 +325,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             .capability(described("water_purification", WATER_PURIFICATION, vec![])?),
     )?;
     catalog.add_asset(
-        asset("cold_storage_group", &facility, STORAGE_ASSET)?
+        asset("cold_storage_group", STORAGE_ASSET)?
             .name("Publicly documented cold-storage units")
             .description("Placeholder group pending identifiers for each reservable unit.")
             .located_in(freezer_room)
@@ -348,7 +340,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("main_biosafety_cabinet", &facility, INSTRUMENT)?
+        asset("main_biosafety_cabinet", INSTRUMENT)?
             .name("Main-lab biosafety cabinet")
             .located_in(microbiology.clone())
             .capability(described(
@@ -358,7 +350,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("amsco_630ls", &facility, INSTRUMENT)?
+        asset("amsco_630ls", INSTRUMENT)?
             .name("Large basement autoclave")
             .located_in(microbiology)
             .model("AMSCO 630LS")
@@ -382,7 +374,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
                 .name(format!("{name} interior")),
         )?;
         catalog.add_asset(
-            asset(identity, &facility, ENVIRONMENT_CONTROLLER)?
+            asset(identity, ENVIRONMENT_CONTROLLER)?
                 .name(name)
                 .located_in(plant_lab.clone())
                 .establishes_zone(interior)
@@ -405,7 +397,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
         )?;
     }
     catalog.add_asset(
-        asset("plant_biosafety_cabinet", &facility, INSTRUMENT)?
+        asset("plant_biosafety_cabinet", INSTRUMENT)?
             .name("Plant-lab biosafety cabinet")
             .located_in(plant_lab.clone())
             .capability(described(
@@ -415,7 +407,7 @@ pub fn build_ebef_catalog() -> Result<InventoryDocument, Box<dyn Error>> {
             )?),
     )?;
     catalog.add_asset(
-        asset("plant_autoclave", &facility, INSTRUMENT)?
+        asset("plant_autoclave", INSTRUMENT)?
             .name("Plant-lab soil and waste autoclave")
             .located_in(plant_lab)
             .capability(described(
@@ -440,12 +432,8 @@ fn zone(
     Ok(ZoneBuilder::new(display_id, facility.clone(), Iri::from_static(kind))?.active(true))
 }
 
-fn asset(
-    display_id: &str,
-    facility: &FacilityId,
-    kind: &'static str,
-) -> Result<AssetBuilder, InventoryBuildError> {
-    Ok(AssetBuilder::new(display_id, facility.clone(), Iri::from_static(kind))?.active(true))
+fn asset(display_id: &str, kind: &'static str) -> Result<AssetBuilder, InventoryBuildError> {
+    Ok(AssetBuilder::new(display_id, Iri::from_static(kind))?.active(true))
 }
 
 fn described(

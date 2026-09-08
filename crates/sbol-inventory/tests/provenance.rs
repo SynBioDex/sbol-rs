@@ -15,18 +15,14 @@ const NS: &str = "https://example.org/run-ledger";
 #[test]
 fn run_builder_records_assets_inputs_outputs_evidence_and_responsibility() {
     let mut builder = InventoryBuilder::new(Namespace::new(NS).unwrap());
-    let facility = builder
+    let _facility = builder
         .add_facility(FacilityBuilder::new("facility").unwrap())
         .unwrap();
     let asset = builder
         .add_asset(
-            AssetBuilder::new(
-                "workstation",
-                facility.clone(),
-                Iri::new(INSTRUMENT).unwrap(),
-            )
-            .unwrap()
-            .active(true),
+            AssetBuilder::new("workstation", Iri::new(INSTRUMENT).unwrap())
+                .unwrap()
+                .active(true),
         )
         .unwrap();
     let design = Component::builder(NS, "design")
@@ -41,7 +37,6 @@ fn run_builder_records_assets_inputs_outputs_evidence_and_responsibility() {
         .add_material_lot(
             MaterialLotBuilder::new(
                 "input",
-                facility.clone(),
                 Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
@@ -53,7 +48,6 @@ fn run_builder_records_assets_inputs_outputs_evidence_and_responsibility() {
         .add_material_lot(
             MaterialLotBuilder::new(
                 "output",
-                facility,
                 Iri::new("https://sbol.io/ns/inventory#BacterialStock").unwrap(),
                 &design,
             )
@@ -159,12 +153,12 @@ fn run_builder_rejects_missing_assets_and_cross_builder_handles_before_mutation(
     assert_eq!(error, RunBuildError::RequiresAsset);
 
     let mut other = InventoryBuilder::new(Namespace::new("https://example.org/other").unwrap());
-    let other_facility = other
+    let _other_facility = other
         .add_facility(FacilityBuilder::new("facility").unwrap())
         .unwrap();
     let foreign_asset = other
         .add_asset(
-            AssetBuilder::new("asset", other_facility, Iri::new(INSTRUMENT).unwrap())
+            AssetBuilder::new("asset", Iri::new(INSTRUMENT).unwrap())
                 .unwrap()
                 .active(true),
         )

@@ -22,7 +22,6 @@ ex:workstation
     a sbol:TopLevel, fac:Asset ;
     sbol:displayId "workstation" ;
     sbol:hasNamespace <https://example.org/sbolinventory-run> ;
-    fac:facility ex:facility ;
     fac:assetKind fac:Workstation ;
     fac:locatedIn ex:room ;
     fac:isActive true .
@@ -39,7 +38,6 @@ ex:input_lot
     sbol:hasNamespace <https://example.org/sbolinventory-run> ;
     sbol:built ex:design ;
     fac:materialKind inv:BacterialStock ;
-    fac:facility ex:facility ;
     fac:locatedIn ex:room ;
     fac:isActive true .
 
@@ -49,7 +47,6 @@ ex:output_lot
     sbol:hasNamespace <https://example.org/sbolinventory-run> ;
     sbol:built ex:design ;
     fac:materialKind inv:BacterialStock ;
-    fac:facility ex:facility ;
     fac:locatedIn ex:room ;
     fac:isActive true ;
     fac:derivedFromMaterial ex:input_lot ;

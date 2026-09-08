@@ -145,7 +145,7 @@ python_semantic = true
 path = "invalid/sbolinv-13501-location-facility.ttl"
 expect = "invalid"
 rule = "sbolinv-13501"
-shacl = false
+shacl = true
 python_semantic = true
 
 [[fixtures]]
@@ -301,3 +301,38 @@ expect = "invalid"
 rule = "sbolinv-17003"
 shacl = true
 python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-17004-run-component.ttl"
+expect = "invalid"
+rule = "sbolinv-17004"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-19001-evidence-component.ttl"
+expect = "invalid"
+rule = "sbolinv-19001"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-19002-submission.ttl"
+expect = "invalid"
+rule = "sbolinv-19002"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "invalid/sbolinv-19003-retrieval.ttl"
+expect = "invalid"
+rule = "sbolinv-19003"
+shacl = true
+python_semantic = true
+
+[[fixtures]]
+path = "valid/component-evidence-repositories.ttl"
+expect = "valid"
+shacl = true
+python_semantic = true
+round_trip = true

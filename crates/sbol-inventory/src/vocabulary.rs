@@ -235,3 +235,12 @@ impl UnknownVocabularyValue {
         &self.value
     }
 }
+
+pub const RUN_COMPONENT: &str = "https://sbol.io/ns/facility#RunComponent";
+pub const EXPERIMENTAL_DATA_DATABASE: &str = "https://sbol.io/ns/facility#ExperimentalDataDatabase";
+pub const METADATA_DATABASE: &str = "https://sbol.io/ns/facility#MetadataDatabase";
+pub const FOR_COMPONENT: &str = "https://sbol.io/ns/facility#forComponent";
+pub const SUBMITTED_TO: &str = "https://sbol.io/ns/facility#submittedTo";
+pub const RETRIEVED_FROM: &str = "https://sbol.io/ns/facility#retrievedFrom";
+pub const SBOL_EXPERIMENTAL_DATA: &str = "http://sbols.org/v3#ExperimentalData";
+pub const SBOL_HAS_ATTACHMENT: &str = "http://sbols.org/v3#hasAttachment";
