@@ -39,7 +39,7 @@ const SOURCES: &[Source] = &[
     },
     Source {
         name: "chebi.owl",
-        url: "http://purl.obolibrary.org/obo/chebi.owl",
+        url: "http://purl.obolibrary.org/obo/chebi/254/chebi.owl",
         sha256: "4557df5b668394b371e6e75158ec9f7728424852ffdaa2e6a6975cfc31e461ba",
     },
     Source {
