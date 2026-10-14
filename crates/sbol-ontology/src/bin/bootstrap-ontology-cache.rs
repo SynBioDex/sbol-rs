@@ -29,7 +29,7 @@ const SOURCES: &[Source] = &[
     },
     Source {
         name: "so.owl",
-        url: "http://purl.obolibrary.org/obo/so.owl",
+        url: "https://raw.githubusercontent.com/The-Sequence-Ontology/SO-Ontologies/01c33c6d9b6c8dca12e7d3e37b49ee113093c2fa/Ontology_Files/so.owl",
         sha256: "f53c3005ea3c3b6756fa00ec709acc90e7daad8151720d09881523ede55a3366",
     },
     Source {
