@@ -29,6 +29,8 @@ pub(crate) struct BenchSamples {
     pub(crate) validate_ns: Vec<u64>,
     #[serde(default)]
     pub(crate) serialized_bytes: u64,
+    #[serde(default)]
+    pub(crate) validation: Option<serde_json::Value>,
 }
 
 // Deserialization surface for whatever the bench scripts emit. The
@@ -46,6 +48,8 @@ pub(crate) struct ForeignSamples {
     pub(crate) validate_ns: Vec<u64>,
     #[serde(default)]
     pub(crate) serialized_bytes: u64,
+    #[serde(default)]
+    pub(crate) validation: Option<serde_json::Value>,
 }
 
 #[derive(Debug)]
@@ -190,37 +194,39 @@ fn run_native_sbol3(
     for _ in 0..config.warmup {
         let doc = v3::Document::read(&rdf_text, case.parse_format)
             .map_err(|error| format!("warmup parse: {error}"))?;
-        let _ = doc
-            .write(case.serialize_format)
-            .map_err(|error| format!("warmup serialize: {error}"))?;
         if case.validate {
             let _ = doc.validate();
         }
+        let _ = doc
+            .write(case.serialize_format)
+            .map_err(|error| format!("warmup serialize: {error}"))?;
     }
 
     let mut parse_ns = Vec::with_capacity(config.iters);
     let mut serialize_ns = Vec::with_capacity(config.iters);
     let mut validate_ns = Vec::with_capacity(if case.validate { config.iters } else { 0 });
     let mut last_bytes = 0u64;
+    let mut validation = None;
     for _ in 0..config.iters {
         let t0 = Instant::now();
         let doc = v3::Document::read(&rdf_text, case.parse_format)
             .map_err(|error| format!("measured parse: {error}"))?;
         let t1 = Instant::now();
+        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
+        if case.validate {
+            let v0 = Instant::now();
+            let report = doc.validate();
+            let elapsed = v0.elapsed().as_nanos() as u64;
+            validate_ns.push(elapsed);
+            validation = Some(crate::validation::summary(&report));
+        }
+        let s0 = Instant::now();
         let out = doc
             .write(case.serialize_format)
             .map_err(|error| format!("measured serialize: {error}"))?;
-        let t2 = Instant::now();
-        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
-        serialize_ns.push(t2.duration_since(t1).as_nanos() as u64);
+        let s1 = Instant::now();
+        serialize_ns.push(s1.duration_since(s0).as_nanos() as u64);
         last_bytes = out.len() as u64;
-
-        if case.validate {
-            let v0 = Instant::now();
-            let _ = doc.validate();
-            let v1 = Instant::now();
-            validate_ns.push(v1.duration_since(v0).as_nanos() as u64);
-        }
     }
 
     Ok(BenchSamples {
@@ -229,6 +235,7 @@ fn run_native_sbol3(
         serialize_ns,
         validate_ns,
         serialized_bytes: last_bytes,
+        validation,
     })
 }
 
@@ -243,37 +250,39 @@ fn run_native_sbol2(
     for _ in 0..config.warmup {
         let doc = v2::Document::read(&rdf_text, case.parse_format)
             .map_err(|error| format!("warmup parse: {error}"))?;
-        let _ = doc
-            .write(case.serialize_format)
-            .map_err(|error| format!("warmup serialize: {error}"))?;
         if case.validate {
             let _ = doc.validate();
         }
+        let _ = doc
+            .write(case.serialize_format)
+            .map_err(|error| format!("warmup serialize: {error}"))?;
     }
 
     let mut parse_ns = Vec::with_capacity(config.iters);
     let mut serialize_ns = Vec::with_capacity(config.iters);
     let mut validate_ns = Vec::with_capacity(if case.validate { config.iters } else { 0 });
     let mut last_bytes = 0u64;
+    let mut validation = None;
     for _ in 0..config.iters {
         let t0 = Instant::now();
         let doc = v2::Document::read(&rdf_text, case.parse_format)
             .map_err(|error| format!("measured parse: {error}"))?;
         let t1 = Instant::now();
+        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
+        if case.validate {
+            let v0 = Instant::now();
+            let report = doc.validate();
+            let elapsed = v0.elapsed().as_nanos() as u64;
+            validate_ns.push(elapsed);
+            validation = Some(crate::validation::summary(&report));
+        }
+        let s0 = Instant::now();
         let out = doc
             .write(case.serialize_format)
             .map_err(|error| format!("measured serialize: {error}"))?;
-        let t2 = Instant::now();
-        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
-        serialize_ns.push(t2.duration_since(t1).as_nanos() as u64);
+        let s1 = Instant::now();
+        serialize_ns.push(s1.duration_since(s0).as_nanos() as u64);
         last_bytes = out.len() as u64;
-
-        if case.validate {
-            let v0 = Instant::now();
-            let _ = doc.validate();
-            let v1 = Instant::now();
-            validate_ns.push(v1.duration_since(v0).as_nanos() as u64);
-        }
     }
 
     Ok(BenchSamples {
@@ -282,6 +291,7 @@ fn run_native_sbol2(
         serialize_ns,
         validate_ns,
         serialized_bytes: last_bytes,
+        validation,
     })
 }
 
@@ -330,6 +340,7 @@ pub(crate) fn run_docker(
         .args([
             "run",
             "--rm",
+            "--network=none",
             "-v",
             &mount_arg,
             image,
@@ -375,6 +386,7 @@ pub(crate) fn run_docker(
         serialize_ns: raw.serialize_ns,
         validate_ns: raw.validate_ns,
         serialized_bytes: raw.serialized_bytes,
+        validation: raw.validation,
     })
 }
 

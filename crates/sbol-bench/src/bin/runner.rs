@@ -17,6 +17,9 @@
 //! The optional trailing `validate` flag (`1`/`0`) turns on a timed
 //! `Document::validate()` phase alongside parse and serialize.
 
+#[path = "../validation.rs"]
+mod validation;
+
 use std::fs;
 use std::path::PathBuf;
 use std::process::ExitCode;
@@ -62,6 +65,8 @@ struct Output<'a> {
     serialize_ns: Vec<u64>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     validate_ns: Vec<u64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    validation: Option<serde_json::Value>,
 }
 
 fn main() -> ExitCode {
@@ -136,13 +141,24 @@ fn main() -> ExitCode {
     let mut serialize_ns = Vec::with_capacity(iters);
     let mut validate_ns = Vec::with_capacity(if validate { iters } else { 0 });
     let mut last_bytes = 0u64;
+    let mut validation = None;
+    let mut expected_counts = None;
     for i in 0..iters {
         match run_timed(&rdf_text, version, parse_format, serialize_format, validate) {
             Ok((parse, serialize, validate_time, bytes)) => {
                 parse_ns.push(parse);
                 serialize_ns.push(serialize);
-                if let Some(validate_time) = validate_time {
+                if let Some((validate_time, report)) = validate_time {
                     validate_ns.push(validate_time);
+                    let counts = (report.errors().count(), report.warnings().count());
+                    if expected_counts.is_some_and(|expected| expected != counts) {
+                        eprintln!("validation outcome changed across iterations");
+                        return ExitCode::FAILURE;
+                    }
+                    expected_counts = Some(counts);
+                    if i + 1 == iters {
+                        validation = Some(validation::summary(&report));
+                    }
                 }
                 last_bytes = bytes;
             }
@@ -165,6 +181,7 @@ fn main() -> ExitCode {
         parse_ns,
         serialize_ns,
         validate_ns,
+        validation,
     };
     let json = match serde_json::to_string(&output) {
         Ok(s) => s,
@@ -200,19 +217,19 @@ fn run_once(
     match version {
         Version::Sbol3 => {
             let doc = v3::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
-            doc.write(serialize_format)
-                .map_err(|e| format!("serialize: {e}"))?;
             if validate {
                 let _ = doc.validate();
             }
+            doc.write(serialize_format)
+                .map_err(|e| format!("serialize: {e}"))?;
         }
         Version::Sbol2 => {
             let doc = v2::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
-            doc.write(serialize_format)
-                .map_err(|e| format!("serialize: {e}"))?;
             if validate {
                 let _ = doc.validate();
             }
+            doc.write(serialize_format)
+                .map_err(|e| format!("serialize: {e}"))?;
         }
     }
     Ok(())
@@ -224,26 +241,28 @@ fn run_timed(
     parse_format: RdfFormat,
     serialize_format: RdfFormat,
     validate: bool,
-) -> Result<(u64, u64, Option<u64>, u64), String> {
+) -> Result<(u64, u64, Option<(u64, v3::ValidationReport)>, u64), String> {
     match version {
         Version::Sbol3 => {
             let t0 = Instant::now();
             let doc = v3::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
             let t1 = Instant::now();
-            let out = doc
-                .write(serialize_format)
-                .map_err(|e| format!("serialize: {e}"))?;
-            let t2 = Instant::now();
             let validate_ns = if validate {
                 let v0 = Instant::now();
-                let _ = doc.validate();
-                Some(v0.elapsed().as_nanos() as u64)
+                let report = doc.validate();
+                let elapsed = v0.elapsed().as_nanos() as u64;
+                Some((elapsed, report))
             } else {
                 None
             };
+            let s0 = Instant::now();
+            let out = doc
+                .write(serialize_format)
+                .map_err(|e| format!("serialize: {e}"))?;
+            let s1 = Instant::now();
             Ok((
                 t1.duration_since(t0).as_nanos() as u64,
-                t2.duration_since(t1).as_nanos() as u64,
+                s1.duration_since(s0).as_nanos() as u64,
                 validate_ns,
                 out.len() as u64,
             ))
@@ -252,20 +271,22 @@ fn run_timed(
             let t0 = Instant::now();
             let doc = v2::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
             let t1 = Instant::now();
-            let out = doc
-                .write(serialize_format)
-                .map_err(|e| format!("serialize: {e}"))?;
-            let t2 = Instant::now();
             let validate_ns = if validate {
                 let v0 = Instant::now();
-                let _ = doc.validate();
-                Some(v0.elapsed().as_nanos() as u64)
+                let report = doc.validate();
+                let elapsed = v0.elapsed().as_nanos() as u64;
+                Some((elapsed, report))
             } else {
                 None
             };
+            let s0 = Instant::now();
+            let out = doc
+                .write(serialize_format)
+                .map_err(|e| format!("serialize: {e}"))?;
+            let s1 = Instant::now();
             Ok((
                 t1.duration_since(t0).as_nanos() as u64,
-                t2.duration_since(t1).as_nanos() as u64,
+                s1.duration_since(s0).as_nanos() as u64,
                 validate_ns,
                 out.len() as u64,
             ))

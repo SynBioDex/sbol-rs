@@ -35,6 +35,7 @@ mod bench;
 mod cli;
 mod matrix;
 mod report;
+mod validation;
 
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -223,14 +224,22 @@ fn main() -> ExitCode {
     if let Some(report_path) = config.report_path.as_ref() {
         match write_json_report(report_path, &outcomes, &config) {
             Ok(()) => eprintln!("wrote machine-readable report to {}", report_path.display()),
-            Err(error) => eprintln!(
-                "failed to write report to {}: {error}",
-                report_path.display()
-            ),
+            Err(error) => {
+                eprintln!(
+                    "failed to write report to {}: {error}",
+                    report_path.display()
+                );
+                return ExitCode::FAILURE;
+            }
         }
     }
 
-    if any_native_failure {
+    if any_native_failure
+        || (!config.skip_docker
+            && outcomes
+                .iter()
+                .any(|outcome| matches!(outcome.state, CaseState::Skipped { .. })))
+    {
         ExitCode::FAILURE
     } else {
         ExitCode::SUCCESS

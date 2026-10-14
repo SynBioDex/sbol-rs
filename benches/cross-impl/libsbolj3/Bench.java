@@ -19,11 +19,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.List;
 
 import org.sbolstandard.core3.entity.SBOLDocument;
 import org.sbolstandard.core3.io.SBOLFormat;
 import org.sbolstandard.core3.io.SBOLIO;
 import org.sbolstandard.core3.validation.SBOLValidator;
+import org.sbolstandard.core3.util.Configuration;
 
 public class Bench {
 
@@ -42,7 +44,18 @@ public class Bench {
         Path outputJson = Paths.get(args[5]);
         boolean validate = args.length > 6 && args[6].equals("1");
 
+        // Separate document I/O from explicit validation. These three flags
+        // otherwise make parse/write include hidden validation passes.
+        Configuration configuration = Configuration.getInstance();
+        configuration.setValidateAfterSettingProperties(false);
+        configuration.setValidateAfterReadingSBOLDocuments(false);
+        configuration.setValidateBeforeSaving(false);
+        configuration.setValidateRecommendedRules(true);
+        configuration.setCompleteDocument(true);
+
         byte[] rdfBytes = Files.readAllBytes(inputPath);
+        List<String> expectedMessages = validate ? SBOLValidator.getValidator().validate(
+            SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat)) : List.of();
 
         long[] parseNs = new long[iters];
         long[] serializeNs = new long[iters];
@@ -51,29 +64,32 @@ public class Bench {
 
         for (int i = 0; i < warmup; i++) {
             SBOLDocument doc = SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat);
+            if (validate) {
+                checkMessages(expectedMessages, SBOLValidator.getValidator().validate(doc));
+            }
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             SBOLIO.write(doc, out, serializeFormat);
-            if (validate) {
-                SBOLValidator.getValidator().validate(doc);
-            }
         }
 
         for (int i = 0; i < iters; i++) {
             long t0 = System.nanoTime();
             SBOLDocument doc = SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat);
             long t1 = System.nanoTime();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            SBOLIO.write(doc, out, serializeFormat);
-            long t2 = System.nanoTime();
             parseNs[i] = t1 - t0;
-            serializeNs[i] = t2 - t1;
-            lastSerializedBytes = out.size();
+            // Validate the freshly parsed document, before serialization.
             if (validate) {
                 long v0 = System.nanoTime();
-                SBOLValidator.getValidator().validate(doc);
+                List<String> messages = SBOLValidator.getValidator().validate(doc);
                 long v1 = System.nanoTime();
                 validateNs[i] = v1 - v0;
+                checkMessages(expectedMessages, messages);
             }
+            long s0 = System.nanoTime();
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            SBOLIO.write(doc, out, serializeFormat);
+            long s1 = System.nanoTime();
+            serializeNs[i] = s1 - s0;
+            lastSerializedBytes = out.size();
         }
 
         String impl = "libsbolj3";
@@ -93,11 +109,24 @@ public class Bench {
         if (validate) {
             json.append(",");
             appendLongArrayField(json, "validate_ns", validateNs);
+            json.append(",\"validation\":{\"complete\":true,\"recommended\":true,\"automatic_validation\":false,\"ontology\":\"bundled EDAM/SO/SBO sets\",\"messages\":[");
+            for (int i = 0; i < expectedMessages.size(); i++) {
+                if (i > 0) json.append(',');
+                json.append('"').append(escape(expectedMessages.get(i))).append('"');
+            }
+            json.append("]}");
         }
         json.append("}");
 
         try (FileWriter writer = new FileWriter(outputJson.toFile(), StandardCharsets.UTF_8)) {
             writer.write(json.toString());
+        }
+    }
+
+    private static void checkMessages(List<String> expected, List<String> actual) {
+        if (!new java.util.HashSet<>(expected).equals(new java.util.HashSet<>(actual))
+                || expected.size() != actual.size()) {
+            throw new IllegalStateException("validation diagnostics changed across iterations");
         }
     }
 
@@ -130,7 +159,7 @@ public class Bench {
             }
         }
         try (var input = SBOLDocument.class.getResourceAsStream(
-                "/META-INF/maven/org.sbolstandard/libSBOLj3/pom.properties")) {
+                "/META-INF/maven/org.sbolstandard/libsbolj3/pom.properties")) {
             if (input != null) {
                 Properties props = new Properties();
                 props.load(input);

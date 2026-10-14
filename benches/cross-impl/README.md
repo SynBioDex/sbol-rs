@@ -4,13 +4,11 @@ sbol-rs reads, writes, converts, and validates both SBOL 2 and SBOL 3.
 This harness benchmarks
 `parse`, `serialize`, `convert`, and `validate` for **both versions**,
 comparing sbol-rs against the mainstream implementation of each version.
-Every implementation, sbol-rs included, is pinned in its own Docker
-image so every row pays the same Linux container overhead and the
-comparison is apples-to-apples.
+Every implementation, sbol-rs included, runs in a Docker image with pinned library versions and reads the same input bytes per format. Validation rule sets differ: the validation rows compare configured API costs, not identical rule workloads.
 
 | Version | Implementation | Source                                                  | Pinned version | Image tag         |
 | ------- | -------------- | ------------------------------------------------------- | -------------- | ----------------- |
-| 2 + 3   | sbol-rs        | this repository                                         | `0.2.1`        | `sbol-rs-bench`   |
+| 2 + 3   | sbol-rs        | this repository                                         | `1.0.0`        | `sbol-rs-bench`   |
 | 2       | libSBOLj       | https://github.com/SynBioDex/libSBOLj                   | `2.4.0`        | `libsbolj2-bench` |
 | 3       | pySBOL3        | https://github.com/SynBioDex/pySBOL3                    | `1.2`          | `pysbol3-bench`   |
 | 3       | libSBOLj3      | https://github.com/SynBioDex/libSBOLj3                  | `1.0.5.2`      | `libsbolj3-bench` |
@@ -22,8 +20,7 @@ byte-for-byte input, then runs `<warmup>` untimed iterations followed
 by `<measured>` timed iterations of `parse(in) -> serialize(out)` for
 each `(version, impl, parse_format, serialize_format)` combination it
 knows about. Per-iteration nanosecond timings come back as JSON, are
-aggregated into the tables below, and are also written verbatim to
-[`results.json`](results.json).
+aggregated into a report, and written verbatim to the path supplied with `--report`. The corrected capture is [`results.validation-revision.json`](results.validation-revision.json); [`results.json`](results.json) is the historical capture.
 
 The matrix covers two kinds of row. A **round-trip** row parses and
 serializes the same format (`turtle -> turtle`). A **conversion** row
@@ -43,11 +40,7 @@ validator, and the SBOL 2 libSBOLj driver runs none, so those rows
 never run this phase and the `val.` columns show `—`.
 
 The sbol-rs row also runs inside Docker by default. Running it natively
-on the host (no container) would give sbol-rs an unfair single-digit
-percentage advantage from skipping the Linux VM overhead the other
-rows pay; the gap to the other implementations is large enough that
-this asymmetry would not change any conclusion, but the dockerized
-default keeps the comparison defensible. For local development (no
+on the host would use a different environment from the other rows. The Docker default keeps the environment consistent across implementations. For local development (no
 Docker required) set `SBOL_BENCH_DOCKER=0` and sbol-rs will fall back
 to in-process timing for both versions; the foreign rows are then
 marked skipped.
@@ -90,12 +83,7 @@ The fixture stems are `sbol2_cd_sa_range`, `sbol2_component_output`,
 `multicellular_simple`, `bba_f2620_popsreceiver`, `toggle_switch_v2`
 (SBOL 3).
 
-The 20-warmup default is what the JVM's tiered JIT needs to reach
-steady state on this loop — at 3 warmup iters libSBOLj3 was 30–60%
-slower than at 20 across the fixtures, large enough to flip the
-ordering on smaller documents. 100 measured iterations gives stable
-p50s; p99 is representative except on the sub-10 µs `component`
-fixture, where rare allocation or scheduling spikes inflate it.
+The default uses 20 warmup and 100 measured iterations per case. This is a fixed sampling protocol, not proof of JIT convergence or tail-latency stability; inspect the saved sample distributions when interpreting a run.
 
 ## Format support matrix
 
@@ -148,7 +136,7 @@ prefix-style RDF/XML that both sbol-rs and libSBOLj parse.
   cores), 128 GB RAM.
 - **OS / runtime**: macOS 26.6 (build 25G5043d), Docker Desktop 29.4.3
   (Linux/arm64 VM on Apple Virtualization).
-- **Impl versions**: sbol-rs 0.2.1 (this checkout), libSBOLj 2.4.0
+- **Impl versions**: sbol-rs 1.0.0 (tagged release baseline), libSBOLj 2.4.0
   (SBOL 2), pySBOL3 1.2, libSBOLj3 1.0.5.2, sboljs 3.0.2.
 - **Iteration counts**: 20 warmup + 100 measured per `(version, impl,
   fixture, parse_format, serialize_format)`.
@@ -179,7 +167,26 @@ prefix-style RDF/XML that both sbol-rs and libSBOLj parse.
   agree at the triple-set level and asks how fast each one processes
   the same bytes.
 
-## Captured results
+## Corrected validation benchmark (2026-10-09)
+
+The corrected full matrix is saved in `results.validation-revision.json`. All 124 cases completed with 20 warmup and 100 measured iterations per case. Rust uses the tagged v1.0.0 library code with the corrected harness. The original `results.json` and tables below are retained as a historical record.
+
+The libSBOLj3 driver disables validation after property updates, after reading, and before saving. It explicitly enables recommended and complete-document checks. Rust uses default validation options (complete, compliant, best practice; external resolution off), and pySBOL3 uses its default native plus SHACL validator. Validation is timed before serialization on freshly parsed documents. Diagnostics are saved and checked outside the timers, and containers run with networking disabled. All three SBOL3 validators produced no diagnostics on the four timed fixtures.
+
+The pySBOL3 image installs the v1.2 release commit, because the PyPI 1.2 wheel was withdrawn for containing older source. RDFLib and pySHACL are pinned as well. Full runtime and image identities are retained with the manuscript's benchmark artifacts.
+
+The validators do not enforce identical rules. Rust and libSBOLj3 check a Range's upper bound against its Sequence length; pySBOL3 v1.2 checks positive coordinates and ordering but leaves upper bounds unimplemented. Rust and Java use bundled biological ontology data; pySBOL3's SHACL invocation supplies no ontology graph or inference. The results characterize validation API costs, not a speedup for equal rule coverage.
+
+| Fixture | Rust validation (ms) | libSBOLj3 (ms) | pySBOL3 (ms) |
+| --- | ---: | ---: | ---: |
+| `component` | 0.007 | 0.235 | 31.894 |
+| `multicellular_simple` | 0.070 | 0.942 | 34.263 |
+| `bba_f2620_popsreceiver` | 0.209 | 1.726 | 42.124 |
+| `toggle_switch_v2` | 0.337 | 2.590 | 49.606 |
+
+## Historical captured results
+
+**Historical capture, superseded by the corrected run below.** These measurements used sbol-rs 0.2.1, libSBOLj3's automatic validation during I/O, validation after serialization, and the older PyPI 1.2 wheel. They remain here as an audit trail and must not be combined with the corrected measurements.
 
 One run (id `1783257836`) with the defaults (20 warmup + 100 measured),
 every impl in Docker, all eight fixtures. Numbers are **median time in

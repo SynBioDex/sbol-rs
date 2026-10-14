@@ -19,7 +19,6 @@ Usage:
 
 from __future__ import annotations
 
-import io
 import json
 import sys
 import time
@@ -84,27 +83,35 @@ def main(argv: list[str]) -> int:
     serialize_ns: list[int] = []
     validate_ns: list[int] = []
     last_bytes = 0
+    expected = _parse_once(rdf_text, parse_rdflib).validate() if validate else None
+    def check_report(report):
+        if (sorted(map(str, report.errors)), sorted(map(str, report.warnings))) != (
+            sorted(map(str, expected.errors)), sorted(map(str, expected.warnings))
+        ):
+            raise RuntimeError("validation diagnostics changed across iterations")
 
     for _ in range(warmup):
         doc = _parse_once(rdf_text, parse_rdflib)
-        doc.write_string(file_format=serialize_rdflib)
         if validate:
-            doc.validate()
+            check_report(doc.validate())
+        doc.write_string(file_format=serialize_rdflib)
 
     for _ in range(iters):
         t0 = time.perf_counter_ns()
         doc = _parse_once(rdf_text, parse_rdflib)
         t1 = time.perf_counter_ns()
-        serialized = doc.write_string(file_format=serialize_rdflib)
-        t2 = time.perf_counter_ns()
         parse_ns.append(t1 - t0)
-        serialize_ns.append(t2 - t1)
-        last_bytes = len(serialized.encode("utf-8") if isinstance(serialized, str) else serialized)
         if validate:
             v0 = time.perf_counter_ns()
-            doc.validate()
+            report = doc.validate()
             v1 = time.perf_counter_ns()
             validate_ns.append(v1 - v0)
+            check_report(report)
+        s0 = time.perf_counter_ns()
+        serialized = doc.write_string(file_format=serialize_rdflib)
+        s1 = time.perf_counter_ns()
+        serialize_ns.append(s1 - s0)
+        last_bytes = len(serialized.encode("utf-8") if isinstance(serialized, str) else serialized)
 
     result = {
         "impl": "pysbol3",
@@ -120,6 +127,12 @@ def main(argv: list[str]) -> int:
     }
     if validate:
         result["validate_ns"] = validate_ns
+        result["validation"] = {
+            "errors": list(map(str, expected.errors)),
+            "warnings": list(map(str, expected.warnings)),
+            "ontology": "none: ont_graph=None, inference=None",
+            "method": "native object checks and bundled SHACL",
+        }
     output_json.write_text(json.dumps(result))
     return 0
 

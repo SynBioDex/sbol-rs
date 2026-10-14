@@ -174,6 +174,8 @@ pub(crate) enum ReportState<'a> {
     Ok {
         version: &'a str,
         serialized_bytes: u64,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        validation: Option<&'a serde_json::Value>,
         parse_stats: Stats,
         serialize_stats: Stats,
         // Present only when the row ran the validation phase.
@@ -212,6 +214,7 @@ pub(crate) fn write_json_report(
                     ReportState::Ok {
                         version: version.as_str(),
                         serialized_bytes: samples.serialized_bytes,
+                        validation: samples.validation.as_ref(),
                         parse_stats: stats(&samples.parse_ns).unwrap_or(zero),
                         serialize_stats: stats(&samples.serialize_ns).unwrap_or(zero),
                         validate_stats: stats(&samples.validate_ns),

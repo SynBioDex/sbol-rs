@@ -24,7 +24,7 @@ COPY docs ./docs
 # Build only the runner binary (everything sbol depends on gets pulled
 # in transitively). Release profile because that's what the user-facing
 # library is shipped with; debug-built numbers would be misleading.
-RUN cargo build --release -p sbol-bench --bin runner
+RUN cargo build --locked --release -p sbol-bench --bin runner
 
 FROM debian:bookworm-slim AS runtime
 
