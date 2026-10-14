@@ -560,11 +560,7 @@ impl Sbol2Document {
 
     /// Upgrades this SBOL 2 document to an SBOL 3 [`Document`].
     fn to_sbol3(&self) -> PyResult<Document> {
-        let ntriples = self
-            .inner
-            .write(CoreFormat::NTriples)
-            .map_err(|err| SbolError::new_err(err.to_string()))?;
-        upgrade_from_sbol2(&ntriples, CoreFormat::NTriples)
+        sbol_convert::upgrade(&self.inner)
             .map(|(inner, _report)| Document { inner })
             .map_err(|err| SbolError::new_err(err.to_string()))
     }

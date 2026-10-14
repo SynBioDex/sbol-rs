@@ -729,6 +729,7 @@ version = "1.0.0"
 dependencies = [
  "sbol-core",
  "sbol-rdf",
+ "sbol2",
  "sbol3",
 ]
 

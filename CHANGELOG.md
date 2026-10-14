@@ -7,6 +7,32 @@ rules](https://doc.rust-lang.org/cargo/reference/semver.html).
 
 ## [Unreleased]
 
+### Added
+
+- **`sbol-convert`**: `upgrade` and `upgrade_with` convert a parsed
+  `sbol2::Document` to an `sbol3::Document` in memory, returning the
+  same `UpgradeReport` as the text-based functions. They are available
+  through the `sbol` crate as `sbol::convert::upgrade` and
+  `sbol::convert::upgrade_with`.
+
+### Changed
+
+- **`sbol-convert`**: `upgrade_from_sbol2`, `upgrade_from_sbol2_with`,
+  `upgrade_from_sbol2_path`, and `parse_and_upgrade` read their input as
+  an `sbol2::Document` and share one conversion path with `upgrade`.
+  SBOL 2 literals therefore carry the datatypes the SBOL 2 schema
+  assigns (for example `xsd:dateTime` on `prov:endedAtTime`,
+  `xsd:decimal` on `om:hasNumericalValue`, and `xsd:long` on
+  `sbol:size`) whether the input wrote them typed or untyped, and the
+  `sbol upgrade` CLI produces the same SBOL 3 as the library.
+- **`sbol-convert`**: Location and Cut positions (`sbol:start`,
+  `sbol:end`, `sbol:at`) are written as plain literals, as the
+  SBOL-Converter reference writes them, regardless of how the SBOL 2
+  input typed them.
+- **`sbol-py`**: `Sbol2Document.to_sbol3()` converts in memory through
+  `sbol_convert::upgrade` instead of serializing to N-Triples and
+  parsing the result.
+
 ## [1.0.0] - 2026-07-29
 
 ### Changed

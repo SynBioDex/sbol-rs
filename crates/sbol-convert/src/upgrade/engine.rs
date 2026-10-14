@@ -744,6 +744,18 @@ impl<'a> Engine<'a> {
                     Term::Literal(sbol_rdf::Literal::simple(override_did.clone()));
             }
 
+            // Location and Cut positions are written as plain literals, as the
+            // SBOL-Converter reference writes them. The SBOL 2 input may carry
+            // them typed (`xsd:integer`, which `sbol2::Document` assigns while
+            // reading) or untyped (raw RDF/XML); either way the SBOL 3 output
+            // is the same.
+            if matches!(predicate, v2::SBOL2_START | v2::SBOL2_END | v2::SBOL2_AT)
+                && let Term::Literal(literal) = &object_with_value_rewrites
+            {
+                object_with_value_rewrites =
+                    Term::Literal(sbol_rdf::Literal::simple(literal.value().to_owned()));
+            }
+
             self.output_triples.push(Triple {
                 subject,
                 predicate: Iri::from_static(target),

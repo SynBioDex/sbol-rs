@@ -1,10 +1,11 @@
 //! SBOL version conversion for the sbol-rs ecosystem.
 //!
 //! This crate converts between SBOL 2 and SBOL 3 at the RDF triple level.
-//! [`upgrade_from_sbol2`] and friends read SBOL 2 RDF and build an
-//! [`sbol3::Document`]; [`downgrade`] takes an [`sbol3::Document`] and emits
-//! the equivalent SBOL 2 RDF graph, alongside a report of any non-fatal
-//! issues encountered during conversion.
+//! [`upgrade`] converts a parsed [`sbol2::Document`] in memory, and
+//! [`upgrade_from_sbol2`] and friends read SBOL 2 RDF text or files; both
+//! build an [`sbol3::Document`]. [`downgrade`] takes an [`sbol3::Document`]
+//! and emits the equivalent SBOL 2 RDF graph. Every conversion also returns
+//! a report of any non-fatal issues encountered along the way.
 #![forbid(unsafe_code)]
 // Conversion errors carry the full context needed to diagnose a failed
 // pipeline; boxing the large error arms would split that surface.
@@ -21,6 +22,6 @@ pub use downgrade::{
 };
 pub use upgrade::{
     MapsToSide, NamespaceSource, UpgradeCounts, UpgradeError, UpgradeFromPathError, UpgradeOptions,
-    UpgradeReport, UpgradeWarning, canonical_nt_line, parse_and_upgrade, sbol2_to_sbol3,
-    upgrade_from_sbol2, upgrade_from_sbol2_path, upgrade_from_sbol2_with,
+    UpgradeReport, UpgradeWarning, canonical_nt_line, parse_and_upgrade, sbol2_to_sbol3, upgrade,
+    upgrade_from_sbol2, upgrade_from_sbol2_path, upgrade_from_sbol2_with, upgrade_with,
 };

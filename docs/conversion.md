@@ -63,6 +63,28 @@ sbol upgrade BBa_F2620.xml --output BBa_F2620.ttl --validate
 
 The result is fully native SBOL 3: all the typed accessors (`document.components()`, `document.sequences()`, etc.) work, all spec rules apply, and the document round-trips through any of the supported RDF serializations.
 
+### Upgrading a document already in memory
+
+When an SBOL 2 document is already parsed, upgrade it directly. The
+conversion reads the document's graph, so nothing is serialized along the
+way, and it produces the same SBOL 3 as the file-based functions:
+
+```rust,no_run
+let design = sbol::v2::Document::read_path("sbol2.rdf")?;
+design.check()?;
+
+let (upgraded, report) = sbol::convert::upgrade(&design)?;
+for warning in report.warnings() {
+    eprintln!("{warning:?}");
+}
+upgraded.check()?;
+upgraded.write_path("sbol3.ttl", sbol::RdfFormat::Turtle)?;
+# Ok::<(), Box<dyn std::error::Error>>(())
+```
+
+`sbol::convert::upgrade_with` takes the same `UpgradeOptions` as the
+other upgrade functions.
+
 **A note on identities.** SBOL 2 and SBOL 3 place the version segment in
 different spots. SBOL 2 puts it last (`…/BBa_F2620/1`); SBOL 3 puts it before
 the displayId (`…/1/BBa_F2620`). The upgrade rewrites the IRI accordingly, and

@@ -281,6 +281,11 @@ impl From<ParseError> for UpgradeError {
 /// namespace (`http://sbols.org/v2#…`); otherwise [`UpgradeError::NotSbol2`]
 /// is returned. Returns the new graph plus an [`UpgradeReport`] of any
 /// non-fatal issues.
+///
+/// Literals are converted as they appear in `graph`. The document-level
+/// [`upgrade`] and the text-level [`upgrade_from_sbol2`] pass the graph of an
+/// [`sbol2::Document`], whose literals carry the datatypes the SBOL 2 schema
+/// assigns.
 pub fn sbol2_to_sbol3(
     graph: &Graph,
     options: UpgradeOptions,
@@ -291,15 +296,16 @@ pub fn sbol2_to_sbol3(
     Ok((Graph::new(engine.output_triples), engine.report))
 }
 
-/// Convenience wrapper: parses input bytes, calls [`sbol2_to_sbol3`], then
-/// returns both the SBOL 3 [`Graph`] and the [`UpgradeReport`].
+/// Convenience wrapper: parses input bytes as an [`sbol2::Document`], calls
+/// [`sbol2_to_sbol3`] on its graph, then returns both the SBOL 3 [`Graph`] and
+/// the [`UpgradeReport`]. Produces the same graph as [`upgrade_from_sbol2`].
 pub fn parse_and_upgrade(
     input: &str,
     format: RdfFormat,
     options: UpgradeOptions,
 ) -> Result<(Graph, UpgradeReport), UpgradeError> {
     let graph = Graph::parse(input, format)?;
-    sbol2_to_sbol3(&graph, options)
+    sbol2_to_sbol3(sbol2::Document::from_rdf_graph(graph).rdf_graph(), options)
 }
 
 /// Upgrades an SBOL 2 RDF document to SBOL 3 and returns the resulting
@@ -324,7 +330,41 @@ pub fn upgrade_from_sbol2_with(
     options: UpgradeOptions,
 ) -> Result<(Document, UpgradeReport), UpgradeError> {
     let parsed = Graph::parse(input, format).map_err(UpgradeError::Parse)?;
-    let (upgraded, report) = sbol2_to_sbol3(&parsed, options)?;
+    upgrade_with(&sbol2::Document::from_rdf_graph(parsed), options)
+}
+
+/// Upgrades a parsed SBOL 2 [`sbol2::Document`] to SBOL 3 in memory and
+/// returns the resulting [`Document`] alongside an [`UpgradeReport`] of any
+/// non-fatal issues encountered during conversion.
+///
+/// The conversion reads the document's RDF graph directly, without
+/// serializing it. As with [`upgrade_from_sbol2`], call [`Document::check`]
+/// to reject content the upgrade could not coerce into fully conformant
+/// SBOL 3.
+///
+/// ```no_run
+/// # fn main() -> Result<(), Box<dyn std::error::Error>> {
+/// let design = sbol2::Document::read_path("design.rdf")?;
+/// design.check()?;
+///
+/// let (upgraded, report) = sbol_convert::upgrade(&design)?;
+/// for warning in report.warnings() {
+///     eprintln!("{warning:?}");
+/// }
+/// upgraded.check()?;
+/// # Ok(())
+/// # }
+/// ```
+pub fn upgrade(document: &sbol2::Document) -> Result<(Document, UpgradeReport), UpgradeError> {
+    upgrade_with(document, UpgradeOptions::default())
+}
+
+/// Like [`upgrade`], with explicit [`UpgradeOptions`].
+pub fn upgrade_with(
+    document: &sbol2::Document,
+    options: UpgradeOptions,
+) -> Result<(Document, UpgradeReport), UpgradeError> {
+    let (upgraded, report) = sbol2_to_sbol3(document.rdf_graph(), options)?;
     Ok((Document::from_rdf_graph(upgraded), report))
 }
 
