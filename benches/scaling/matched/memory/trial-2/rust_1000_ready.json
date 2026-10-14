@@ -1,0 +1,1 @@
+{"fingerprints":["568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186"],"implementation":"rust","iterations":1,"mode":"ready","row_counts":[5700],"serialize_ns":[3851292],"serialized_bytes":551357,"time_ns":[8995666],"warmup":0}

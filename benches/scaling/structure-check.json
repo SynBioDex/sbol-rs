@@ -1,0 +1,46 @@
+[
+  {
+    "objects": 10,
+    "triples": 57,
+    "classes": {
+      "Component": 3,
+      "Sequence": 3,
+      "SubComponent": 2,
+      "Range": 2
+    },
+    "internal_references": 11
+  },
+  {
+    "objects": 1000,
+    "triples": 5700,
+    "classes": {
+      "Component": 300,
+      "Sequence": 300,
+      "SubComponent": 200,
+      "Range": 200
+    },
+    "internal_references": 1100
+  },
+  {
+    "objects": 10000,
+    "triples": 57000,
+    "classes": {
+      "Component": 3000,
+      "Sequence": 3000,
+      "SubComponent": 2000,
+      "Range": 2000
+    },
+    "internal_references": 11000
+  },
+  {
+    "objects": 100000,
+    "triples": 570000,
+    "classes": {
+      "Component": 30000,
+      "Sequence": 30000,
+      "SubComponent": 20000,
+      "Range": 20000
+    },
+    "internal_references": 110000
+  }
+]

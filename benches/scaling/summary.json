@@ -1,0 +1,1375 @@
+{
+  "cases": [
+    {
+      "implementation": "rust",
+      "objects": 1000,
+      "peak_rss_kib": 10624,
+      "peak_rss_samples_kib": [
+        10624,
+        10896,
+        10560
+      ],
+      "validation": {
+        "config": "complete=true, compliant=true, best_practice=true; default options; external resolution off",
+        "errors": 0,
+        "fully_applied": [
+          "sbol3-10102",
+          "sbol3-10103",
+          "sbol3-10104",
+          "sbol3-10105",
+          "sbol3-10106",
+          "sbol3-10107",
+          "sbol3-10108",
+          "sbol3-10109",
+          "sbol3-10110",
+          "sbol3-10111",
+          "sbol3-10112",
+          "sbol3-10201",
+          "sbol3-10202",
+          "sbol3-10203",
+          "sbol3-10204",
+          "sbol3-10205",
+          "sbol3-10301",
+          "sbol3-10501",
+          "sbol3-10503",
+          "sbol3-10505",
+          "sbol3-10601",
+          "sbol3-10604",
+          "sbol3-10607",
+          "sbol3-10608",
+          "sbol3-10612",
+          "sbol3-10613",
+          "sbol3-10616",
+          "sbol3-10617",
+          "sbol3-10702",
+          "sbol3-10801",
+          "sbol3-10802",
+          "sbol3-10803",
+          "sbol3-10804",
+          "sbol3-10805",
+          "sbol3-10806",
+          "sbol3-10807",
+          "sbol3-10901",
+          "sbol3-10902",
+          "sbol3-10903",
+          "sbol3-10904",
+          "sbol3-11001",
+          "sbol3-11004",
+          "sbol3-11007",
+          "sbol3-11008",
+          "sbol3-11011",
+          "sbol3-11012",
+          "sbol3-11013",
+          "sbol3-11101",
+          "sbol3-11104",
+          "sbol3-11107",
+          "sbol3-11108",
+          "sbol3-11201",
+          "sbol3-11301",
+          "sbol3-11302",
+          "sbol3-11303",
+          "sbol3-11401",
+          "sbol3-11402",
+          "sbol3-11403",
+          "sbol3-11501",
+          "sbol3-11701",
+          "sbol3-11702",
+          "sbol3-11703",
+          "sbol3-11704",
+          "sbol3-11705",
+          "sbol3-11706",
+          "sbol3-11803",
+          "sbol3-11804",
+          "sbol3-11901",
+          "sbol3-11902",
+          "sbol3-11903",
+          "sbol3-11906",
+          "sbol3-12001",
+          "sbol3-12002",
+          "sbol3-12003",
+          "sbol3-12101",
+          "sbol3-12102",
+          "sbol3-12103",
+          "sbol3-12104",
+          "sbol3-12105",
+          "sbol3-12106",
+          "sbol3-12107",
+          "sbol3-12108",
+          "sbol3-12109",
+          "sbol3-12110",
+          "sbol3-12111",
+          "sbol3-12112",
+          "sbol3-12114",
+          "sbol3-12115",
+          "sbol3-12201",
+          "sbol3-12202",
+          "sbol3-12203",
+          "sbol3-12204",
+          "sbol3-12504",
+          "sbol3-12507",
+          "sbol3-12803",
+          "sbol3-12807",
+          "sbol3-12808",
+          "sbol3-12901",
+          "sbol3-12902",
+          "sbol3-13001",
+          "sbol3-13401",
+          "sbol3-13501",
+          "sbol3-13502",
+          "sbol3-14201",
+          "sbol3-14202"
+        ],
+        "issues": [],
+        "not_applied": [
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10504"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10602"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10603"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10605"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10606"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10609"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10610"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10611"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10614"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10615"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10701"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11002"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11003"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11005"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11006"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11009"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11010"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11102"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11103"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11105"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11106"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11109"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11904"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11905"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12301"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12302"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12303"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12501"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12503"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12505"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12506"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12804"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12805"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12806"
+          }
+        ],
+        "ontology": "bundled offline registry",
+        "partially_applied": [
+          {
+            "blocker": "External",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10101"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10113"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10114"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-12113"
+          }
+        ],
+        "warnings": 0
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "8d8a256aa2fdc34332463d9747839662ecf2a270c25d003225f395e277d390ea",
+      "parse": {
+        "median_ns": 13975708,
+        "p25_ns": 13966042,
+        "p75_ns": 13977625,
+        "min_ns": 13869709,
+        "max_ns": 14215041
+      },
+      "serialize": {
+        "median_ns": 7473208,
+        "p25_ns": 7375584,
+        "p75_ns": 7499500,
+        "min_ns": 7306750,
+        "max_ns": 7506375
+      },
+      "validate": {
+        "median_ns": 14409667,
+        "p25_ns": 14328125,
+        "p75_ns": 14582250,
+        "min_ns": 14324709,
+        "max_ns": 14676167
+      }
+    },
+    {
+      "implementation": "python",
+      "objects": 1000,
+      "peak_rss_kib": 59568,
+      "peak_rss_samples_kib": [
+        59568,
+        55120,
+        60256
+      ],
+      "validation": {
+        "errors": [],
+        "warnings": [],
+        "ontology": "none: ont_graph=None, inference=None",
+        "method": "native object checks and bundled SHACL"
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "141d32df32684cb0a6ec977c279fac6b866b56dc2ac1097aa40becb7002df638",
+      "parse": {
+        "median_ns": 281820709,
+        "p25_ns": 240768959,
+        "p75_ns": 301380709,
+        "min_ns": 227903292,
+        "max_ns": 317619041
+      },
+      "serialize": {
+        "median_ns": 85914333,
+        "p25_ns": 79484292,
+        "p75_ns": 102023375,
+        "min_ns": 77353625,
+        "max_ns": 119472458
+      },
+      "validate": {
+        "median_ns": 612511792,
+        "p25_ns": 578423292,
+        "p75_ns": 613309417,
+        "min_ns": 563718583,
+        "max_ns": 667347500
+      }
+    },
+    {
+      "implementation": "java",
+      "objects": 1000,
+      "peak_rss_kib": 279408,
+      "peak_rss_samples_kib": [
+        279408,
+        285744,
+        219440
+      ],
+      "validation": {
+        "complete": true,
+        "recommended": true,
+        "automatic_validation": false,
+        "ontology": "bundled EDAM/SO/SBO sets",
+        "messages": []
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "187ff52647f84844fe79a8030bdb8bdf639d8623f2206b9118be76730d0b285a",
+      "parse": {
+        "median_ns": 14249750,
+        "p25_ns": 11874125,
+        "p75_ns": 19972792,
+        "min_ns": 9855792,
+        "max_ns": 32210375
+      },
+      "serialize": {
+        "median_ns": 46042708,
+        "p25_ns": 42172834,
+        "p75_ns": 46705458,
+        "min_ns": 34130416,
+        "max_ns": 50351250
+      },
+      "validate": {
+        "median_ns": 247120542,
+        "p25_ns": 217976208,
+        "p75_ns": 256713917,
+        "min_ns": 217014792,
+        "max_ns": 272974709
+      }
+    },
+    {
+      "implementation": "javascript",
+      "objects": 1000,
+      "peak_rss_kib": 153584,
+      "peak_rss_samples_kib": [
+        155648,
+        152928,
+        153584
+      ],
+      "validation": {},
+      "validation_incomplete": false,
+      "raw_sha256": "7a103a922ed366080ef6decdea9bd37c52279bfcd5d316dd134449bf58b9cf6d",
+      "parse": {
+        "median_ns": 107101833,
+        "p25_ns": 102352458,
+        "p75_ns": 107685083,
+        "min_ns": 100223625,
+        "max_ns": 121004750
+      },
+      "serialize": {
+        "median_ns": 32041416,
+        "p25_ns": 31816083,
+        "p75_ns": 36340542,
+        "min_ns": 31287917,
+        "max_ns": 36652875
+      }
+    },
+    {
+      "implementation": "rust",
+      "objects": 10000,
+      "peak_rss_kib": 79520,
+      "peak_rss_samples_kib": [
+        79536,
+        79520,
+        77696
+      ],
+      "validation": {
+        "config": "complete=true, compliant=true, best_practice=true; default options; external resolution off",
+        "errors": 0,
+        "fully_applied": [
+          "sbol3-10102",
+          "sbol3-10103",
+          "sbol3-10104",
+          "sbol3-10105",
+          "sbol3-10106",
+          "sbol3-10107",
+          "sbol3-10108",
+          "sbol3-10109",
+          "sbol3-10110",
+          "sbol3-10111",
+          "sbol3-10112",
+          "sbol3-10201",
+          "sbol3-10202",
+          "sbol3-10203",
+          "sbol3-10204",
+          "sbol3-10205",
+          "sbol3-10301",
+          "sbol3-10501",
+          "sbol3-10503",
+          "sbol3-10505",
+          "sbol3-10601",
+          "sbol3-10604",
+          "sbol3-10607",
+          "sbol3-10608",
+          "sbol3-10612",
+          "sbol3-10613",
+          "sbol3-10616",
+          "sbol3-10617",
+          "sbol3-10702",
+          "sbol3-10801",
+          "sbol3-10802",
+          "sbol3-10803",
+          "sbol3-10804",
+          "sbol3-10805",
+          "sbol3-10806",
+          "sbol3-10807",
+          "sbol3-10901",
+          "sbol3-10902",
+          "sbol3-10903",
+          "sbol3-10904",
+          "sbol3-11001",
+          "sbol3-11004",
+          "sbol3-11007",
+          "sbol3-11008",
+          "sbol3-11011",
+          "sbol3-11012",
+          "sbol3-11013",
+          "sbol3-11101",
+          "sbol3-11104",
+          "sbol3-11107",
+          "sbol3-11108",
+          "sbol3-11201",
+          "sbol3-11301",
+          "sbol3-11302",
+          "sbol3-11303",
+          "sbol3-11401",
+          "sbol3-11402",
+          "sbol3-11403",
+          "sbol3-11501",
+          "sbol3-11701",
+          "sbol3-11702",
+          "sbol3-11703",
+          "sbol3-11704",
+          "sbol3-11705",
+          "sbol3-11706",
+          "sbol3-11803",
+          "sbol3-11804",
+          "sbol3-11901",
+          "sbol3-11902",
+          "sbol3-11903",
+          "sbol3-11906",
+          "sbol3-12001",
+          "sbol3-12002",
+          "sbol3-12003",
+          "sbol3-12101",
+          "sbol3-12102",
+          "sbol3-12103",
+          "sbol3-12104",
+          "sbol3-12105",
+          "sbol3-12106",
+          "sbol3-12107",
+          "sbol3-12108",
+          "sbol3-12109",
+          "sbol3-12110",
+          "sbol3-12111",
+          "sbol3-12112",
+          "sbol3-12114",
+          "sbol3-12115",
+          "sbol3-12201",
+          "sbol3-12202",
+          "sbol3-12203",
+          "sbol3-12204",
+          "sbol3-12504",
+          "sbol3-12507",
+          "sbol3-12803",
+          "sbol3-12807",
+          "sbol3-12808",
+          "sbol3-12901",
+          "sbol3-12902",
+          "sbol3-13001",
+          "sbol3-13401",
+          "sbol3-13501",
+          "sbol3-13502",
+          "sbol3-14201",
+          "sbol3-14202"
+        ],
+        "issues": [],
+        "not_applied": [
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10504"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10602"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10603"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10605"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10606"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10609"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10610"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10611"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10614"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10615"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10701"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11002"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11003"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11005"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11006"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11009"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11010"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11102"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11103"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11105"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11106"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11109"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11904"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11905"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12301"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12302"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12303"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12501"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12503"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12505"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12506"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12804"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12805"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12806"
+          }
+        ],
+        "ontology": "bundled offline registry",
+        "partially_applied": [
+          {
+            "blocker": "External",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10101"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10113"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10114"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-12113"
+          }
+        ],
+        "warnings": 0
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "50bf31f2a007b6118e92e03f98a9b88edf1d1ed8963a00c2a9eef5ff05e433cf",
+      "parse": {
+        "median_ns": 110340667,
+        "p25_ns": 103692250,
+        "p75_ns": 120178458,
+        "min_ns": 101125000,
+        "max_ns": 143937167
+      },
+      "serialize": {
+        "median_ns": 55850708,
+        "p25_ns": 55571250,
+        "p75_ns": 56808875,
+        "min_ns": 54293500,
+        "max_ns": 74666750
+      },
+      "validate": {
+        "median_ns": 279291750,
+        "p25_ns": 276847959,
+        "p75_ns": 359631958,
+        "min_ns": 270386084,
+        "max_ns": 373872375
+      }
+    },
+    {
+      "implementation": "python",
+      "objects": 10000,
+      "peak_rss_kib": 254576,
+      "peak_rss_samples_kib": [
+        252432,
+        255488,
+        254576
+      ],
+      "validation": {
+        "errors": [],
+        "warnings": [],
+        "ontology": "none: ont_graph=None, inference=None",
+        "method": "native object checks and bundled SHACL"
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "ec72aeddf89244f251ab77612cf3b5d93de9014fef727586d089a7390d2a7e66",
+      "parse": {
+        "median_ns": 3402933583,
+        "p25_ns": 3101594334,
+        "p75_ns": 3416914000,
+        "min_ns": 2634756958,
+        "max_ns": 4221865083
+      },
+      "serialize": {
+        "median_ns": 1463978583,
+        "p25_ns": 1274369792,
+        "p75_ns": 1523612458,
+        "min_ns": 947578417,
+        "max_ns": 1542759708
+      },
+      "validate": {
+        "median_ns": 6396635667,
+        "p25_ns": 6331151416,
+        "p75_ns": 6428462375,
+        "min_ns": 6235616750,
+        "max_ns": 6985869250
+      }
+    },
+    {
+      "implementation": "java",
+      "objects": 10000,
+      "peak_rss_kib": 350768,
+      "peak_rss_samples_kib": [
+        353344,
+        350768,
+        330512
+      ],
+      "validation": {
+        "complete": true,
+        "recommended": true,
+        "automatic_validation": false,
+        "ontology": "bundled EDAM/SO/SBO sets",
+        "messages": []
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "77957592bb362ee96ab05eca020d0269429bc44d2875872fe5ae763c00ffc280",
+      "parse": {
+        "median_ns": 99412542,
+        "p25_ns": 95890833,
+        "p75_ns": 103254958,
+        "min_ns": 65249208,
+        "max_ns": 105650750
+      },
+      "serialize": {
+        "median_ns": 365360791,
+        "p25_ns": 293807292,
+        "p75_ns": 380404625,
+        "min_ns": 273245334,
+        "max_ns": 384248000
+      },
+      "validate": {
+        "median_ns": 14482507458,
+        "p25_ns": 14333640667,
+        "p75_ns": 15525021166,
+        "min_ns": 13547873583,
+        "max_ns": 15849773209
+      }
+    },
+    {
+      "implementation": "javascript",
+      "objects": 10000,
+      "peak_rss_kib": 315344,
+      "peak_rss_samples_kib": [
+        316144,
+        315344,
+        315056
+      ],
+      "validation": {},
+      "validation_incomplete": false,
+      "raw_sha256": "1ea99bbd35e654f03fcd947d20d960ef96b2dc154ff0749778725a8066115e48",
+      "parse": {
+        "median_ns": 707176375,
+        "p25_ns": 631545750,
+        "p75_ns": 827730792,
+        "min_ns": 630465791,
+        "max_ns": 861398666
+      },
+      "serialize": {
+        "median_ns": 228543500,
+        "p25_ns": 227299542,
+        "p75_ns": 280507083,
+        "min_ns": 223658250,
+        "max_ns": 342491000
+      }
+    },
+    {
+      "implementation": "rust",
+      "objects": 100000,
+      "peak_rss_kib": 757104,
+      "peak_rss_samples_kib": [
+        757088,
+        757104,
+        757760
+      ],
+      "validation": {
+        "config": "complete=true, compliant=true, best_practice=true; default options; external resolution off",
+        "errors": 0,
+        "fully_applied": [
+          "sbol3-10102",
+          "sbol3-10103",
+          "sbol3-10104",
+          "sbol3-10105",
+          "sbol3-10106",
+          "sbol3-10107",
+          "sbol3-10108",
+          "sbol3-10109",
+          "sbol3-10110",
+          "sbol3-10111",
+          "sbol3-10112",
+          "sbol3-10201",
+          "sbol3-10202",
+          "sbol3-10203",
+          "sbol3-10204",
+          "sbol3-10205",
+          "sbol3-10301",
+          "sbol3-10501",
+          "sbol3-10503",
+          "sbol3-10505",
+          "sbol3-10601",
+          "sbol3-10604",
+          "sbol3-10607",
+          "sbol3-10608",
+          "sbol3-10612",
+          "sbol3-10613",
+          "sbol3-10616",
+          "sbol3-10617",
+          "sbol3-10702",
+          "sbol3-10801",
+          "sbol3-10802",
+          "sbol3-10803",
+          "sbol3-10804",
+          "sbol3-10805",
+          "sbol3-10806",
+          "sbol3-10807",
+          "sbol3-10901",
+          "sbol3-10902",
+          "sbol3-10903",
+          "sbol3-10904",
+          "sbol3-11001",
+          "sbol3-11004",
+          "sbol3-11007",
+          "sbol3-11008",
+          "sbol3-11011",
+          "sbol3-11012",
+          "sbol3-11013",
+          "sbol3-11101",
+          "sbol3-11104",
+          "sbol3-11107",
+          "sbol3-11108",
+          "sbol3-11201",
+          "sbol3-11301",
+          "sbol3-11302",
+          "sbol3-11303",
+          "sbol3-11401",
+          "sbol3-11402",
+          "sbol3-11403",
+          "sbol3-11501",
+          "sbol3-11701",
+          "sbol3-11702",
+          "sbol3-11703",
+          "sbol3-11704",
+          "sbol3-11705",
+          "sbol3-11706",
+          "sbol3-11803",
+          "sbol3-11804",
+          "sbol3-11901",
+          "sbol3-11902",
+          "sbol3-11903",
+          "sbol3-11906",
+          "sbol3-12001",
+          "sbol3-12002",
+          "sbol3-12003",
+          "sbol3-12101",
+          "sbol3-12102",
+          "sbol3-12103",
+          "sbol3-12104",
+          "sbol3-12105",
+          "sbol3-12106",
+          "sbol3-12107",
+          "sbol3-12108",
+          "sbol3-12109",
+          "sbol3-12110",
+          "sbol3-12111",
+          "sbol3-12112",
+          "sbol3-12114",
+          "sbol3-12115",
+          "sbol3-12201",
+          "sbol3-12202",
+          "sbol3-12203",
+          "sbol3-12204",
+          "sbol3-12504",
+          "sbol3-12507",
+          "sbol3-12803",
+          "sbol3-12807",
+          "sbol3-12808",
+          "sbol3-12901",
+          "sbol3-12902",
+          "sbol3-13001",
+          "sbol3-13401",
+          "sbol3-13501",
+          "sbol3-13502",
+          "sbol3-14201",
+          "sbol3-14202"
+        ],
+        "issues": [],
+        "not_applied": [
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10504"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10602"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10603"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10605"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10606"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10609"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10610"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10611"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10614"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10615"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-10701"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11002"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11003"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11005"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11006"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11009"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11010"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11102"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11103"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11105"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11106"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11109"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11904"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-11905"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12301"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12302"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12303"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12501"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12502"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12503"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12505"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12506"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12801"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12802"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12804"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12805"
+          },
+          {
+            "reason": "MachineUncheckable",
+            "rule": "sbol3-12806"
+          }
+        ],
+        "ontology": "bundled offline registry",
+        "partially_applied": [
+          {
+            "blocker": "External",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10101"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10113"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-10114"
+          },
+          {
+            "blocker": "Resolver",
+            "coverage_kind": "LocalReferencesOnly",
+            "rule": "sbol3-12113"
+          }
+        ],
+        "warnings": 0
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "bfddc8fba0dbe9aaef1f3067b0de460148a84de28fe60815176a68256af6d309",
+      "parse": {
+        "median_ns": 1362384875,
+        "p25_ns": 1346004458,
+        "p75_ns": 1473841417,
+        "min_ns": 1029673000,
+        "max_ns": 1494468958
+      },
+      "serialize": {
+        "median_ns": 529584458,
+        "p25_ns": 508013166,
+        "p75_ns": 689464959,
+        "min_ns": 474123125,
+        "max_ns": 730620916
+      },
+      "validate": {
+        "median_ns": 25170253459,
+        "p25_ns": 25122438000,
+        "p75_ns": 25189302208,
+        "min_ns": 23645051500,
+        "max_ns": 25976595792
+      }
+    },
+    {
+      "implementation": "python",
+      "objects": 100000,
+      "peak_rss_kib": 2065648,
+      "peak_rss_samples_kib": [
+        2068640,
+        2065648,
+        2061376
+      ],
+      "validation": {
+        "errors": [],
+        "warnings": [],
+        "ontology": "none: ont_graph=None, inference=None",
+        "method": "native object checks and bundled SHACL"
+      },
+      "validation_incomplete": false,
+      "raw_sha256": "5fd6e7ca20e3182c101502e1424b49315b0dd9b18be5d49572494aacc9e9f634",
+      "parse": {
+        "median_ns": 21689242542,
+        "p25_ns": 21641394917,
+        "p75_ns": 24906362875,
+        "min_ns": 19241511750,
+        "max_ns": 29796701417
+      },
+      "serialize": {
+        "median_ns": 10401773916,
+        "p25_ns": 4736595084,
+        "p75_ns": 11618791583,
+        "min_ns": 4548939042,
+        "max_ns": 15454361583
+      },
+      "validate": {
+        "median_ns": 40245717625,
+        "p25_ns": 38293711916,
+        "p75_ns": 41553593667,
+        "min_ns": 37708689458,
+        "max_ns": 66388235875
+      }
+    },
+    {
+      "implementation": "java",
+      "objects": 100000,
+      "peak_rss_kib": 2718736,
+      "peak_rss_samples_kib": [
+        2943616,
+        2718736,
+        2621152
+      ],
+      "validation": {},
+      "validation_incomplete": true,
+      "raw_sha256": "8ab5b55dd502f4f7a8ff95c49c7f38c52ade663301c5d7c21cfa9f4d2747a429",
+      "parse": {
+        "median_ns": 635237708,
+        "p25_ns": 629080500,
+        "p75_ns": 671710750,
+        "min_ns": 616111292,
+        "max_ns": 687352583
+      },
+      "serialize": {
+        "median_ns": 2325845292,
+        "p25_ns": 2268190541,
+        "p75_ns": 2344087042,
+        "min_ns": 2212745375,
+        "max_ns": 2472545417
+      }
+    },
+    {
+      "implementation": "javascript",
+      "objects": 100000,
+      "peak_rss_kib": 1915616,
+      "peak_rss_samples_kib": [
+        1802704,
+        1915616,
+        1927088
+      ],
+      "validation": {},
+      "validation_incomplete": false,
+      "raw_sha256": "ed2cb758850d71c40d98a26ec36d6cb8aeb540b67a603743cf44cb7b6196e7c4",
+      "parse": {
+        "median_ns": 5429848292,
+        "p25_ns": 5323104292,
+        "p75_ns": 5538124083,
+        "min_ns": 5247165542,
+        "max_ns": 5864611250
+      },
+      "serialize": {
+        "median_ns": 2416839667,
+        "p25_ns": 2312328750,
+        "p75_ns": 2424076167,
+        "min_ns": 1961833500,
+        "max_ns": 2447795750
+      }
+    }
+  ],
+  "growth": {
+    "rust": {
+      "parse": {
+        "1000_to_10000": 7.89517547161117,
+        "10000_to_100000": 12.347078480140055,
+        "1000_to_100000": 97.48235116245989,
+        "endpoint_exponent": 0.9944629976618031
+      },
+      "serialize": {
+        "1000_to_10000": 7.473458252466679,
+        "10000_to_100000": 9.482144040143591,
+        "1000_to_100000": 70.86440762788885,
+        "endpoint_exponent": 0.9252140805533291
+      },
+      "validate": {
+        "1000_to_10000": 19.38224873621299,
+        "10000_to_100000": 90.12172203081545,
+        "1000_to_100000": 1746.7616329371108,
+        "endpoint_exponent": 1.6211168221070495
+      }
+    },
+    "python": {
+      "parse": {
+        "1000_to_10000": 12.07481733714608,
+        "10000_to_100000": 6.373689645414393,
+        "1000_to_100000": 76.96113823203815,
+        "endpoint_exponent": 0.9431357410808722
+      },
+      "serialize": {
+        "1000_to_10000": 17.039980779458535,
+        "10000_to_100000": 7.105140769672039,
+        "1000_to_100000": 121.07146215055874,
+        "endpoint_exponent": 1.0415208936561555
+      },
+      "validate": {
+        "1000_to_10000": 10.443285746570574,
+        "10000_to_100000": 6.29170078149458,
+        "1000_to_100000": 65.70602909306928,
+        "endpoint_exponent": 0.9088026108203526
+      }
+    },
+    "java": {
+      "parse": {
+        "1000_to_10000": 6.97644113054615,
+        "10000_to_100000": 6.389915147728543,
+        "1000_to_100000": 44.57886685731329,
+        "endpoint_exponent": 0.8245645125132206
+      },
+      "serialize": {
+        "1000_to_10000": 7.9352585212841955,
+        "10000_to_100000": 6.365886404050401,
+        "1000_to_100000": 50.51495433326815,
+        "endpoint_exponent": 0.8517099823563895
+      },
+      "validate": {
+        "1000_to_10000": 58.60503275361059
+      }
+    },
+    "javascript": {
+      "parse": {
+        "1000_to_10000": 6.602841008332696,
+        "10000_to_100000": 7.6782094028522945,
+        "1000_to_100000": 50.69799591571883,
+        "endpoint_exponent": 0.8524953960379992
+      },
+      "serialize": {
+        "1000_to_10000": 7.132752809676076,
+        "10000_to_100000": 10.574965671743016,
+        "1000_to_100000": 75.42861610735306,
+        "endpoint_exponent": 0.9387680698830713
+      }
+    }
+  }
+}

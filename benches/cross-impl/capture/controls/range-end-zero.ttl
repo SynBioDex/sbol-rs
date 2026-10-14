@@ -1,0 +1,24 @@
+@prefix sbol: <http://sbols.org/v3#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <https://example.org/> .
+:component a sbol:Component;
+    sbol:displayId "component";
+    sbol:hasNamespace <https://example.org>;
+    sbol:type <https://identifiers.org/SBO:0000251>;
+    sbol:role <https://identifiers.org/SO:0000110>;
+    sbol:hasSequence :sequence;
+    sbol:hasFeature <https://example.org/component/feature> .
+:sequence a sbol:Sequence;
+    sbol:displayId "sequence";
+    sbol:hasNamespace <https://example.org>;
+    sbol:elements "ATGC";
+    sbol:encoding <https://identifiers.org/edam:format_1207> .
+<https://example.org/component/feature> a sbol:SequenceFeature;
+    sbol:displayId "feature";
+    sbol:role <https://identifiers.org/SO:0000110>;
+    sbol:hasLocation <https://example.org/component/feature/range> .
+<https://example.org/component/feature/range> a sbol:Range;
+    sbol:displayId "range";
+    sbol:hasSequence :sequence;
+    sbol:start "1"^^xsd:integer;
+    sbol:end "0"^^xsd:integer .

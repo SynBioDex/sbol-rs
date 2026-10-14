@@ -1,0 +1,194 @@
+[
+  {
+    "file": "bba_f2620_popsreceiver.jsonld",
+    "bytes": 27001,
+    "sha256": "86bb3859ae027d549c5e97c8514f912c3280ab0622d405e47df1014785d24d8c",
+    "triples": null
+  },
+  {
+    "file": "bba_f2620_popsreceiver.nt",
+    "bytes": 38067,
+    "sha256": "fcdd213fd8545b9499c285c1896b17ddbc2509103857d7e8b8faa47329c110c0",
+    "triples": 284
+  },
+  {
+    "file": "bba_f2620_popsreceiver.rdf",
+    "bytes": 22382,
+    "sha256": "b67553a0322db02a45c2d77c8aa308e9545f62adbd7feaaa9932a387643df7c2",
+    "triples": null
+  },
+  {
+    "file": "bba_f2620_popsreceiver.ttl",
+    "bytes": 22132,
+    "sha256": "d9bfaa444c9a91c7ae7d8cfc334fa6992ab4fd48a5ebe32b27fef912d0114d48",
+    "triples": null
+  },
+  {
+    "file": "component.jsonld",
+    "bytes": 549,
+    "sha256": "bc781c2fca8f836ee3e2ca84c363e78480a89e464e1e8e688b6187e1f98934d9",
+    "triples": null
+  },
+  {
+    "file": "component.nt",
+    "bytes": 751,
+    "sha256": "297abb659c21dd26f11448d460bd6692e929b530a610035ed933cc69ace26f64",
+    "triples": 7
+  },
+  {
+    "file": "component.rdf",
+    "bytes": 957,
+    "sha256": "303c844d2a8f4da70fb59743217ce1486a4f4a77ee2009d6f720940ee4620095",
+    "triples": null
+  },
+  {
+    "file": "component.ttl",
+    "bytes": 433,
+    "sha256": "ba2c11e5a6ae5fbe096a630655a2f1bb0ae170bd1258564b32efe71926b19040",
+    "triples": null
+  },
+  {
+    "file": "multicellular_simple.jsonld",
+    "bytes": 8766,
+    "sha256": "193d65f10a7229f49c84c23f8d698cc19da27b195339557800ad1760a1804609",
+    "triples": null
+  },
+  {
+    "file": "multicellular_simple.nt",
+    "bytes": 12289,
+    "sha256": "0f63a88d970c8e4c3ed69d8d775945510f4cdfa51c6d680debe490f3f0cd233c",
+    "triples": 94
+  },
+  {
+    "file": "multicellular_simple.rdf",
+    "bytes": 6973,
+    "sha256": "1e5e1c3bd63c0da142d2e79b06e4c19af22bee40de114f5e5e41e5f15f40d481",
+    "triples": null
+  },
+  {
+    "file": "multicellular_simple.ttl",
+    "bytes": 7056,
+    "sha256": "c9615011cb8412a4426a8e5e1a090c0cfcfc4a4c0abb10f9ec7e2486a8b514c3",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_f2620.jsonld",
+    "bytes": 102320,
+    "sha256": "0303791229cf9944cdf54461b5d446e391e95ff3f35e674cd45ac13786112883",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_f2620.nt",
+    "bytes": 144991,
+    "sha256": "45692fe1459fad2573ce8adb6bcd642133ebc12f1dbcf5824f95b6919664351e",
+    "triples": 984
+  },
+  {
+    "file": "sbol2_bba_f2620.rdf",
+    "bytes": 79139,
+    "sha256": "770f07145425de09412b2d6682cc8e60dd0c8716c9e791fdeab5163258aabd71",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_f2620.ttl",
+    "bytes": 85654,
+    "sha256": "35571597c99e30049499dcc0a39a13df14b03b793ae394113691e56c37b916ef",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_k093005.jsonld",
+    "bytes": 26586,
+    "sha256": "bc458c2d15c436d5ae4f32b28487df57da0f2775d47738969989b472b0a1ea1f",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_k093005.nt",
+    "bytes": 37679,
+    "sha256": "a2bf78f3b1383fd515a8b18e2524a9175a3e2556bd727e3a8649187ab1b3eaa3",
+    "triples": 254
+  },
+  {
+    "file": "sbol2_bba_k093005.rdf",
+    "bytes": 21558,
+    "sha256": "e10f2328ad2fbe1cc64f433a953f58bb38e16f788aeef3e8d6e7fca077fb8efb",
+    "triples": null
+  },
+  {
+    "file": "sbol2_bba_k093005.ttl",
+    "bytes": 22745,
+    "sha256": "4f4a639a01a1086f314e7713167c9cea176224c0fc328d5fa1dd49a229499aec",
+    "triples": null
+  },
+  {
+    "file": "sbol2_cd_sa_range.jsonld",
+    "bytes": 2092,
+    "sha256": "2b2ce54e74cd88ea99799a20222289c7ea04d2d509e15ef6fe71232035fee840",
+    "triples": null
+  },
+  {
+    "file": "sbol2_cd_sa_range.nt",
+    "bytes": 2542,
+    "sha256": "afee1de3f5351fad36711e76b3f7325d262505fda66a3201eaaad028888047dd",
+    "triples": 20
+  },
+  {
+    "file": "sbol2_cd_sa_range.rdf",
+    "bytes": 1710,
+    "sha256": "b2afa5a69b247f33de0829de3ec3ff1c09bc1aeecdcf47214f454d8c419bb312",
+    "triples": null
+  },
+  {
+    "file": "sbol2_cd_sa_range.ttl",
+    "bytes": 1518,
+    "sha256": "5a0df99affaae0865a80ba506f615c9b479b5642dc3457e67313c41e759fbc94",
+    "triples": null
+  },
+  {
+    "file": "sbol2_component_output.jsonld",
+    "bytes": 16313,
+    "sha256": "375383b511d3754bf5f9757524cdc44cfd2e1f9ad98f08ebcfcfb6a2b3afac29",
+    "triples": null
+  },
+  {
+    "file": "sbol2_component_output.nt",
+    "bytes": 19809,
+    "sha256": "35f151da48f4f18ce24b6c8df6fd278bd47b1feeb1957eec40a1ecc0b26031b2",
+    "triples": 162
+  },
+  {
+    "file": "sbol2_component_output.rdf",
+    "bytes": 12951,
+    "sha256": "bcf5df959b7efc87ed94a45b87335ccd0164d3183c73149abc6db7a43e7556bb",
+    "triples": null
+  },
+  {
+    "file": "sbol2_component_output.ttl",
+    "bytes": 12872,
+    "sha256": "a786fbe9a5a8486c51de39f024da4370d01389a3be04d2ae4bc04b3a9ebec562",
+    "triples": null
+  },
+  {
+    "file": "toggle_switch_v2.jsonld",
+    "bytes": 37345,
+    "sha256": "1857acf94385922983f380c0d524db82dc2d05090e4d01f4e2533c6eae163e07",
+    "triples": null
+  },
+  {
+    "file": "toggle_switch_v2.nt",
+    "bytes": 53409,
+    "sha256": "caef3946da6bbf73595cb5b911c09fdc1b737a5a925d9a62d2180b9a44e1e567",
+    "triples": 405
+  },
+  {
+    "file": "toggle_switch_v2.rdf",
+    "bytes": 29249,
+    "sha256": "eb64082991fd6bbc54a715b5d023f011bdf019880c16e21a3136e8c8acf8ae0c",
+    "triples": null
+  },
+  {
+    "file": "toggle_switch_v2.ttl",
+    "bytes": 29858,
+    "sha256": "598b506e69deee959ce66365672552ab0aeeb22f78b95bac6647bcf367c9716f",
+    "triples": null
+  }
+]

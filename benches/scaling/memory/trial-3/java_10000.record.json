@@ -1,0 +1,37 @@
+{
+  "implementation": "java",
+  "objects": 10000,
+  "input": {
+    "file": "sbol3_10000.rdf.gz",
+    "objects": 10000,
+    "designs": 1000,
+    "top_level_objects": 6000,
+    "triples": 57000,
+    "bytes": 5028150,
+    "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+    "compressed_bytes": 91726,
+    "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+  },
+  "backend": "native",
+  "command": [
+    "/private/tmp/sbol-scaling-tools/measure_rss.native",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/memory/trial-3/java_10000.rss.json",
+    "/private/tmp/sbol-scaling-tools/jdk-17.0.20.1+1/Contents/Home/bin/java",
+    "-cp",
+    "/private/tmp/sbol-scaling-tools/libSBOLj3.jar:/private/tmp/sbol-scaling-tools",
+    "Bench",
+    "/private/tmp/sbol-scaling-inputs/sbol3_10000.rdf",
+    "rdfxml",
+    "rdfxml",
+    "0",
+    "1",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/memory/trial-3/java_10000.json",
+    "0"
+  ],
+  "warmup": 0,
+  "iterations": 1,
+  "validation_requested": false,
+  "started_utc": "2026-10-10T02:46:31.917709+00:00",
+  "exit_code": 0,
+  "elapsed_seconds": 0.9423428340815008
+}

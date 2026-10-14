@@ -1,0 +1,33 @@
+{
+  "implementation": "javascript",
+  "objects": 1000,
+  "input": {
+    "file": "sbol3_1000.rdf.gz",
+    "objects": 1000,
+    "designs": 100,
+    "top_level_objects": 600,
+    "triples": 5700,
+    "bytes": 502950,
+    "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+    "compressed_bytes": 9815,
+    "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+  },
+  "backend": "native",
+  "command": [
+    "/private/tmp/sbol-scaling-tools/measure_rss.native",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/results/javascript_1000.rss.json",
+    "/private/tmp/sbol-scaling-tools/node-v20.20.2-darwin-arm64/bin/node",
+    "/private/tmp/sbol-scaling-tools/javascript/bench.js",
+    "/private/tmp/sbol-scaling-inputs/sbol3_1000.rdf",
+    "rdfxml",
+    "rdfxml",
+    "3",
+    "5",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/results/javascript_1000.json"
+  ],
+  "warmup": 3,
+  "iterations": 5,
+  "started_utc": "2026-10-10T02:17:32.885600+00:00",
+  "exit_code": 0,
+  "elapsed_seconds": 1.8762929174117744
+}

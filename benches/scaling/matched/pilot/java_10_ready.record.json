@@ -1,0 +1,32 @@
+{
+  "command": [
+    "/private/tmp/sbol-scaling-tools/measure_rss.native",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/pilot/java_10_ready.rss.json",
+    "/private/tmp/sbol-scaling-tools/jdk-17.0.20.1+1/Contents/Home/bin/java",
+    "-cp",
+    "/private/tmp/sbol-scaling-tools/libSBOLj3.jar:/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched",
+    "Matched",
+    "/private/tmp/sbol-scaling-inputs/sbol3_10.rdf",
+    "ready",
+    "0",
+    "1",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/pilot/java_10_ready.json",
+    "6090eb3b8d173fe1322cbdc2eeae8b66ea5804a7a98a72e9253be6e4274bc3f5"
+  ],
+  "input": {
+    "file": "sbol3_10.rdf.gz",
+    "objects": 10,
+    "designs": 1,
+    "top_level_objects": 6,
+    "triples": 57,
+    "bytes": 5178,
+    "sha256": "6a6a940152a79d6452921399c0d898377bbc9d6ba2b5dfcc648ab5e692c9c556",
+    "compressed_bytes": 605,
+    "compressed_sha256": "e5af7098c027ef803064d9e386f33cd90691375fa8d7eb4c69b4c77cebc3bcf7"
+  },
+  "endpoint_sha256": "6090eb3b8d173fe1322cbdc2eeae8b66ea5804a7a98a72e9253be6e4274bc3f5",
+  "started_utc": "2026-10-10T13:09:33.574923+00:00",
+  "timeout_seconds": 1200,
+  "exit_code": 0,
+  "elapsed_seconds": 0.5592329576611519
+}

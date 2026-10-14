@@ -1,0 +1,686 @@
+{
+  "cases": [
+    {
+      "implementation": "rust",
+      "objects": 1000,
+      "input": {
+        "file": "sbol3_1000.rdf.gz",
+        "objects": 1000,
+        "designs": 100,
+        "top_level_objects": 600,
+        "triples": 5700,
+        "bytes": 502950,
+        "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+        "compressed_bytes": 9815,
+        "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+      },
+      "endpoint_sha256": "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186",
+      "raw_sha256": {
+        "rdf": "8fb04e4d00ab35114200c9e651055d0be09e400999b4f80baac1117c72de9f16",
+        "ready": "ede8de9f7435ff7af2f9fd3096e007e9322c2509fa01fdb378c4e6d0e79865d9",
+        "memory-1": "89c4aed9992512953bf876044a4f312d6b72de412fb3ccbc36c0f9e7e0076ae5",
+        "memory-2": "a4a404e1096ce073c904324f6a93b7150707f974188702000d2812658e3e4853",
+        "memory-3": "66f52a08f8d74aaa3b6504df8a12752f202cbb52ee4a25683bbc23a1ae6387b4"
+      },
+      "rdf": {
+        "median_ns": 4582375,
+        "p25_ns": 4545750,
+        "p75_ns": 4585959,
+        "min_ns": 4538875,
+        "max_ns": 4653500
+      },
+      "ready": {
+        "median_ns": 7509375,
+        "p25_ns": 7440833,
+        "p75_ns": 7620291,
+        "min_ns": 7434333,
+        "max_ns": 7712250
+      },
+      "serialize": {
+        "median_ns": 3391916,
+        "p25_ns": 3369292,
+        "p75_ns": 3434250,
+        "min_ns": 3364291,
+        "max_ns": 3436750
+      },
+      "serialized_bytes": 551357,
+      "peak_rss_kib": 11600,
+      "peak_rss_samples_kib": [
+        11504,
+        11600,
+        11776
+      ]
+    },
+    {
+      "implementation": "python",
+      "objects": 1000,
+      "input": {
+        "file": "sbol3_1000.rdf.gz",
+        "objects": 1000,
+        "designs": 100,
+        "top_level_objects": 600,
+        "triples": 5700,
+        "bytes": 502950,
+        "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+        "compressed_bytes": 9815,
+        "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+      },
+      "endpoint_sha256": "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186",
+      "raw_sha256": {
+        "rdf": "b646a33937ee8261629297baf9ea6579b93f1d3ea95cc8bfa8d40ca0fd836e80",
+        "ready": "09cd05da0402e991848ed0dfeefef64d48eded24e8ee1f955c5683e1f797ada0",
+        "memory-1": "a9f166a09cde488a86b8baa77e18885714ef8f6159912dd2ab0c86ba243b6f30",
+        "memory-2": "46668ffb321415bc4733500c2a2e8ab185561dc21170e6604e8c0f4c9cc6e6d2",
+        "memory-3": "99cbf7c8ecf7d38c732852158db9e16ef62e158ebfbe5e165010ce62de1b5b31"
+      },
+      "rdf": {
+        "median_ns": 63789833,
+        "p25_ns": 63237666,
+        "p75_ns": 74376250,
+        "min_ns": 63015000,
+        "max_ns": 76827334
+      },
+      "ready": {
+        "median_ns": 141724000,
+        "p25_ns": 141714500,
+        "p75_ns": 154112792,
+        "min_ns": 139130167,
+        "max_ns": 159289000
+      },
+      "serialize": {
+        "median_ns": 44154334,
+        "p25_ns": 40948417,
+        "p75_ns": 49897042,
+        "min_ns": 40909375,
+        "max_ns": 57984709
+      },
+      "serialized_bytes": 502957,
+      "peak_rss_kib": 59712,
+      "peak_rss_samples_kib": [
+        60144,
+        57760,
+        59712
+      ]
+    },
+    {
+      "implementation": "java",
+      "objects": 1000,
+      "input": {
+        "file": "sbol3_1000.rdf.gz",
+        "objects": 1000,
+        "designs": 100,
+        "top_level_objects": 600,
+        "triples": 5700,
+        "bytes": 502950,
+        "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+        "compressed_bytes": 9815,
+        "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+      },
+      "endpoint_sha256": "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186",
+      "raw_sha256": {
+        "rdf": "3a2771623fa22d206e61c8e8641e3cc9a30229fa6ebeb2147692b0d234d7701c",
+        "ready": "0ad653c6459001e012afee7e185b086972d2ba24b7d96fef0e3f44868c978b44",
+        "memory-1": "c11437c997959b9069229d27303f74a74d78bb695e79ba6e05bb8c28e065fbee",
+        "memory-2": "e7c063d153f7c4f1ddfa50ef683bfa12b1ac2007ff05f86d952e2ed4b67d6d5c",
+        "memory-3": "2ad9f23cf506dad0683af3e44da0240bebc9c930c8cddbea391f7041b60b3eaa"
+      },
+      "rdf": {
+        "median_ns": 12421708,
+        "p25_ns": 11321167,
+        "p75_ns": 13323833,
+        "min_ns": 11171917,
+        "max_ns": 15809959
+      },
+      "ready": {
+        "median_ns": 12287000,
+        "p25_ns": 10825875,
+        "p75_ns": 12315709,
+        "min_ns": 8977250,
+        "max_ns": 14626167
+      },
+      "serialize": {
+        "median_ns": 22727333,
+        "p25_ns": 20171791,
+        "p75_ns": 24953667,
+        "min_ns": 18583500,
+        "max_ns": 25995458
+      },
+      "serialized_bytes": 504404,
+      "peak_rss_kib": 279168,
+      "peak_rss_samples_kib": [
+        279168,
+        291376,
+        262592
+      ]
+    },
+    {
+      "implementation": "javascript",
+      "objects": 1000,
+      "input": {
+        "file": "sbol3_1000.rdf.gz",
+        "objects": 1000,
+        "designs": 100,
+        "top_level_objects": 600,
+        "triples": 5700,
+        "bytes": 502950,
+        "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+        "compressed_bytes": 9815,
+        "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+      },
+      "endpoint_sha256": "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186",
+      "raw_sha256": {
+        "rdf": "08e097e8546ef9ecefdc956989bb6d2c2e1547f9ceb50a103dafd35df3b6ce8b",
+        "ready": "594f3253e282e1315e8ababbef56b71f5d820f6bd983df2c803878f2830dc044",
+        "memory-1": "f8ffbf2ceb459fc2e6f99d672c7dfb0b6211f5d98132ca4615999329c72b1c07",
+        "memory-2": "b86522c09e7ce7d819eb208bb30f15aff8fff2a35c58ed0a26c658ff9345a23a",
+        "memory-3": "4a6e24acbffdd0880fb15c494cd69fa6effc2d0fd950364454c84fea3d63ae6b"
+      },
+      "rdf": {
+        "median_ns": 45707667,
+        "p25_ns": 44887250,
+        "p75_ns": 48953833,
+        "min_ns": 44449791,
+        "max_ns": 56962375
+      },
+      "ready": {
+        "median_ns": 73532833,
+        "p25_ns": 73001333,
+        "p75_ns": 73536709,
+        "min_ns": 72992792,
+        "max_ns": 81515792
+      },
+      "serialize": {
+        "median_ns": 14795542,
+        "p25_ns": 14582583,
+        "p75_ns": 15489333,
+        "min_ns": 14526000,
+        "max_ns": 25334417
+      },
+      "serialized_bytes": 411649,
+      "peak_rss_kib": 155440,
+      "peak_rss_samples_kib": [
+        157024,
+        154816,
+        155440
+      ]
+    },
+    {
+      "implementation": "rust",
+      "objects": 10000,
+      "input": {
+        "file": "sbol3_10000.rdf.gz",
+        "objects": 10000,
+        "designs": 1000,
+        "top_level_objects": 6000,
+        "triples": 57000,
+        "bytes": 5028150,
+        "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+        "compressed_bytes": 91726,
+        "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+      },
+      "endpoint_sha256": "3120707052246fca88266c11c4e7f762407a4e82fddd973be422214dd10c0ffa",
+      "raw_sha256": {
+        "rdf": "bc993d4b3d4ba2142c3f1b23643195c749f8f946ec1515d9dfda7440dce6dfc1",
+        "ready": "2d1b9605ab2d12b8302e3341475ee0efe65d1a9f37b1f124c0dcdfc14efce9b8",
+        "memory-1": "a60fec8677a0edfb46c18b8379d813de909bd769ac1efc9df2e1dbef0e786462",
+        "memory-2": "83a376c6339da269d78ead8d1a3c49b9c69343302f320a2b9b04cfa91406593d",
+        "memory-3": "eeaf54df3510cd8576cc372fb4b05d9d8469ea8d4efc0ca64a85887041f12ee3"
+      },
+      "rdf": {
+        "median_ns": 46024083,
+        "p25_ns": 45987333,
+        "p75_ns": 46292875,
+        "min_ns": 45905833,
+        "max_ns": 46495500
+      },
+      "ready": {
+        "median_ns": 76568292,
+        "p25_ns": 76541209,
+        "p75_ns": 77424917,
+        "min_ns": 76423125,
+        "max_ns": 77425917
+      },
+      "serialize": {
+        "median_ns": 33896667,
+        "p25_ns": 33578709,
+        "p75_ns": 34172041,
+        "min_ns": 33401584,
+        "max_ns": 34275958
+      },
+      "serialized_bytes": 5512157,
+      "peak_rss_kib": 90352,
+      "peak_rss_samples_kib": [
+        90128,
+        90448,
+        90352
+      ]
+    },
+    {
+      "implementation": "python",
+      "objects": 10000,
+      "input": {
+        "file": "sbol3_10000.rdf.gz",
+        "objects": 10000,
+        "designs": 1000,
+        "top_level_objects": 6000,
+        "triples": 57000,
+        "bytes": 5028150,
+        "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+        "compressed_bytes": 91726,
+        "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+      },
+      "endpoint_sha256": "3120707052246fca88266c11c4e7f762407a4e82fddd973be422214dd10c0ffa",
+      "raw_sha256": {
+        "rdf": "507c8fed23fca920c0b6a04472dee485b6b3e02c667d6733d36c495b2f5dddd6",
+        "ready": "20b3568605c78c9e57139bc82e093d20018d97bf6de9d01468a6e80886328eae",
+        "memory-1": "aa4854cd88894e8dcc31b64ac13dee0cba73c5bc2bf902e831fd28cb236eb1e6",
+        "memory-2": "edcce237735644796278cb13fdec1e1d55c271dd3db9acd7aac69ab54def7595",
+        "memory-3": "4b321a722c03a15738767b72ebfb93abe24902c7759e2a4478fba0485a5fa42c"
+      },
+      "rdf": {
+        "median_ns": 753546959,
+        "p25_ns": 751103750,
+        "p75_ns": 755123458,
+        "min_ns": 747209291,
+        "max_ns": 776494542
+      },
+      "ready": {
+        "median_ns": 1659937209,
+        "p25_ns": 1632640000,
+        "p75_ns": 1668359125,
+        "min_ns": 1629728125,
+        "max_ns": 1744124042
+      },
+      "serialize": {
+        "median_ns": 593941375,
+        "p25_ns": 569503083,
+        "p75_ns": 595751750,
+        "min_ns": 567522500,
+        "max_ns": 607693958
+      },
+      "serialized_bytes": 5028157,
+      "peak_rss_kib": 263568,
+      "peak_rss_samples_kib": [
+        267184,
+        261360,
+        263568
+      ]
+    },
+    {
+      "implementation": "java",
+      "objects": 10000,
+      "input": {
+        "file": "sbol3_10000.rdf.gz",
+        "objects": 10000,
+        "designs": 1000,
+        "top_level_objects": 6000,
+        "triples": 57000,
+        "bytes": 5028150,
+        "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+        "compressed_bytes": 91726,
+        "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+      },
+      "endpoint_sha256": "3120707052246fca88266c11c4e7f762407a4e82fddd973be422214dd10c0ffa",
+      "raw_sha256": {
+        "rdf": "2c5800caa5d2f45e95f6dae56f53c86bfbec3e4d1ba92efaa613372ea6738c03",
+        "ready": "5149e1222f2dcae4955f18f28fa9bcc7287fe8114deb4f7e6a31ebd993e18981",
+        "memory-1": "9ee3c411bb723eb152ad424b0eee7e4f434628265c2c00183001ff170bb541ee",
+        "memory-2": "bbbad7083dab528f1d2610edc49f2247a19ef1398fc27fa033dce2e13b60b69d",
+        "memory-3": "d3dd8db6322d20bc22995ec76582a3628669d88ec6321b803cd84885f638067a"
+      },
+      "rdf": {
+        "median_ns": 48388917,
+        "p25_ns": 48067167,
+        "p75_ns": 49825708,
+        "min_ns": 46873041,
+        "max_ns": 52411041
+      },
+      "ready": {
+        "median_ns": 85280583,
+        "p25_ns": 85064250,
+        "p75_ns": 92763667,
+        "min_ns": 82620833,
+        "max_ns": 94592542
+      },
+      "serialize": {
+        "median_ns": 224052542,
+        "p25_ns": 221837333,
+        "p75_ns": 241803000,
+        "min_ns": 213152959,
+        "max_ns": 245761666
+      },
+      "serialized_bytes": 5018024,
+      "peak_rss_kib": 389056,
+      "peak_rss_samples_kib": [
+        389056,
+        383440,
+        389216
+      ]
+    },
+    {
+      "implementation": "javascript",
+      "objects": 10000,
+      "input": {
+        "file": "sbol3_10000.rdf.gz",
+        "objects": 10000,
+        "designs": 1000,
+        "top_level_objects": 6000,
+        "triples": 57000,
+        "bytes": 5028150,
+        "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+        "compressed_bytes": 91726,
+        "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+      },
+      "endpoint_sha256": "3120707052246fca88266c11c4e7f762407a4e82fddd973be422214dd10c0ffa",
+      "raw_sha256": {
+        "rdf": "16387a63ed597b88ae8a42e93a6292b7f6b3cdde1c3f9fbf4c0035e8a34f510a",
+        "ready": "6320c5b34df0b804c3b7df189d8c375b437837330cba8f90ba367aac85a24926",
+        "memory-1": "29a6e704ced5670d32f24e4132ac26fda6ea2949603e85265afa909d15904268",
+        "memory-2": "22797545af0a6e95d497352b1f11b3d287c0a9a221d6c8001b53d84a9696fb5b",
+        "memory-3": "d044031e5c93a162788e086d7e48e67b681c3f3c050e874e9fe051fde185e66b"
+      },
+      "rdf": {
+        "median_ns": 405826416,
+        "p25_ns": 404193958,
+        "p75_ns": 418287625,
+        "min_ns": 402432875,
+        "max_ns": 422442084
+      },
+      "ready": {
+        "median_ns": 607719417,
+        "p25_ns": 602069167,
+        "p75_ns": 615174209,
+        "min_ns": 600310166,
+        "max_ns": 721919833
+      },
+      "serialize": {
+        "median_ns": 148369208,
+        "p25_ns": 147105833,
+        "p75_ns": 154319166,
+        "min_ns": 146120000,
+        "max_ns": 263238375
+      },
+      "serialized_bytes": 4115149,
+      "peak_rss_kib": 340400,
+      "peak_rss_samples_kib": [
+        339648,
+        340704,
+        340400
+      ]
+    },
+    {
+      "implementation": "rust",
+      "objects": 100000,
+      "input": {
+        "file": "sbol3_100000.rdf.gz",
+        "objects": 100000,
+        "designs": 10000,
+        "top_level_objects": 60000,
+        "triples": 570000,
+        "bytes": 50280150,
+        "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+        "compressed_bytes": 910010,
+        "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+      },
+      "endpoint_sha256": "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4",
+      "raw_sha256": {
+        "rdf": "59edb268bc2860a64cdb1af99ad3183d3b06c5279102c0439e79dfd0d457ace3",
+        "ready": "039279f97a3cfe35ce845aee30658d011b4f788630436a37c3031f09aa15ea39",
+        "memory-1": "9d84ac6ab2d127205de42523da732de57392e9553f2bb030e1d8a56900500b3c",
+        "memory-2": "b5658eedf2c1ebbefd79d9224df7447a45e41023cdf799ade9226229c34cb22b",
+        "memory-3": "2e5b5d05b0f66493ee4d7aceb191cc3428530fae2e6c49381922363d49396a62"
+      },
+      "rdf": {
+        "median_ns": 467072542,
+        "p25_ns": 466989500,
+        "p75_ns": 467632500,
+        "min_ns": 457056917,
+        "max_ns": 472135625
+      },
+      "ready": {
+        "median_ns": 799191250,
+        "p25_ns": 792937583,
+        "p75_ns": 801703042,
+        "min_ns": 789499250,
+        "max_ns": 802417000
+      },
+      "serialize": {
+        "median_ns": 338531500,
+        "p25_ns": 332340750,
+        "p75_ns": 339729959,
+        "min_ns": 332329959,
+        "max_ns": 347175000
+      },
+      "serialized_bytes": 55120157,
+      "peak_rss_kib": 873824,
+      "peak_rss_samples_kib": [
+        873824,
+        874304,
+        872592
+      ]
+    },
+    {
+      "implementation": "python",
+      "objects": 100000,
+      "input": {
+        "file": "sbol3_100000.rdf.gz",
+        "objects": 100000,
+        "designs": 10000,
+        "top_level_objects": 60000,
+        "triples": 570000,
+        "bytes": 50280150,
+        "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+        "compressed_bytes": 910010,
+        "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+      },
+      "endpoint_sha256": "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4",
+      "raw_sha256": {
+        "rdf": "c2fefce1b08760aca8cc74dbe8c42de37ebcd6a6da95b55cc77bee198ecb2547",
+        "ready": "b31e5d47d8329d64692bb90594b80bc6e162e740335a9c192d4796eb396bfd27",
+        "memory-1": "73feaedc1afd46671afbd291de12b134bbac04a46f3287ba15c7e214bbe2ad2c",
+        "memory-2": "37238a243c93088e7ba03c11451eb1867c9cda115d1f45ee167a259850badcf7",
+        "memory-3": "a709751a2f9781a30b6fd81871bf869f51176fc336ce1ef2b98ec737e4bd5c18"
+      },
+      "rdf": {
+        "median_ns": 8173948500,
+        "p25_ns": 8077533042,
+        "p75_ns": 8204552833,
+        "min_ns": 8012210500,
+        "max_ns": 8286518625
+      },
+      "ready": {
+        "median_ns": 18402070208,
+        "p25_ns": 18162818667,
+        "p75_ns": 18487099000,
+        "min_ns": 18033348541,
+        "max_ns": 18904820167
+      },
+      "serialize": {
+        "median_ns": 5731130667,
+        "p25_ns": 5683145500,
+        "p75_ns": 6462475083,
+        "min_ns": 5634027750,
+        "max_ns": 6634074750
+      },
+      "serialized_bytes": 50280157,
+      "peak_rss_kib": 2161344,
+      "peak_rss_samples_kib": [
+        2161344,
+        2164592,
+        2160352
+      ]
+    },
+    {
+      "implementation": "java",
+      "objects": 100000,
+      "input": {
+        "file": "sbol3_100000.rdf.gz",
+        "objects": 100000,
+        "designs": 10000,
+        "top_level_objects": 60000,
+        "triples": 570000,
+        "bytes": 50280150,
+        "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+        "compressed_bytes": 910010,
+        "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+      },
+      "endpoint_sha256": "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4",
+      "raw_sha256": {
+        "rdf": "d23cfe8c55544c1c9b749225a14a7fba4acbc3b34f45b7a694afd23b0b49c361",
+        "ready": "d6e2c2ede54758bebd3be4429a57916e1615ef8f69315d178cb1679532d82dcb",
+        "memory-1": "69ddc130e2a2f08ab59c5f8e2f1f13ecab89081419e2f55af44a39e539e75ebf",
+        "memory-2": "002e2ecac3660f9a8078c1fcea505cc40d80c10914485ded7055de9660777d21",
+        "memory-3": "d56b6ea91df36c792086a49f7694830ead19bd71f8b4571c506723fc9fd7ff10"
+      },
+      "rdf": {
+        "median_ns": 662091292,
+        "p25_ns": 647295958,
+        "p75_ns": 693393208,
+        "min_ns": 614394667,
+        "max_ns": 695566083
+      },
+      "ready": {
+        "median_ns": 1013210542,
+        "p25_ns": 1007794042,
+        "p75_ns": 1015302209,
+        "min_ns": 985565166,
+        "max_ns": 1049303583
+      },
+      "serialize": {
+        "median_ns": 2394480875,
+        "p25_ns": 2386060041,
+        "p75_ns": 2459781666,
+        "min_ns": 2353102375,
+        "max_ns": 2463523208
+      },
+      "serialized_bytes": 50230904,
+      "peak_rss_kib": 2982288,
+      "peak_rss_samples_kib": [
+        3313808,
+        2982288,
+        2720016
+      ]
+    },
+    {
+      "implementation": "javascript",
+      "objects": 100000,
+      "input": {
+        "file": "sbol3_100000.rdf.gz",
+        "objects": 100000,
+        "designs": 10000,
+        "top_level_objects": 60000,
+        "triples": 570000,
+        "bytes": 50280150,
+        "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+        "compressed_bytes": 910010,
+        "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+      },
+      "endpoint_sha256": "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4",
+      "raw_sha256": {
+        "rdf": "3c3bd64b7ff1bd5b8c465d302070e030bcb91e3b3da44bdd6b1b9de88bf862e7",
+        "ready": "a18bcf8fd879d0df09f047a21dc803bd8830aae46601edeaace13350ce77b88f",
+        "memory-1": "6234dd2ae856b95a87dbaabdfc37802d735a6e91e35ecc371b4e005dff01ffe6",
+        "memory-2": "c100886f94fd7c179fbeb84fc21e930d9812a8dfb34b6e465fe3c44be208b883",
+        "memory-3": "a59ade549f4f991e45cccccac3b8e5ab2953d53e6af0413aa37b5ade2f845f8b"
+      },
+      "rdf": {
+        "median_ns": 4575178542,
+        "p25_ns": 4469488041,
+        "p75_ns": 4582049250,
+        "min_ns": 4457734666,
+        "max_ns": 4610707084
+      },
+      "ready": {
+        "median_ns": 6925116292,
+        "p25_ns": 6914153083,
+        "p75_ns": 6990073875,
+        "min_ns": 6691066917,
+        "max_ns": 7032660666
+      },
+      "serialize": {
+        "median_ns": 1953607917,
+        "p25_ns": 1881799375,
+        "p75_ns": 1986282375,
+        "min_ns": 1814567542,
+        "max_ns": 2210576709
+      },
+      "serialized_bytes": 41150149,
+      "peak_rss_kib": 2141424,
+      "peak_rss_samples_kib": [
+        2141424,
+        1958784,
+        2141680
+      ]
+    }
+  ],
+  "growth": {
+    "rust": {
+      "rdf": {
+        "ratio_1000_to_100000": 101.9280486647208,
+        "endpoint_exponent": 1.0041468550263577
+      },
+      "ready": {
+        "ratio_1000_to_100000": 106.42580108198085,
+        "endpoint_exponent": 1.013523463928578
+      },
+      "serialize": {
+        "ratio_1000_to_100000": 99.80539022782403,
+        "endpoint_exponent": 0.999576998514351
+      }
+    },
+    "python": {
+      "rdf": {
+        "ratio_1000_to_100000": 128.13873489839673,
+        "endpoint_exponent": 1.0538402159643436
+      },
+      "ready": {
+        "ratio_1000_to_100000": 129.84441737461546,
+        "endpoint_exponent": 1.0567116409968358
+      },
+      "serialize": {
+        "ratio_1000_to_100000": 129.7976924983174,
+        "endpoint_exponent": 1.056633485892593
+      }
+    },
+    "java": {
+      "rdf": {
+        "ratio_1000_to_100000": 53.30114763605778,
+        "endpoint_exponent": 0.8633682799977268
+      },
+      "ready": {
+        "ratio_1000_to_100000": 82.46199576788476,
+        "endpoint_exponent": 0.9581269207534722
+      },
+      "serialize": {
+        "ratio_1000_to_100000": 105.35687909355664,
+        "endpoint_exponent": 1.0113314486850946
+      }
+    },
+    "javascript": {
+      "rdf": {
+        "ratio_1000_to_100000": 100.09652301877495,
+        "endpoint_exponent": 1.000209495982487
+      },
+      "ready": {
+        "ratio_1000_to_100000": 94.17719961911436,
+        "endpoint_exponent": 0.9869728862257475
+      },
+      "serialize": {
+        "ratio_1000_to_100000": 132.04030761428004,
+        "endpoint_exponent": 1.0603532637176127
+      }
+    }
+  },
+  "speedups": {
+    "rdf": {
+      "1000": 2.710757631141057,
+      "10000": 1.0513825337921452,
+      "100000": 1.4175341782347806
+    },
+    "ready": {
+      "1000": 1.636221389929255,
+      "10000": 1.1137845806982347,
+      "100000": 1.2677948388448947
+    }
+  }
+}

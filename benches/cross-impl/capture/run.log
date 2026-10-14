@@ -1,0 +1,252 @@
+sbol-bench run 1791553602
+  warmup iters : 20
+  measured iters: 100
+  fixtures      : 8
+  scratch       : /private/tmp/sbol-review-validation/target/sbol-bench/1791553602
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Oct 09, 2026 1:47:17 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator null
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Oct 09, 2026 1:47:43 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator null
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Oct 09, 2026 1:48:20 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator null
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+Oct 09, 2026 1:49:01 PM org.hibernate.validator.internal.util.Version <clinit>
+INFO: HV000001: Hibernate Validator null
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J(W): No SLF4J providers were found.
+SLF4J(W): Defaulting to no-operation (NOP) logger implementation
+SLF4J(W): See https://www.slf4j.org/codes.html#noProviders for further details.
+
+################ SBOL 2 ################
+
+=== fixture: sbol2_bba_f2620 ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip       1035.46       1315.92        435.35        533.08        609.48        794.17      85654
+sbol-rs     rdfxml -> rdfxml     round-trip       1046.35       1513.79        603.00       1060.38             —             —     114899
+sbol-rs     jsonld -> jsonld     round-trip       2266.69       4405.75        759.56       1775.46             —             —     102320
+sbol-rs     ntriples -> ntriples round-trip       1029.85       1411.88        415.94       1116.54             —             —     144991
+sbol-rs     rdfxml -> turtle     convert         1017.79       8249.50        422.48       1470.96             —             —      85654
+sbol-rs     turtle -> rdfxml     convert         1074.40       3288.00        583.23       1907.92             —             —     114899
+sbol-rs     rdfxml -> jsonld     convert         1086.90       1998.83        744.15       1079.54             —             —     102320
+libsbolj    rdfxml -> rdfxml     round-trip       2634.25       4762.92       1085.33       1884.58             —             —      79007
+libsbolj    rdfxml -> turtle     convert         2470.38       8194.38        745.06       2514.50             —             —      57946
+
+=== fixture: sbol2_bba_k093005 ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip        267.23        414.17        115.29        176.04        126.06        311.00      22745
+sbol-rs     rdfxml -> rdfxml     round-trip        263.75        411.67        146.19        201.79             —             —      29897
+sbol-rs     jsonld -> jsonld     round-trip        540.44        694.71        191.44        360.38             —             —      26586
+sbol-rs     ntriples -> ntriples round-trip        297.54        418.75        115.96        168.75             —             —      37679
+sbol-rs     rdfxml -> turtle     convert          284.17       1214.08        125.33        417.71             —             —      22745
+sbol-rs     turtle -> rdfxml     convert          244.31        303.42        143.83        179.00             —             —      29897
+sbol-rs     rdfxml -> jsonld     convert          249.71        308.25        176.52        213.71             —             —      26586
+libsbolj    rdfxml -> rdfxml     round-trip       1080.98       3228.12        329.08       1082.17             —             —      21466
+libsbolj    rdfxml -> turtle     convert         1135.75       2618.83        267.94       1098.38             —             —      16288
+
+=== fixture: sbol2_cd_sa_range ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip         21.12         47.04          8.50         19.50         14.08         26.62       1518
+sbol-rs     rdfxml -> rdfxml     round-trip         23.19         75.88         11.92        122.29             —             —       2323
+sbol-rs     jsonld -> jsonld     round-trip         45.65       1097.08         15.54        779.79             —             —       2092
+sbol-rs     ntriples -> ntriples round-trip         21.38         86.38          8.06         12.25             —             —       2542
+sbol-rs     rdfxml -> turtle     convert           22.42         86.04          8.54         19.75             —             —       1518
+sbol-rs     turtle -> rdfxml     convert           21.69         81.83         12.17         26.71             —             —       2323
+sbol-rs     rdfxml -> jsonld     convert           23.06         88.92         14.69         37.29             —             —       2092
+libsbolj    rdfxml -> rdfxml     round-trip        475.54       3896.08        149.23       2964.33             —             —       1715
+libsbolj    rdfxml -> turtle     convert          419.21       4104.83         66.42        631.38             —             —       1314
+
+=== fixture: sbol2_component_output ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip        177.23        260.25         67.04        147.17        141.83        251.25      12872
+sbol-rs     rdfxml -> rdfxml     round-trip        178.96        304.29         89.85        197.25             —             —      17882
+sbol-rs     jsonld -> jsonld     round-trip        392.23        640.88        112.98        307.17             —             —      16313
+sbol-rs     ntriples -> ntriples round-trip        182.02        527.12         66.48        142.50             —             —      19809
+sbol-rs     rdfxml -> turtle     convert          181.98        507.88         70.38        913.71             —             —      12872
+sbol-rs     turtle -> rdfxml     convert          185.73        318.62         89.96        168.58             —             —      17882
+sbol-rs     rdfxml -> jsonld     convert          179.12        261.88        113.56        173.71             —             —      16313
+libsbolj    rdfxml -> rdfxml     round-trip        989.29       2730.33        282.79       1356.54             —             —      12951
+libsbolj    rdfxml -> turtle     convert         1020.42       2994.75        249.27        700.00             —             —       8113
+
+################ SBOL 3 ################
+
+=== fixture: bba_f2620_popsreceiver ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip        323.92        851.04        121.04        213.83        209.19        703.58      22132
+sbol-rs     rdfxml -> rdfxml     round-trip        291.65        460.88        169.94        219.88             —             —      35928
+sbol-rs     jsonld -> jsonld     round-trip        576.54        731.71        187.35        249.71             —             —      27001
+sbol-rs     ntriples -> ntriples round-trip        293.33        418.79        112.71        179.33             —             —      38067
+sbol-rs     turtle -> rdfxml     convert          269.73        403.00        152.21        212.75             —             —      28669
+sbol-rs     rdfxml -> turtle     convert          303.27        826.71        137.02        423.00             —             —      26912
+sbol-rs     turtle -> jsonld     convert          323.56        679.71        193.96        435.00             —             —      27001
+pysbol3     turtle -> turtle     round-trip       5705.25      21672.75       4979.83      21336.71      42124.10      60457.62      18358
+pysbol3     rdfxml -> rdfxml     round-trip       7517.92      20793.25       2213.88       5130.46             —             —      26007
+pysbol3     jsonld -> jsonld     round-trip       5137.23      19833.08       3064.60      12777.75             —             —      26185
+pysbol3     ntriples -> ntriples round-trip       5302.54      18452.29       1500.25       5906.00             —             —      38067
+pysbol3     turtle -> rdfxml     convert         5984.52      31603.62       2268.38       9178.21             —             —      26007
+pysbol3     rdfxml -> turtle     convert         7501.65      20698.83       4183.23      16108.29             —             —      15601
+pysbol3     turtle -> jsonld     convert         5811.15      16857.33       2985.44      14525.62             —             —      26185
+libsbolj3   turtle -> turtle     round-trip        489.48       1303.67        571.81       2333.12       1725.52       5459.67      20016
+libsbolj3   rdfxml -> rdfxml     round-trip       1077.98       6254.08       1792.10       4614.42             —             —      22382
+libsbolj3   jsonld -> jsonld     round-trip       3380.58      13283.88       1861.29       8338.62             —             —      27921
+libsbolj3   ntriples -> ntriples round-trip        674.23       1426.46        212.21        788.67             —             —      38067
+libsbolj3   turtle -> rdfxml     convert          639.58       5285.88       1670.44       5603.42             —             —      25424
+libsbolj3   rdfxml -> turtle     convert          955.00       4234.75        794.89       3261.62             —             —      15891
+libsbolj3   turtle -> jsonld     convert          460.98        983.67       1689.29       5391.29             —             —      27921
+sboljs      rdfxml -> rdfxml     round-trip       2369.50       5110.92        744.35       2452.33             —             —      22875
+
+=== fixture: component ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip          6.33         15.42          2.88          3.12          6.67         13.50        433
+sbol-rs     rdfxml -> rdfxml     round-trip          8.08         10.38          4.21          5.50             —             —        734
+sbol-rs     jsonld -> jsonld     round-trip         14.27        204.92          4.94         31.12             —             —        549
+sbol-rs     ntriples -> ntriples round-trip          6.92         14.96          2.69         15.17             —             —        751
+sbol-rs     turtle -> rdfxml     convert            6.21         14.21          4.17         10.54             —             —        734
+sbol-rs     rdfxml -> turtle     convert            7.83         23.25          2.92         11.12             —             —        433
+sbol-rs     turtle -> jsonld     convert            6.25         22.79          4.67         18.00             —             —        549
+pysbol3     turtle -> turtle     round-trip        450.77       1950.67        349.50       1289.58      31894.04     112054.50        373
+pysbol3     rdfxml -> rdfxml     round-trip        564.31       4647.17        337.50       1704.83             —             —        663
+pysbol3     jsonld -> jsonld     round-trip        326.58        635.29        305.21        874.33             —             —       1894
+pysbol3     ntriples -> ntriples round-trip        389.02       1111.33        189.85        463.67             —             —        751
+pysbol3     turtle -> rdfxml     convert          330.23        774.21        197.71        789.54             —             —        663
+pysbol3     rdfxml -> turtle     convert          454.19        929.83        314.54        975.08             —             —        425
+pysbol3     turtle -> jsonld     convert          448.89       1750.08        376.87       1658.17             —             —       1894
+libsbolj3   turtle -> turtle     round-trip        207.69       1276.17        164.56        859.92        235.08       1544.75        739
+libsbolj3   rdfxml -> rdfxml     round-trip        395.02       1100.96        292.19        600.25             —             —        957
+libsbolj3   jsonld -> jsonld     round-trip        411.73       1562.92        509.54       1166.58             —             —        815
+libsbolj3   ntriples -> ntriples round-trip        134.92        411.67         63.88        175.46             —             —        751
+libsbolj3   turtle -> rdfxml     convert          209.33       1303.29        328.88       3071.54             —             —        921
+libsbolj3   rdfxml -> turtle     convert          442.08        829.62        226.92        787.67             —             —        822
+libsbolj3   turtle -> jsonld     convert          200.62        324.83        506.23       1506.29             —             —        815
+sboljs      rdfxml -> rdfxml     round-trip        233.96       1401.75         52.52        120.42             —             —        584
+
+=== fixture: multicellular_simple ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip         94.56        141.21         38.27         92.33         69.75        167.29       7056
+sbol-rs     rdfxml -> rdfxml     round-trip         96.27        138.71         57.04         73.79             —             —      11329
+sbol-rs     jsonld -> jsonld     round-trip        199.69        271.92         63.58        111.75             —             —       8766
+sbol-rs     ntriples -> ntriples round-trip        112.75       3333.42         36.33       1275.83             —             —      12289
+sbol-rs     turtle -> rdfxml     convert           88.44        104.12         52.42         64.58             —             —       9463
+sbol-rs     rdfxml -> turtle     convert          102.38        459.83         39.98        108.00             —             —       8302
+sbol-rs     turtle -> jsonld     convert           97.54        261.08         62.58        567.46             —             —       8766
+pysbol3     turtle -> turtle     round-trip       2124.08       3719.46       1759.62       4252.21      34263.06      54950.75       5800
+pysbol3     rdfxml -> rdfxml     round-trip       3006.29       8663.62        952.90       2180.08             —             —       8657
+pysbol3     jsonld -> jsonld     round-trip       2117.27       7513.92       1280.29       2182.83             —             —       9597
+pysbol3     ntriples -> ntriples round-trip       2489.25      13426.92        610.85       5341.92             —             —      12289
+pysbol3     turtle -> rdfxml     convert         3263.48      12654.62       1213.98       5395.96             —             —       8657
+pysbol3     rdfxml -> turtle     convert         3971.77      13924.67       2225.62       3910.46             —             —       5257
+pysbol3     turtle -> jsonld     convert         1994.46       7820.50       1112.29       2220.04             —             —       9597
+libsbolj3   turtle -> turtle     round-trip        288.89        657.79        290.33        954.54        942.27       3244.21       6725
+libsbolj3   rdfxml -> rdfxml     round-trip        712.96       2087.50        979.85       1811.08             —             —       6973
+libsbolj3   jsonld -> jsonld     round-trip       1713.10       8453.00       1179.52       6091.75             —             —       9721
+libsbolj3   ntriples -> ntriples round-trip        289.98        606.58         97.08        213.96             —             —      12289
+libsbolj3   turtle -> rdfxml     convert          312.23       1768.58        829.25       3542.71             —             —       8143
+libsbolj3   rdfxml -> turtle     convert          657.69       1616.17        478.42        744.21             —             —       5154
+libsbolj3   turtle -> jsonld     convert          368.14       1404.25       1091.27       3996.04             —             —       9721
+sboljs      rdfxml -> rdfxml     round-trip       1032.12       2246.46        306.81       1506.17             —             —       7525
+
+=== fixture: toggle_switch_v2 ===
+impl        conversion           kind      parse p50 (μs) parse p99 (μs) ser. p50 (μs) ser. p99 (μs) val. p50 (μs) val. p99 (μs)      bytes
+sbol-rs     turtle -> turtle     round-trip        407.94        722.46        164.73        359.00        337.25        445.42      29858
+sbol-rs     rdfxml -> rdfxml     round-trip        393.35        652.54        238.04        588.38             —             —      48155
+sbol-rs     jsonld -> jsonld     round-trip        829.87       1123.50        278.79        412.12             —             —      37345
+sbol-rs     ntriples -> ntriples round-trip        411.48        766.25        153.29        302.79             —             —      53409
+sbol-rs     turtle -> rdfxml     convert          428.40        602.62        228.00        307.83             —             —      40531
+sbol-rs     rdfxml -> turtle     convert          379.85        468.00        165.33        295.17             —             —      35449
+sbol-rs     turtle -> jsonld     convert          406.31       1382.42        277.39        811.79             —             —      37345
+pysbol3     turtle -> turtle     round-trip       8204.60      26013.50       6938.67      23120.25      49605.75      79252.96      24869
+pysbol3     rdfxml -> rdfxml     round-trip      10734.25      24679.04       3040.77       4977.00             —             —      37202
+pysbol3     jsonld -> jsonld     round-trip       7762.21      21384.96       4714.98      17163.04             —             —      36498
+pysbol3     ntriples -> ntriples round-trip       8162.85      22475.21       2192.79      15045.42             —             —      53409
+pysbol3     turtle -> rdfxml     convert         8613.42      23167.00       3148.94      16341.42             —             —      37202
+pysbol3     rdfxml -> turtle     convert        10863.31      23602.38       6218.29      19098.04             —             —      21603
+pysbol3     turtle -> jsonld     convert         8204.65      23087.88       4350.42       6304.92             —             —      36498
+libsbolj3   turtle -> turtle     round-trip        666.73       1034.62        623.12       1138.29       2589.88       7572.96      27017
+libsbolj3   rdfxml -> rdfxml     round-trip       1173.56       1920.92       2134.92       4378.67             —             —      29249
+libsbolj3   jsonld -> jsonld     round-trip       3352.10       6253.58       2033.81       5230.42             —             —      40200
+libsbolj3   ntriples -> ntriples round-trip        841.25       1409.12        250.37        832.71             —             —      53409
+libsbolj3   turtle -> rdfxml     convert          813.96      12811.58       2533.60      18092.50             —             —      34135
+libsbolj3   rdfxml -> turtle     convert         1619.46       5343.21       1494.89       9497.79             —             —      20089
+libsbolj3   turtle -> jsonld     convert          610.81       1639.08       2672.39       5572.33             —             —      40200
+sboljs      rdfxml -> rdfxml     round-trip       3413.35      10516.71       1039.56       2661.96             —             —      32201
+
+p50 = median across measured iters; p99 picked from same set. Lower is better. `val.` columns show `validate` timing where the impl ships a validator; `—` marks rows that don't run the validation phase.
+wrote machine-readable report to /Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/revision-validation/results.json

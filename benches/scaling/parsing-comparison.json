@@ -1,0 +1,26 @@
+{
+  "original": {
+    "rust_seconds": 1.362384875,
+    "java_seconds": 0.635237708,
+    "rust_over_java": 2.144685143596671,
+    "caveat": "Rust interleaves validation; Java does not."
+  },
+  "matched": [
+    {
+      "directory": "parse-check",
+      "rust_seconds": 0.689305958,
+      "java_seconds": 0.657051417,
+      "rust_over_java": 1.049089827927424,
+      "java_time_reduction_percent": 4.679277848342645
+    },
+    {
+      "directory": "parse-check-reversed",
+      "rust_seconds": 0.68621925,
+      "java_seconds": 0.648295417,
+      "rust_over_java": 1.0584977650705802,
+      "java_time_reduction_percent": 5.526489237951271
+    }
+  ],
+  "scope": "Two sequential matched I/O-only runs on the same 100,000-object RDF/XML input, reversing implementation order. Diagnostic follow-up; does not replace the primary scaling matrix or establish a language-level ranking.",
+  "source_observation": "Rust v1.0.0 Document::read builds an RDF graph, identity/property indexes, and owned typed objects. libSBOLj3 1.0.5.2 reads a Jena model and wraps it; SBOL object lists are populated on access. No profiler attribution of the timing gap was performed."
+}

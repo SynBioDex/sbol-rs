@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/private/tmp/sbol-scaling-tools/measure_rss.native",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/memory/trial-3/javascript_100000_ready.rss.json",
+    "/private/tmp/sbol-scaling-tools/node-v20.20.2-darwin-arm64/bin/node",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/javascript.js",
+    "/private/tmp/sbol-scaling-inputs/sbol3_100000.rdf",
+    "ready",
+    "0",
+    "1",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/memory/trial-3/javascript_100000_ready.json",
+    "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4"
+  ],
+  "input": {
+    "file": "sbol3_100000.rdf.gz",
+    "objects": 100000,
+    "designs": 10000,
+    "top_level_objects": 60000,
+    "triples": 570000,
+    "bytes": 50280150,
+    "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+    "compressed_bytes": 910010,
+    "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+  },
+  "endpoint_sha256": "0f1cfa6350bc1996e9bc881ca6c603c8bbd8954aba6b9318c8b2f57d523031d4",
+  "started_utc": "2026-10-10T13:21:15.931863+00:00",
+  "timeout_seconds": 1200,
+  "exit_code": 0,
+  "elapsed_seconds": 9.53013875009492
+}

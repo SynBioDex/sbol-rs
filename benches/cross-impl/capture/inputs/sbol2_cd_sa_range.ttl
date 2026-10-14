@@ -1,0 +1,20 @@
+<http://partsregistry.org/cd/BBa_J23119> a <http://sbols.org/v2#ComponentDefinition> ;
+	<http://sbols.org/v2#persistentIdentity> <http://partsregistry.org/cd/BBa_J23119> ;
+	<http://sbols.org/v2#displayId> "BBa_J23119" ;
+	<http://www.w3.org/ns/prov#wasDerivedFrom> <http://partsregistry.org/Part:BBa_J23119> ;
+	<http://purl.org/dc/terms/title> "J23119 promoter" ;
+	<http://purl.org/dc/terms/description> "Constitutive promoter" ;
+	<http://sbols.org/v2#type> <http://www.biopax.org/release/biopax-level3.owl#DnaRegion> ;
+	<http://sbols.org/v2#role> <http://identifiers.org/so/SO:0000167> .
+<http://partsregistry.org/cd/BBa_J23119/rangeAt12> a <http://sbols.org/v2#SequenceAnnotation> ;
+	<http://sbols.org/v2#persistentIdentity> <http://partsregistry.org/cd/BBa_J23119/rangeAt12> ;
+	<http://sbols.org/v2#displayId> "rangeAt12" .
+<http://partsregistry.org/cd/BBa_J23119/rangeAt12/location3> a <http://sbols.org/v2#Range> ;
+	<http://sbols.org/v2#persistentIdentity> <http://partsregistry.org/cd/BBa_J23119/rangeAt12/location3> ;
+	<http://sbols.org/v2#displayId> "location3" ;
+	a <http://sbols.org/v2#Range> ;
+	<http://sbols.org/v2#start> 69 ;
+	<http://sbols.org/v2#end> 1197 ;
+	<http://sbols.org/v2#orientation> <http://sbols.org/v2#inline> .
+<http://partsregistry.org/cd/BBa_J23119/rangeAt12> <http://sbols.org/v2#location> <http://partsregistry.org/cd/BBa_J23119/rangeAt12/location3> .
+<http://partsregistry.org/cd/BBa_J23119> <http://sbols.org/v2#sequenceAnnotation> <http://partsregistry.org/cd/BBa_J23119/rangeAt12> .

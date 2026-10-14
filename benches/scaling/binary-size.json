@@ -1,0 +1,32 @@
+{
+  "linux_arm64": {
+    "sbol.unstripped": {
+      "bytes": 11607320,
+      "sha256": "8155b088c70853d645e54a1cb1f4b030e611419b12b8c01cca26c822ddc4a8d8"
+    },
+    "sbol": {
+      "bytes": 9639472,
+      "sha256": "aa6125db0f3daf022e365ee0fdfcac2c83089b89fb4e7cac456ab34c0feb3b53"
+    },
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)\nbinary: rustc\ncommit-hash: 01f6ddf7588f42ae2d7eb0a2f21d44e8e96674cf\ncommit-date: 2026-02-11\nhost: aarch64-unknown-linux-gnu\nrelease: 1.93.1\nLLVM version: 21.1.8\n",
+    "dynamic_dependencies": "\tlinux-vdso.so.1 (0x0000ffffb5017000)\n\tlibc.so.6 => /lib/aarch64-linux-gnu/libc.so.6 (0x0000ffffb44d0000)\n\tlibgcc_s.so.1 => /lib/aarch64-linux-gnu/libgcc_s.so.1 (0x0000ffffb4490000)\n\t/lib/ld-linux-aarch64.so.1 (0x0000ffffb4fd0000)\n",
+    "source_commit": "20e03f90eb69e1a7611b32ec1479351a0bd7af1f",
+    "release": "v1.0.0",
+    "command": "cargo build --locked --release -p sbol-cli; strip copy of target/release/sbol"
+  },
+  "macos_arm64": {
+    "unstripped": {
+      "bytes": 10526432,
+      "sha256": "bdd6d816b4d0dc7cb18aa3414999950382ffbd58c4a503afc675087effc02426"
+    },
+    "stripped": {
+      "bytes": 9464552,
+      "sha256": "47dd6579508b0ef891c2640ceed4b1f88b8a34c8a4fd4dffba66f9b9e335a301"
+    },
+    "dynamic_dependencies": "/private/tmp/sbol-scaling-tools/sbol-macos:\n\t/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)\n\t/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1356.0.0)",
+    "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)\nbinary: rustc\ncommit-hash: 01f6ddf7588f42ae2d7eb0a2f21d44e8e96674cf\ncommit-date: 2026-02-11\nhost: aarch64-apple-darwin\nrelease: 1.93.1\nLLVM version: 21.1.8",
+    "release": "v1.0.0",
+    "command": "cargo +1.93 build --locked --release -p sbol-cli; strip copy of target/release/sbol",
+    "version": "sbol 1.0.0"
+  }
+}

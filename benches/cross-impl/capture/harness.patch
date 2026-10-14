@@ -1,0 +1,699 @@
+--- a/benches/cross-impl/README.md
++++ b/benches/cross-impl/README.md
+@@ -4,13 +4,11 @@
+ This harness benchmarks
+ `parse`, `serialize`, `convert`, and `validate` for **both versions**,
+ comparing sbol-rs against the mainstream implementation of each version.
+-Every implementation, sbol-rs included, is pinned in its own Docker
+-image so every row pays the same Linux container overhead and the
+-comparison is apples-to-apples.
++Every implementation, sbol-rs included, runs in a Docker image with pinned library versions and reads the same input bytes per format. Validation rule sets differ: the validation rows compare configured API costs, not identical rule workloads.
+ 
+ | Version | Implementation | Source                                                  | Pinned version | Image tag         |
+ | ------- | -------------- | ------------------------------------------------------- | -------------- | ----------------- |
+-| 2 + 3   | sbol-rs        | this repository                                         | `0.2.1`        | `sbol-rs-bench`   |
++| 2 + 3   | sbol-rs        | this repository                                         | `1.0.0`        | `sbol-rs-bench`   |
+ | 2       | libSBOLj       | https://github.com/SynBioDex/libSBOLj                   | `2.4.0`        | `libsbolj2-bench` |
+ | 3       | pySBOL3        | https://github.com/SynBioDex/pySBOL3                    | `1.2`          | `pysbol3-bench`   |
+ | 3       | libSBOLj3      | https://github.com/SynBioDex/libSBOLj3                  | `1.0.5.2`      | `libsbolj3-bench` |
+@@ -22,8 +20,7 @@
+ by `<measured>` timed iterations of `parse(in) -> serialize(out)` for
+ each `(version, impl, parse_format, serialize_format)` combination it
+ knows about. Per-iteration nanosecond timings come back as JSON, are
+-aggregated into the tables below, and are also written verbatim to
+-[`results.json`](results.json).
++aggregated into a report, and written verbatim to the path supplied with `--report`. The corrected capture is [`results.validation-revision.json`](results.validation-revision.json); [`results.json`](results.json) is the historical capture.
+ 
+ The matrix covers two kinds of row. A **round-trip** row parses and
+ serializes the same format (`turtle -> turtle`). A **conversion** row
+@@ -43,11 +40,7 @@
+ never run this phase and the `val.` columns show `—`.
+ 
+ The sbol-rs row also runs inside Docker by default. Running it natively
+-on the host (no container) would give sbol-rs an unfair single-digit
+-percentage advantage from skipping the Linux VM overhead the other
+-rows pay; the gap to the other implementations is large enough that
+-this asymmetry would not change any conclusion, but the dockerized
+-default keeps the comparison defensible. For local development (no
++on the host would use a different environment from the other rows. The Docker default keeps the environment consistent across implementations. For local development (no
+ Docker required) set `SBOL_BENCH_DOCKER=0` and sbol-rs will fall back
+ to in-process timing for both versions; the foreign rows are then
+ marked skipped.
+@@ -90,12 +83,7 @@
+ `multicellular_simple`, `bba_f2620_popsreceiver`, `toggle_switch_v2`
+ (SBOL 3).
+ 
+-The 20-warmup default is what the JVM's tiered JIT needs to reach
+-steady state on this loop — at 3 warmup iters libSBOLj3 was 30–60%
+-slower than at 20 across the fixtures, large enough to flip the
+-ordering on smaller documents. 100 measured iterations gives stable
+-p50s; p99 is representative except on the sub-10 µs `component`
+-fixture, where rare allocation or scheduling spikes inflate it.
++The default uses 20 warmup and 100 measured iterations per case. This is a fixed sampling protocol, not proof of JIT convergence or tail-latency stability; inspect the saved sample distributions when interpreting a run.
+ 
+ ## Format support matrix
+ 
+@@ -148,7 +136,7 @@
+   cores), 128 GB RAM.
+ - **OS / runtime**: macOS 26.6 (build 25G5043d), Docker Desktop 29.4.3
+   (Linux/arm64 VM on Apple Virtualization).
+-- **Impl versions**: sbol-rs 0.2.1 (this checkout), libSBOLj 2.4.0
++- **Impl versions**: sbol-rs 1.0.0 (tagged release baseline), libSBOLj 2.4.0
+   (SBOL 2), pySBOL3 1.2, libSBOLj3 1.0.5.2, sboljs 3.0.2.
+ - **Iteration counts**: 20 warmup + 100 measured per `(version, impl,
+   fixture, parse_format, serialize_format)`.
+@@ -179,7 +167,26 @@
+   agree at the triple-set level and asks how fast each one processes
+   the same bytes.
+ 
+-## Captured results
++## Corrected validation benchmark (2026-10-09)
++
++The corrected full matrix is saved in `results.validation-revision.json`. All 124 cases completed with 20 warmup and 100 measured iterations per case. Rust uses the tagged v1.0.0 library code with the corrected harness. The original `results.json` and tables below are retained as a historical record.
++
++The libSBOLj3 driver disables validation after property updates, after reading, and before saving. It explicitly enables recommended and complete-document checks. Rust uses default validation options (complete, compliant, best practice; external resolution off), and pySBOL3 uses its default native plus SHACL validator. Validation is timed before serialization on freshly parsed documents. Diagnostics are saved and checked outside the timers, and containers run with networking disabled. All three SBOL3 validators produced no diagnostics on the four timed fixtures.
++
++The pySBOL3 image installs the v1.2 release commit, because the PyPI 1.2 wheel was withdrawn for containing older source. RDFLib and pySHACL are pinned as well. Full runtime and image identities are retained with the manuscript's benchmark artifacts.
++
++The validators do not enforce identical rules. Rust and libSBOLj3 check a Range's upper bound against its Sequence length; pySBOL3 v1.2 checks positive coordinates and ordering but leaves upper bounds unimplemented. Rust and Java use bundled biological ontology data; pySBOL3's SHACL invocation supplies no ontology graph or inference. The results characterize validation API costs, not a speedup for equal rule coverage.
++
++| Fixture | Rust validation (ms) | libSBOLj3 (ms) | pySBOL3 (ms) |
++| --- | ---: | ---: | ---: |
++| `component` | 0.007 | 0.235 | 31.894 |
++| `multicellular_simple` | 0.070 | 0.942 | 34.263 |
++| `bba_f2620_popsreceiver` | 0.209 | 1.726 | 42.124 |
++| `toggle_switch_v2` | 0.337 | 2.590 | 49.606 |
++
++## Historical captured results
++
++**Historical capture, superseded by the corrected run below.** These measurements used sbol-rs 0.2.1, libSBOLj3's automatic validation during I/O, validation after serialization, and the older PyPI 1.2 wheel. They remain here as an audit trail and must not be combined with the corrected measurements.
+ 
+ One run (id `1783257836`) with the defaults (20 warmup + 100 measured),
+ every impl in Docker, all eight fixtures. Numbers are **median time in
+--- a/benches/cross-impl/libsbolj3/Bench.java
++++ b/benches/cross-impl/libsbolj3/Bench.java
+@@ -19,11 +19,13 @@
+ import java.nio.file.Path;
+ import java.nio.file.Paths;
+ import java.util.Properties;
++import java.util.List;
+ 
+ import org.sbolstandard.core3.entity.SBOLDocument;
+ import org.sbolstandard.core3.io.SBOLFormat;
+ import org.sbolstandard.core3.io.SBOLIO;
+ import org.sbolstandard.core3.validation.SBOLValidator;
++import org.sbolstandard.core3.util.Configuration;
+ 
+ public class Bench {
+ 
+@@ -42,7 +44,18 @@
+         Path outputJson = Paths.get(args[5]);
+         boolean validate = args.length > 6 && args[6].equals("1");
+ 
++        // Separate document I/O from explicit validation. These three flags
++        // otherwise make parse/write include hidden validation passes.
++        Configuration configuration = Configuration.getInstance();
++        configuration.setValidateAfterSettingProperties(false);
++        configuration.setValidateAfterReadingSBOLDocuments(false);
++        configuration.setValidateBeforeSaving(false);
++        configuration.setValidateRecommendedRules(true);
++        configuration.setCompleteDocument(true);
++
+         byte[] rdfBytes = Files.readAllBytes(inputPath);
++        List<String> expectedMessages = validate ? SBOLValidator.getValidator().validate(
++            SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat)) : List.of();
+ 
+         long[] parseNs = new long[iters];
+         long[] serializeNs = new long[iters];
+@@ -51,29 +64,32 @@
+ 
+         for (int i = 0; i < warmup; i++) {
+             SBOLDocument doc = SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat);
++            if (validate) {
++                checkMessages(expectedMessages, SBOLValidator.getValidator().validate(doc));
++            }
+             ByteArrayOutputStream out = new ByteArrayOutputStream();
+             SBOLIO.write(doc, out, serializeFormat);
+-            if (validate) {
+-                SBOLValidator.getValidator().validate(doc);
+-            }
+         }
+ 
+         for (int i = 0; i < iters; i++) {
+             long t0 = System.nanoTime();
+             SBOLDocument doc = SBOLIO.read(new ByteArrayInputStream(rdfBytes), parseFormat);
+             long t1 = System.nanoTime();
++            parseNs[i] = t1 - t0;
++            // Validate the freshly parsed document, before serialization.
++            if (validate) {
++                long v0 = System.nanoTime();
++                List<String> messages = SBOLValidator.getValidator().validate(doc);
++                long v1 = System.nanoTime();
++                validateNs[i] = v1 - v0;
++                checkMessages(expectedMessages, messages);
++            }
++            long s0 = System.nanoTime();
+             ByteArrayOutputStream out = new ByteArrayOutputStream();
+             SBOLIO.write(doc, out, serializeFormat);
+-            long t2 = System.nanoTime();
+-            parseNs[i] = t1 - t0;
+-            serializeNs[i] = t2 - t1;
++            long s1 = System.nanoTime();
++            serializeNs[i] = s1 - s0;
+             lastSerializedBytes = out.size();
+-            if (validate) {
+-                long v0 = System.nanoTime();
+-                SBOLValidator.getValidator().validate(doc);
+-                long v1 = System.nanoTime();
+-                validateNs[i] = v1 - v0;
+-            }
+         }
+ 
+         String impl = "libsbolj3";
+@@ -93,11 +109,24 @@
+         if (validate) {
+             json.append(",");
+             appendLongArrayField(json, "validate_ns", validateNs);
++            json.append(",\"validation\":{\"complete\":true,\"recommended\":true,\"automatic_validation\":false,\"ontology\":\"bundled EDAM/SO/SBO sets\",\"messages\":[");
++            for (int i = 0; i < expectedMessages.size(); i++) {
++                if (i > 0) json.append(',');
++                json.append('"').append(escape(expectedMessages.get(i))).append('"');
++            }
++            json.append("]}");
+         }
+         json.append("}");
+ 
+         try (FileWriter writer = new FileWriter(outputJson.toFile(), StandardCharsets.UTF_8)) {
+             writer.write(json.toString());
++        }
++    }
++
++    private static void checkMessages(List<String> expected, List<String> actual) {
++        if (!new java.util.HashSet<>(expected).equals(new java.util.HashSet<>(actual))
++                || expected.size() != actual.size()) {
++            throw new IllegalStateException("validation diagnostics changed across iterations");
+         }
+     }
+ 
+@@ -130,7 +159,7 @@
+             }
+         }
+         try (var input = SBOLDocument.class.getResourceAsStream(
+-                "/META-INF/maven/org.sbolstandard/libSBOLj3/pom.properties")) {
++                "/META-INF/maven/org.sbolstandard/libsbolj3/pom.properties")) {
+             if (input != null) {
+                 Properties props = new Properties();
+                 props.load(input);
+--- a/benches/cross-impl/pysbol3/bench.py
++++ b/benches/cross-impl/pysbol3/bench.py
+@@ -19,7 +19,6 @@
+ 
+ from __future__ import annotations
+ 
+-import io
+ import json
+ import sys
+ import time
+@@ -84,27 +83,35 @@
+     serialize_ns: list[int] = []
+     validate_ns: list[int] = []
+     last_bytes = 0
++    expected = _parse_once(rdf_text, parse_rdflib).validate() if validate else None
++    def check_report(report):
++        if (sorted(map(str, report.errors)), sorted(map(str, report.warnings))) != (
++            sorted(map(str, expected.errors)), sorted(map(str, expected.warnings))
++        ):
++            raise RuntimeError("validation diagnostics changed across iterations")
+ 
+     for _ in range(warmup):
+         doc = _parse_once(rdf_text, parse_rdflib)
++        if validate:
++            check_report(doc.validate())
+         doc.write_string(file_format=serialize_rdflib)
+-        if validate:
+-            doc.validate()
+ 
+     for _ in range(iters):
+         t0 = time.perf_counter_ns()
+         doc = _parse_once(rdf_text, parse_rdflib)
+         t1 = time.perf_counter_ns()
+-        serialized = doc.write_string(file_format=serialize_rdflib)
+-        t2 = time.perf_counter_ns()
+         parse_ns.append(t1 - t0)
+-        serialize_ns.append(t2 - t1)
+-        last_bytes = len(serialized.encode("utf-8") if isinstance(serialized, str) else serialized)
+         if validate:
+             v0 = time.perf_counter_ns()
+-            doc.validate()
++            report = doc.validate()
+             v1 = time.perf_counter_ns()
+             validate_ns.append(v1 - v0)
++            check_report(report)
++        s0 = time.perf_counter_ns()
++        serialized = doc.write_string(file_format=serialize_rdflib)
++        s1 = time.perf_counter_ns()
++        serialize_ns.append(s1 - s0)
++        last_bytes = len(serialized.encode("utf-8") if isinstance(serialized, str) else serialized)
+ 
+     result = {
+         "impl": "pysbol3",
+@@ -120,6 +127,12 @@
+     }
+     if validate:
+         result["validate_ns"] = validate_ns
++        result["validation"] = {
++            "errors": list(map(str, expected.errors)),
++            "warnings": list(map(str, expected.warnings)),
++            "ontology": "none: ont_graph=None, inference=None",
++            "method": "native object checks and bundled SHACL",
++        }
+     output_json.write_text(json.dumps(result))
+     return 0
+ 
+--- a/benches/cross-impl/pysbol3/Dockerfile
++++ b/benches/cross-impl/pysbol3/Dockerfile
+@@ -8,17 +8,20 @@
+ # Used by:
+ #     crates/sbol/src/bin/run-cross-impl-bench.rs
+ #
+-# IMPORTANT — bump PYSBOL3_VERSION when a new release ships. After
++# IMPORTANT — bump PYSBOL3_REVISION when a new release ships. After
+ # bumping, rerun the bench driver and re-record any baseline numbers
+ # captured in benches/cross-impl/README.md.
+ 
+ FROM python:3.12-slim AS runtime
+ 
+-ARG PYSBOL3_VERSION=1.2
++# PyPI's 1.2 wheel was yanked because it predates the release tag.
++# Install the exact v1.2 source commit instead of that wheel.
++ARG PYSBOL3_REVISION=e73a4624ecc22ba5828d0c308ee902bb816b65b2
+ 
+ WORKDIR /opt/pysbol3-bench
+ 
+-RUN pip install --no-cache-dir "sbol3==${PYSBOL3_VERSION}"
++RUN pip install --no-cache-dir "rdflib==6.3.2" "pyshacl==0.28.1" \
++    "https://github.com/SynBioDex/pySBOL3/archive/${PYSBOL3_REVISION}.tar.gz"
+ 
+ COPY bench.py /opt/pysbol3-bench/bench.py
+ 
+--- a/benches/cross-impl/sbol-rs/Dockerfile
++++ b/benches/cross-impl/sbol-rs/Dockerfile
+@@ -24,7 +24,7 @@
+ # Build only the runner binary (everything sbol depends on gets pulled
+ # in transitively). Release profile because that's what the user-facing
+ # library is shipped with; debug-built numbers would be misleading.
+-RUN cargo build --release -p sbol-bench --bin runner
++RUN cargo build --locked --release -p sbol-bench --bin runner
+ 
+ FROM debian:bookworm-slim AS runtime
+ 
+--- a/crates/sbol-bench/src/bench.rs
++++ b/crates/sbol-bench/src/bench.rs
+@@ -29,6 +29,8 @@
+     pub(crate) validate_ns: Vec<u64>,
+     #[serde(default)]
+     pub(crate) serialized_bytes: u64,
++    #[serde(default)]
++    pub(crate) validation: Option<serde_json::Value>,
+ }
+ 
+ // Deserialization surface for whatever the bench scripts emit. The
+@@ -46,6 +48,8 @@
+     pub(crate) validate_ns: Vec<u64>,
+     #[serde(default)]
+     pub(crate) serialized_bytes: u64,
++    #[serde(default)]
++    pub(crate) validation: Option<serde_json::Value>,
+ }
+ 
+ #[derive(Debug)]
+@@ -190,37 +194,39 @@
+     for _ in 0..config.warmup {
+         let doc = v3::Document::read(&rdf_text, case.parse_format)
+             .map_err(|error| format!("warmup parse: {error}"))?;
++        if case.validate {
++            let _ = doc.validate();
++        }
+         let _ = doc
+             .write(case.serialize_format)
+             .map_err(|error| format!("warmup serialize: {error}"))?;
+-        if case.validate {
+-            let _ = doc.validate();
+-        }
+     }
+ 
+     let mut parse_ns = Vec::with_capacity(config.iters);
+     let mut serialize_ns = Vec::with_capacity(config.iters);
+     let mut validate_ns = Vec::with_capacity(if case.validate { config.iters } else { 0 });
+     let mut last_bytes = 0u64;
++    let mut validation = None;
+     for _ in 0..config.iters {
+         let t0 = Instant::now();
+         let doc = v3::Document::read(&rdf_text, case.parse_format)
+             .map_err(|error| format!("measured parse: {error}"))?;
+         let t1 = Instant::now();
++        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
++        if case.validate {
++            let v0 = Instant::now();
++            let report = doc.validate();
++            let elapsed = v0.elapsed().as_nanos() as u64;
++            validate_ns.push(elapsed);
++            validation = Some(crate::validation::summary(&report));
++        }
++        let s0 = Instant::now();
+         let out = doc
+             .write(case.serialize_format)
+             .map_err(|error| format!("measured serialize: {error}"))?;
+-        let t2 = Instant::now();
+-        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
+-        serialize_ns.push(t2.duration_since(t1).as_nanos() as u64);
++        let s1 = Instant::now();
++        serialize_ns.push(s1.duration_since(s0).as_nanos() as u64);
+         last_bytes = out.len() as u64;
+-
+-        if case.validate {
+-            let v0 = Instant::now();
+-            let _ = doc.validate();
+-            let v1 = Instant::now();
+-            validate_ns.push(v1.duration_since(v0).as_nanos() as u64);
+-        }
+     }
+ 
+     Ok(BenchSamples {
+@@ -229,6 +235,7 @@
+         serialize_ns,
+         validate_ns,
+         serialized_bytes: last_bytes,
++        validation,
+     })
+ }
+ 
+@@ -243,37 +250,39 @@
+     for _ in 0..config.warmup {
+         let doc = v2::Document::read(&rdf_text, case.parse_format)
+             .map_err(|error| format!("warmup parse: {error}"))?;
++        if case.validate {
++            let _ = doc.validate();
++        }
+         let _ = doc
+             .write(case.serialize_format)
+             .map_err(|error| format!("warmup serialize: {error}"))?;
+-        if case.validate {
+-            let _ = doc.validate();
+-        }
+     }
+ 
+     let mut parse_ns = Vec::with_capacity(config.iters);
+     let mut serialize_ns = Vec::with_capacity(config.iters);
+     let mut validate_ns = Vec::with_capacity(if case.validate { config.iters } else { 0 });
+     let mut last_bytes = 0u64;
++    let mut validation = None;
+     for _ in 0..config.iters {
+         let t0 = Instant::now();
+         let doc = v2::Document::read(&rdf_text, case.parse_format)
+             .map_err(|error| format!("measured parse: {error}"))?;
+         let t1 = Instant::now();
++        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
++        if case.validate {
++            let v0 = Instant::now();
++            let report = doc.validate();
++            let elapsed = v0.elapsed().as_nanos() as u64;
++            validate_ns.push(elapsed);
++            validation = Some(crate::validation::summary(&report));
++        }
++        let s0 = Instant::now();
+         let out = doc
+             .write(case.serialize_format)
+             .map_err(|error| format!("measured serialize: {error}"))?;
+-        let t2 = Instant::now();
+-        parse_ns.push(t1.duration_since(t0).as_nanos() as u64);
+-        serialize_ns.push(t2.duration_since(t1).as_nanos() as u64);
++        let s1 = Instant::now();
++        serialize_ns.push(s1.duration_since(s0).as_nanos() as u64);
+         last_bytes = out.len() as u64;
+-
+-        if case.validate {
+-            let v0 = Instant::now();
+-            let _ = doc.validate();
+-            let v1 = Instant::now();
+-            validate_ns.push(v1.duration_since(v0).as_nanos() as u64);
+-        }
+     }
+ 
+     Ok(BenchSamples {
+@@ -282,6 +291,7 @@
+         serialize_ns,
+         validate_ns,
+         serialized_bytes: last_bytes,
++        validation,
+     })
+ }
+ 
+@@ -330,6 +340,7 @@
+         .args([
+             "run",
+             "--rm",
++            "--network=none",
+             "-v",
+             &mount_arg,
+             image,
+@@ -375,6 +386,7 @@
+         serialize_ns: raw.serialize_ns,
+         validate_ns: raw.validate_ns,
+         serialized_bytes: raw.serialized_bytes,
++        validation: raw.validation,
+     })
+ }
+ 
+--- a/crates/sbol-bench/src/bin/runner.rs
++++ b/crates/sbol-bench/src/bin/runner.rs
+@@ -16,6 +16,9 @@
+ //!
+ //! The optional trailing `validate` flag (`1`/`0`) turns on a timed
+ //! `Document::validate()` phase alongside parse and serialize.
++
++#[path = "../validation.rs"]
++mod validation;
+ 
+ use std::fs;
+ use std::path::PathBuf;
+@@ -62,6 +65,8 @@
+     serialize_ns: Vec<u64>,
+     #[serde(skip_serializing_if = "Vec::is_empty")]
+     validate_ns: Vec<u64>,
++    #[serde(skip_serializing_if = "Option::is_none")]
++    validation: Option<serde_json::Value>,
+ }
+ 
+ fn main() -> ExitCode {
+@@ -136,13 +141,24 @@
+     let mut serialize_ns = Vec::with_capacity(iters);
+     let mut validate_ns = Vec::with_capacity(if validate { iters } else { 0 });
+     let mut last_bytes = 0u64;
++    let mut validation = None;
++    let mut expected_counts = None;
+     for i in 0..iters {
+         match run_timed(&rdf_text, version, parse_format, serialize_format, validate) {
+             Ok((parse, serialize, validate_time, bytes)) => {
+                 parse_ns.push(parse);
+                 serialize_ns.push(serialize);
+-                if let Some(validate_time) = validate_time {
++                if let Some((validate_time, report)) = validate_time {
+                     validate_ns.push(validate_time);
++                    let counts = (report.errors().count(), report.warnings().count());
++                    if expected_counts.is_some_and(|expected| expected != counts) {
++                        eprintln!("validation outcome changed across iterations");
++                        return ExitCode::FAILURE;
++                    }
++                    expected_counts = Some(counts);
++                    if i + 1 == iters {
++                        validation = Some(validation::summary(&report));
++                    }
+                 }
+                 last_bytes = bytes;
+             }
+@@ -165,6 +181,7 @@
+         parse_ns,
+         serialize_ns,
+         validate_ns,
++        validation,
+     };
+     let json = match serde_json::to_string(&output) {
+         Ok(s) => s,
+@@ -200,19 +217,19 @@
+     match version {
+         Version::Sbol3 => {
+             let doc = v3::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
+-            doc.write(serialize_format)
+-                .map_err(|e| format!("serialize: {e}"))?;
+             if validate {
+                 let _ = doc.validate();
+             }
++            doc.write(serialize_format)
++                .map_err(|e| format!("serialize: {e}"))?;
+         }
+         Version::Sbol2 => {
+             let doc = v2::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
+-            doc.write(serialize_format)
+-                .map_err(|e| format!("serialize: {e}"))?;
+             if validate {
+                 let _ = doc.validate();
+             }
++            doc.write(serialize_format)
++                .map_err(|e| format!("serialize: {e}"))?;
+         }
+     }
+     Ok(())
+@@ -224,26 +241,28 @@
+     parse_format: RdfFormat,
+     serialize_format: RdfFormat,
+     validate: bool,
+-) -> Result<(u64, u64, Option<u64>, u64), String> {
++) -> Result<(u64, u64, Option<(u64, v3::ValidationReport)>, u64), String> {
+     match version {
+         Version::Sbol3 => {
+             let t0 = Instant::now();
+             let doc = v3::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
+             let t1 = Instant::now();
+-            let out = doc
+-                .write(serialize_format)
+-                .map_err(|e| format!("serialize: {e}"))?;
+-            let t2 = Instant::now();
+             let validate_ns = if validate {
+                 let v0 = Instant::now();
+-                let _ = doc.validate();
+-                Some(v0.elapsed().as_nanos() as u64)
++                let report = doc.validate();
++                let elapsed = v0.elapsed().as_nanos() as u64;
++                Some((elapsed, report))
+             } else {
+                 None
+             };
++            let s0 = Instant::now();
++            let out = doc
++                .write(serialize_format)
++                .map_err(|e| format!("serialize: {e}"))?;
++            let s1 = Instant::now();
+             Ok((
+                 t1.duration_since(t0).as_nanos() as u64,
+-                t2.duration_since(t1).as_nanos() as u64,
++                s1.duration_since(s0).as_nanos() as u64,
+                 validate_ns,
+                 out.len() as u64,
+             ))
+@@ -252,20 +271,22 @@
+             let t0 = Instant::now();
+             let doc = v2::Document::read(text, parse_format).map_err(|e| format!("parse: {e}"))?;
+             let t1 = Instant::now();
+-            let out = doc
+-                .write(serialize_format)
+-                .map_err(|e| format!("serialize: {e}"))?;
+-            let t2 = Instant::now();
+             let validate_ns = if validate {
+                 let v0 = Instant::now();
+-                let _ = doc.validate();
+-                Some(v0.elapsed().as_nanos() as u64)
++                let report = doc.validate();
++                let elapsed = v0.elapsed().as_nanos() as u64;
++                Some((elapsed, report))
+             } else {
+                 None
+             };
++            let s0 = Instant::now();
++            let out = doc
++                .write(serialize_format)
++                .map_err(|e| format!("serialize: {e}"))?;
++            let s1 = Instant::now();
+             Ok((
+                 t1.duration_since(t0).as_nanos() as u64,
+-                t2.duration_since(t1).as_nanos() as u64,
++                s1.duration_since(s0).as_nanos() as u64,
+                 validate_ns,
+                 out.len() as u64,
+             ))
+--- a/crates/sbol-bench/src/main.rs
++++ b/crates/sbol-bench/src/main.rs
+@@ -35,6 +35,7 @@
+ mod cli;
+ mod matrix;
+ mod report;
++mod validation;
+ 
+ use std::fs;
+ use std::path::{Path, PathBuf};
+@@ -223,14 +224,22 @@
+     if let Some(report_path) = config.report_path.as_ref() {
+         match write_json_report(report_path, &outcomes, &config) {
+             Ok(()) => eprintln!("wrote machine-readable report to {}", report_path.display()),
+-            Err(error) => eprintln!(
+-                "failed to write report to {}: {error}",
+-                report_path.display()
+-            ),
+-        }
+-    }
+-
+-    if any_native_failure {
++            Err(error) => {
++                eprintln!(
++                    "failed to write report to {}: {error}",
++                    report_path.display()
++                );
++                return ExitCode::FAILURE;
++            }
++        }
++    }
++
++    if any_native_failure
++        || (!config.skip_docker
++            && outcomes
++                .iter()
++                .any(|outcome| matches!(outcome.state, CaseState::Skipped { .. })))
++    {
+         ExitCode::FAILURE
+     } else {
+         ExitCode::SUCCESS
+--- a/crates/sbol-bench/src/report.rs
++++ b/crates/sbol-bench/src/report.rs
+@@ -174,6 +174,8 @@
+     Ok {
+         version: &'a str,
+         serialized_bytes: u64,
++        #[serde(skip_serializing_if = "Option::is_none")]
++        validation: Option<&'a serde_json::Value>,
+         parse_stats: Stats,
+         serialize_stats: Stats,
+         // Present only when the row ran the validation phase.
+@@ -212,6 +214,7 @@
+                     ReportState::Ok {
+                         version: version.as_str(),
+                         serialized_bytes: samples.serialized_bytes,
++                        validation: samples.validation.as_ref(),
+                         parse_stats: stats(&samples.parse_ns).unwrap_or(zero),
+                         serialize_stats: stats(&samples.serialize_ns).unwrap_or(zero),
+                         validate_stats: stats(&samples.validate_ns),
+--- /dev/null
++++ b/crates/sbol-bench/src/validation.rs
+@@ -0,0 +1,23 @@
++//! Untimed diagnostics retained alongside validation samples.
++
++pub(crate) fn summary(report: &sbol::v3::ValidationReport) -> serde_json::Value {
++    serde_json::json!({
++        "errors": report.errors().count(),
++        "warnings": report.warnings().count(),
++        "issues": report.issues().iter().map(|issue| serde_json::json!({
++            "rule": issue.rule,
++            "severity": format!("{:?}", issue.severity),
++            "message": issue.message,
++        })).collect::<Vec<_>>(),
++        "fully_applied": report.coverage().fully_applied,
++        "partially_applied": report.coverage().partially_applied.iter().map(|entry|
++            serde_json::json!({"rule": entry.rule, "blocker": format!("{:?}", entry.blocker),
++                "coverage_kind": format!("{:?}", entry.coverage_kind)})
++        ).collect::<Vec<_>>(),
++        "not_applied": report.coverage().not_applied.iter().map(|entry|
++            serde_json::json!({"rule": entry.rule, "reason": format!("{:?}", entry.reason)})
++        ).collect::<Vec<_>>(),
++        "config": "complete=true, compliant=true, best_practice=true; default options; external resolution off",
++        "ontology": "bundled offline registry",
++    })
++}

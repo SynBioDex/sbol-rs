@@ -1,0 +1,1 @@
+{"impl":"sboljs","version":"3.0.2","fixture":"/inputs/sbol3_10.rdf","parse_format":"rdfxml","serialize_format":"rdfxml","warmup_iters":0,"measured_iters":1,"serialized_bytes":4264,"parse_ns":[24285375],"serialize_ns":[3290208]}

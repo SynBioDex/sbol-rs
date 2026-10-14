@@ -1,0 +1,30 @@
+{
+  "command": [
+    "/private/tmp/sbol-scaling-tools/measure_rss.native",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/memory/trial-2/python_1000_ready.rss.json",
+    "/usr/local/bin/python3.12",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/python.py",
+    "/private/tmp/sbol-scaling-inputs/sbol3_1000.rdf",
+    "ready",
+    "0",
+    "1",
+    "/Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/matched/memory/trial-2/python_1000_ready.json",
+    "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186"
+  ],
+  "input": {
+    "file": "sbol3_1000.rdf.gz",
+    "objects": 1000,
+    "designs": 100,
+    "top_level_objects": 600,
+    "triples": 5700,
+    "bytes": 502950,
+    "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+    "compressed_bytes": 9815,
+    "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+  },
+  "endpoint_sha256": "568eb02bdf75d5f17e377ddc88b15d8f878c7d04da94219841f3e140466d4186",
+  "started_utc": "2026-10-10T13:19:48.753152+00:00",
+  "timeout_seconds": 1200,
+  "exit_code": 0,
+  "elapsed_seconds": 0.27981399977579713
+}

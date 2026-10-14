@@ -1,0 +1,151 @@
+{
+  "platform": "macOS-26.6-arm64-arm-64bit",
+  "cpu": "Apple M4 Max",
+  "memory_bytes": 137438953472,
+  "logical_cpus": 16,
+  "sampling": {
+    "warmup": 3,
+    "measured": 5
+  },
+  "execution": "Native macOS; sequential, fresh process per implementation and size; unrelated services left running. Docker resource-pressure pilots excluded.",
+  "small_fixture_provenance": "../revision-validation/provenance.json",
+  "validation_settings": "Unchanged from corrected small-fixture drivers; no external resolution or online ontology work.",
+  "java_heap": "Runtime defaults, no forced garbage collection.",
+  "memory_method": "wait4 ru_maxrss, macOS bytes converted to KiB; median peak of three fresh processes each reading, parsing, and serializing once without validation or warmup; runtime and startup included. Timing-run peaks retained separately.",
+  "memory_sampling": {
+    "processes_per_case": 3,
+    "warmup": 0,
+    "measured": 1,
+    "validate": false
+  },
+  "java_largest_budget_seconds": 300,
+  "rustc": "rustc 1.93.1 (01f6ddf75 2026-02-11)\nbinary: rustc\ncommit-hash: 01f6ddf7588f42ae2d7eb0a2f21d44e8e96674cf\ncommit-date: 2026-02-11\nhost: aarch64-apple-darwin\nrelease: 1.93.1\nLLVM version: 21.1.8",
+  "java": "openjdk version \"17.0.20.1\" 2026-08-18\nOpenJDK Runtime Environment Temurin-17.0.20.1+1 (build 17.0.20.1+1)\nOpenJDK 64-Bit Server VM Temurin-17.0.20.1+1 (build 17.0.20.1+1, mixed mode, sharing)",
+  "node": "v20.20.2",
+  "python": "Python 3.12.8",
+  "files": {
+    "/private/tmp/sbol-scaling-tools/libSBOLj3.jar": {
+      "bytes": 16761378,
+      "sha256": "9b9729ea14bb207c285af1d0fb13ec66b1badc8bc77d85e46bb31582f39bcedc"
+    },
+    "/private/tmp/sbol-scaling-tools/Bench.java": {
+      "bytes": 9316,
+      "sha256": "41723af18b13f4b9d9c6cb5ada52ec1b1b2a8cde792137f527c8af5d4c927cd2"
+    },
+    "/private/tmp/sbol-scaling-tools/bench.py": {
+      "bytes": 4555,
+      "sha256": "7672021bd297aa09a2d0f121afaa77ec866e47503ab0d0b99e4a807c60060c60"
+    },
+    "/private/tmp/sbol-scaling-tools/javascript/bench.js": {
+      "bytes": 4325,
+      "sha256": "3d1e32c599009e1ed749b3446e55baa9167be3e0600734cc883a386d3197bacf"
+    },
+    "/private/tmp/sbol-scaling-tools/node.tar.gz": {
+      "bytes": 41511345,
+      "sha256": "466e05f3477c20dfb723054dfebffe55bc74660ee77f612166fca121dacb65b6"
+    },
+    "/private/tmp/sbol-scaling-tools/java.tar.gz": {
+      "bytes": 185851019,
+      "sha256": "196d13ba5f10414bef7f6a05a9b3f00edacb18ebacef2b99485db9e2ee18f0e8"
+    },
+    "/private/tmp/sbol-scaling-tools/measure_rss.native": {
+      "bytes": 33904,
+      "sha256": "34544d2ce1e8f47f54cd6700732671ab14cafca5dbd1aef8d62b734b2fae94fe"
+    },
+    "/private/tmp/sbol-review-validation/target/release/runner": {
+      "bytes": 6400800,
+      "sha256": "ca515429dab3795954f86d032ef98b3c2bdcfebaed89a4e7dbd40de91bb7062a"
+    }
+  },
+  "python_environment_distributions": [
+    "attrs==26.1.0",
+    "cffi==2.0.0",
+    "charset-normalizer==3.4.7",
+    "cryptography==49.0.0",
+    "cypari==2.5.6",
+    "html5lib==1.1",
+    "isodate==0.6.1",
+    "jsonschema-specifications==2025.9.1",
+    "jsonschema==4.26.0",
+    "mpmath==1.3.0",
+    "networkx==3.6.1",
+    "owlrl==6.0.2",
+    "packaging==26.3",
+    "pandas==3.0.5",
+    "patsy==1.0.2",
+    "pdfminer.six==20260107",
+    "pillow==12.3.0",
+    "pip==24.3.1",
+    "pip==25.0.1",
+    "prettytable==3.18.0",
+    "pycparser==3.0",
+    "pyparsing==3.3.3",
+    "pypdf==6.14.2",
+    "pyshacl==0.28.1",
+    "python-dateutil==2.9.0.post0",
+    "rdflib==6.3.2",
+    "referencing==0.37.0",
+    "rpds-py==2026.6.3",
+    "sbol3==1.2",
+    "scipy==1.18.0",
+    "shapely==2.1.2",
+    "six==1.17.0",
+    "statsmodels==0.14.6",
+    "sympy==1.14.0",
+    "types-requests==2.32.4.20250809",
+    "typing_extensions==4.16.0",
+    "urllib3==2.5.0",
+    "wcwidth==0.9.2",
+    "webencodings==0.6.1"
+  ],
+  "python_active_packages": {
+    "sbol3": {
+      "version": "1.2",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/sbol3/__init__.py"
+    },
+    "rdflib": {
+      "version": "6.3.2",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/rdflib/__init__.py"
+    },
+    "pyshacl": {
+      "version": "0.28.1",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/pyshacl/__init__.py"
+    },
+    "owlrl": {
+      "version": "6.0.2",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/owlrl/__init__.py"
+    },
+    "isodate": {
+      "version": "0.6.1",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/isodate/__init__.py"
+    },
+    "six": {
+      "version": "1.17.0",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/six.py"
+    },
+    "html5lib": {
+      "version": "1.1",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/html5lib/__init__.py"
+    },
+    "webencodings": {
+      "version": "0.6.1",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/webencodings/__init__.py"
+    },
+    "prettytable": {
+      "version": "3.18.0",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/prettytable/__init__.py"
+    },
+    "packaging": {
+      "version": "26.3",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/packaging/__init__.py"
+    },
+    "pyparsing": {
+      "version": "3.3.3",
+      "file": "/private/tmp/sbol-scaling-tools/python-packages/pyparsing/__init__.py"
+    }
+  },
+  "downloads": [
+    "https://nodejs.org/dist/v20.20.2/node-v20.20.2-darwin-arm64.tar.gz",
+    "https://github.com/adoptium/temurin17-binaries/releases/download/jdk-17.0.20.1%2B1/OpenJDK17U-jdk_aarch64_mac_hotspot_17.0.20.1_1.tar.gz"
+  ]
+}

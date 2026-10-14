@@ -1,0 +1,46 @@
+[
+  {
+    "file": "sbol3_10.rdf.gz",
+    "objects": 10,
+    "designs": 1,
+    "top_level_objects": 6,
+    "triples": 57,
+    "bytes": 5178,
+    "sha256": "6a6a940152a79d6452921399c0d898377bbc9d6ba2b5dfcc648ab5e692c9c556",
+    "compressed_bytes": 605,
+    "compressed_sha256": "e5af7098c027ef803064d9e386f33cd90691375fa8d7eb4c69b4c77cebc3bcf7"
+  },
+  {
+    "file": "sbol3_1000.rdf.gz",
+    "objects": 1000,
+    "designs": 100,
+    "top_level_objects": 600,
+    "triples": 5700,
+    "bytes": 502950,
+    "sha256": "16d79f9933b6f66639efa655b3407be7798cd3c4e9aec7210bd9566feab5b8d7",
+    "compressed_bytes": 9815,
+    "compressed_sha256": "02aeb9a59d3af37b0f0b4ef672eff8d214b28e2f63e5f5bcc0555e06fa5a00aa"
+  },
+  {
+    "file": "sbol3_10000.rdf.gz",
+    "objects": 10000,
+    "designs": 1000,
+    "top_level_objects": 6000,
+    "triples": 57000,
+    "bytes": 5028150,
+    "sha256": "addf42700701f4da44f8905a2dcf7201a678beea72b0009dc8e2b8e218d7ca9e",
+    "compressed_bytes": 91726,
+    "compressed_sha256": "39479a43a18c0c9efe9dcd15fc0d63bd6b086090aaec8e83e100fd5a10893724"
+  },
+  {
+    "file": "sbol3_100000.rdf.gz",
+    "objects": 100000,
+    "designs": 10000,
+    "top_level_objects": 60000,
+    "triples": 570000,
+    "bytes": 50280150,
+    "sha256": "a211822dd9644f7006ea469679cc651f0ef18cf759998af5dd6e93e2ab6b8d93",
+    "compressed_bytes": 910010,
+    "compressed_sha256": "3aa31e655478b73b4c6a5579badf330508b65941025b42b32e1cf86b7bcbd9b8"
+  }
+]

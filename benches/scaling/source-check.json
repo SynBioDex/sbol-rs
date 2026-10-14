@@ -1,0 +1,11 @@
+{
+  "release": "v1.0.0",
+  "source_commit": "20e03f90eb69e1a7611b32ec1479351a0bd7af1f",
+  "archive_differences": [
+    "crates/sbol-bench/src/bench.rs",
+    "crates/sbol-bench/src/bin/runner.rs",
+    "crates/sbol-bench/src/main.rs",
+    "crates/sbol-bench/src/report.rs"
+  ],
+  "cargo_lock_sha256": "d89acacc3bd6f5493b35effe98a5b46ff998fb8a86fae7821d5f875293bfb48a"
+}

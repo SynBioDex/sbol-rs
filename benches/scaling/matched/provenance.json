@@ -1,0 +1,77 @@
+{
+  "parent_provenance": "../provenance.json",
+  "source_and_release_pins": "../../revision-validation/provenance.json",
+  "rust_release_commit": "20e03f90eb69e1a7611b32ec1479351a0bd7af1f",
+  "execution": "Native macOS; fresh process per client, size, and endpoint; sequential; unrelated host services left running.",
+  "sampling": {
+    "warmup": 3,
+    "measured": 5
+  },
+  "memory_sampling": {
+    "processes": 3,
+    "warmup": 0,
+    "measured": 1,
+    "mode": "ready"
+  },
+  "validation": false,
+  "forced_gc": false,
+  "heap_settings": "Runtime defaults",
+  "timing_endpoints": {
+    "rdf": "Fully parsed underlying RDF graph, no SBOL interpretation.",
+    "ready": "Native SBOL read followed by a copied semantic record for every field present in the synthetic profile, through public SBOL fields/getters."
+  },
+  "verification": "Every warmup and measured endpoint fingerprint checked against an independent ElementTree extraction of the retained input. Sorting and SHA-256 outside timers.",
+  "memory_method": "wait4 peak RSS; macOS bytes converted to KiB. Entire cold read-copy-serialize-verify process, including runtime, input, copied records, output buffers, and verification.",
+  "rust_build": "cargo +1.93 build --offline --release --manifest-path /private/tmp/sbol-like-for-like/Cargo.toml --target-dir /private/tmp/sbol-review-validation/target",
+  "rust_registry_dependencies_match_release_lock": true,
+  "files": {
+    "sbol-rs/benchmarks/scaling/matched/rust.rs": {
+      "bytes": 5463,
+      "sha256": "c45544c1a41fc398d5f3c3bb3aa749e3a30230dcd31f1a0292b75980197f2afe"
+    },
+    "sbol-rs/benchmarks/scaling/matched/python.py": {
+      "bytes": 3670,
+      "sha256": "75a649b2af19334c247d68d6f7ffc09a524cb2fcf86c786939ef0ca46ea3c53d"
+    },
+    "sbol-rs/benchmarks/scaling/matched/Matched.java": {
+      "bytes": 6053,
+      "sha256": "b38e7ab2418ab88b2acc51375d8b1297060bb1a899af430ae1c6e58cfdf3df2a"
+    },
+    "sbol-rs/benchmarks/scaling/matched/Matched.class": {
+      "bytes": 10068,
+      "sha256": "142c08cdd27e5fb8a0615a0fad66513a31c5a270dfd2cd0785b1c3067bddb965"
+    },
+    "sbol-rs/benchmarks/scaling/matched/javascript.js": {
+      "bytes": 3792,
+      "sha256": "714982c286e39e2d0aad9a9ace67707c6277c7476259a72ec5e3cd004ff35f68"
+    },
+    "sbol-rs/benchmarks/scaling/matched/run.py": {
+      "bytes": 4890,
+      "sha256": "926f12e1e72418b8ce91a95731c1b40656a244942575d610d697ca290d21862e"
+    },
+    "sbol-rs/benchmarks/scaling/matched/suite.py": {
+      "bytes": 425,
+      "sha256": "6791053096ffbfef68b1f559d392874b16b35da701d406c6bc426b74d0fbf91c"
+    },
+    "sbol-rs/benchmarks/scaling/matched/Cargo.lock": {
+      "bytes": 26425,
+      "sha256": "96c6f18da51189e4120d2a2239ab216782957267a59bf49f14b0e481a3aefba7"
+    },
+    "sbol-rs/benchmarks/scaling/matched/Cargo.toml.capture": {
+      "bytes": 392,
+      "sha256": "27917bcb186796cc7a4f651c75c267c85a85db6ecc3b6df960770f9ba61d2c94"
+    },
+    "/private/tmp/sbol-review-validation/target/release/sbol-matched-bench": {
+      "bytes": 1891472,
+      "sha256": "2164f49ecba8c6254dd7829c9cb571b2850df3720f7d936a41eef7362222249c"
+    },
+    "/private/tmp/sbol-scaling-tools/libSBOLj3.jar": {
+      "bytes": 16761378,
+      "sha256": "9b9729ea14bb207c285af1d0fb13ec66b1badc8bc77d85e46bb31582f39bcedc"
+    },
+    "/private/tmp/sbol-scaling-tools/measure_rss.native": {
+      "bytes": 33904,
+      "sha256": "34544d2ce1e8f47f54cd6700732671ab14cafca5dbd1aef8d62b734b2fae94fe"
+    }
+  }
+}

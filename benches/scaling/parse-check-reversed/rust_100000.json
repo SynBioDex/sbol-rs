@@ -1,0 +1,1 @@
+{"impl":"sbol-rs","version":"1.0.0","fixture":"/private/tmp/sbol-scaling-inputs/sbol3_100000.rdf","parse_format":"rdfxml","serialize_format":"rdfxml","warmup_iters":3,"measured_iters":5,"serialized_bytes":55120157,"parse_ns":[686219250,685547042,683873833,688013333,687149292],"serialize_ns":[343642541,367557500,342746541,337124958,338255083]}

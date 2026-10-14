@@ -20,7 +20,7 @@ byte-for-byte input, then runs `<warmup>` untimed iterations followed
 by `<measured>` timed iterations of `parse(in) -> serialize(out)` for
 each `(version, impl, parse_format, serialize_format)` combination it
 knows about. Per-iteration nanosecond timings come back as JSON, are
-aggregated into a report, and written verbatim to the path supplied with `--report`. The corrected capture is [`results.validation-revision.json`](results.validation-revision.json); [`results.json`](results.json) is the historical capture.
+aggregated into a report, and written verbatim to the path supplied with `--report`. The corrected capture is [`results.validation-revision.json`](results.validation-revision.json); [`results.json`](results.json) is the historical capture. Its inputs, provenance, validation audit, and verifier are in [`capture/`](capture/README.md).
 
 The matrix covers two kinds of row. A **round-trip** row parses and
 serializes the same format (`turtle -> turtle`). A **conversion** row

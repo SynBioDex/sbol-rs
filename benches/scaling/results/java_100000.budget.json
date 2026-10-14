@@ -1,0 +1,10 @@
+{
+  "budget_seconds": 300,
+  "observed_seconds": 300.5018260413781,
+  "kind": "whole-process wall-clock budget, including untimed preflight and startup",
+  "signal": "SIGTERM",
+  "wrapper_pid": 12260,
+  "child_pid": 12261,
+  "command": "/private/tmp/sbol-scaling-tools/jdk-17.0.20.1+1/Contents/Home/bin/java -cp /private/tmp/sbol-scaling-tools/libSBOLj3.jar:/private/tmp/sbol-scaling-tools Bench /private/tmp/sbol-scaling-inputs/sbol3_100000.rdf rdfxml rdfxml 3 5 /Users/marpaia/git/marpaia/research/sbol-rs/benchmarks/scaling/results/java_100000.json 1",
+  "stopped_utc": "2026-10-10T02:43:39.357589+00:00"
+}

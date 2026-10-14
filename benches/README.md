@@ -16,3 +16,8 @@ Suites here:
 - [`cross-impl/`](cross-impl/README.md) — head-to-head performance
   comparison of sbol-rs against pySBOL3, libSBOLj3, and sboljs, each
   pinned in its own Docker image. Orchestrated by `crates/sbol-bench`.
+  [`cross-impl/capture/`](cross-impl/capture/README.md) holds the inputs,
+  provenance, validation audit, and verifier for the corrected capture.
+- [`scaling/`](scaling/README.md) — synthetic SBOL3 documents of 10^3 to
+  10^5 objects, comparing equal loading work, serialization, and peak
+  process memory across the four clients.

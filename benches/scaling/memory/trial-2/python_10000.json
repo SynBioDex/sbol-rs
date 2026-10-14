@@ -1,0 +1,1 @@
+{"impl": "pysbol3", "version": "1.2", "fixture": "/private/tmp/sbol-scaling-inputs/sbol3_10000.rdf", "parse_format": "rdfxml", "serialize_format": "rdfxml", "warmup_iters": 0, "measured_iters": 1, "serialized_bytes": 5028157, "parse_ns": [1404174084], "serialize_ns": [588893666]}

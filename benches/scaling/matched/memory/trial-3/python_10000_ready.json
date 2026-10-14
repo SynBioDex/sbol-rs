@@ -1,0 +1,1 @@
+{"implementation": "python", "mode": "ready", "warmup": 0, "iterations": 1, "time_ns": [1461888709], "serialize_ns": [573810166], "fingerprints": ["3120707052246fca88266c11c4e7f762407a4e82fddd973be422214dd10c0ffa"], "row_counts": [57000], "serialized_bytes": 5028157}
