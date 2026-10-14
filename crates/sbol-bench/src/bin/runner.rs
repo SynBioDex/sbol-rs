@@ -235,13 +235,17 @@ fn run_once(
     Ok(())
 }
 
+/// Timings for one measured iteration: parse ns, serialize ns, optional
+/// validate ns with its report, and serialized byte count.
+type IterTimings = (u64, u64, Option<(u64, v3::ValidationReport)>, u64);
+
 fn run_timed(
     text: &str,
     version: Version,
     parse_format: RdfFormat,
     serialize_format: RdfFormat,
     validate: bool,
-) -> Result<(u64, u64, Option<(u64, v3::ValidationReport)>, u64), String> {
+) -> Result<IterTimings, String> {
     match version {
         Version::Sbol3 => {
             let t0 = Instant::now();
